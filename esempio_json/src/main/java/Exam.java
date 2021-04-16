@@ -22,4 +22,9 @@ public class Exam {
     public String getNome_esame() {
         return nome_esame;
     }
+
+    @Override
+    public String toString() {
+        return nome_esame + ", voto: " + voto + ", data di verbalizzazione: " + data_verbalizzazione;
+    }
 }
