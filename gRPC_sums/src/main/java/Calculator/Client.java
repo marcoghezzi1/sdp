@@ -17,7 +17,7 @@ import static com.example.grpc.CalculatorServiceOuterClass.*;
 
 public class Client {
     static Scanner scan = new Scanner(System.in);
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("Cosa vuoi fare?");
         String choice = scan.nextLine();
         switch (choice) {
@@ -28,9 +28,9 @@ public class Client {
     }
 
     private static void simple() throws InterruptedException {
-        System.out.println("Inserisci primo intero:");
+        System.out.print("Inserisci primo numero: ");
         int a = scan.nextInt();
-        System.out.println("Inserisci secondo intero:");
+        System.out.print("Inserisci secondo numero: ");
         int b = scan.nextInt();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:9999").usePlaintext().build();
         CalculatorServiceStub stub = CalculatorServiceGrpc.newStub(channel);
@@ -56,9 +56,9 @@ public class Client {
     }
 
     private static void repeated() throws InterruptedException {
-        System.out.println("Inserisci primo intero:");
+        System.out.print("Inserisci primo numero: ");
         int n = scan.nextInt();
-        System.out.println("Inserisci secondo intero:");
+        System.out.print("Inserisci secondo numero: ");
         int t = scan.nextInt();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:9999").usePlaintext().build();
         CalculatorServiceStub stub = CalculatorServiceGrpc.newStub(channel);
@@ -84,9 +84,10 @@ public class Client {
         });
         channel.awaitTermination(10, TimeUnit.SECONDS);
     }
-    private static void stream() throws InterruptedException {
+    private static void stream() {
         final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:9999").usePlaintext().build();
         CalculatorServiceStub stub = CalculatorServiceGrpc.newStub(channel);
+        // preparazione richieste da inviare al server
         StreamObserver<HelloRequest> streamServer = stub.streamSum(new StreamObserver<HelloResponse>() {
             @Override
             public void onNext(HelloResponse value) {
@@ -95,18 +96,20 @@ public class Client {
 
             @Override
             public void onError(Throwable t) {
+                System.out.println("Error!: " + t.getMessage());
             }
 
             @Override
             public void onCompleted() {
+                channel.shutdown();
             }
         });
         while (true) {
-            System.out.print("a:");
+            System.out.print("Inserisci primo numero: ");
             int n = scan.nextInt();
-            System.out.print("b:");
+            System.out.print("Inserisci secondo numero: ");
             int t = scan.nextInt();
-
+            // costruzione della richiesta
             HelloRequest request = HelloRequest.newBuilder().setA(n).setB(t).build();
             streamServer.onNext(request);
             try {

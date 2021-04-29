@@ -1,9 +1,6 @@
 package Calculator;
 
-import com.example.grpc.CalculatorServiceGrpc;
-import com.example.grpc.CalculatorServiceOuterClass;
 import io.grpc.stub.StreamObserver;
-
 import static com.example.grpc.CalculatorServiceGrpc.*;
 import static com.example.grpc.CalculatorServiceOuterClass.*;
 
@@ -44,7 +41,8 @@ public class CalculatorServiceImpl extends CalculatorServiceImplBase {
                 System.out.println(request);
                 int n = request.getA();
                 int t = request.getB();
-                responseObserver.onNext(HelloResponse.newBuilder().setSum(n+t).build());
+                int sum = n+t;
+                responseObserver.onNext(HelloResponse.newBuilder().setSum(sum).build());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -52,7 +50,6 @@ public class CalculatorServiceImpl extends CalculatorServiceImplBase {
                 }
 
             }
-
             @Override
             public void onError(Throwable t) {
                 System.out.println("Error! "+ t.getMessage());

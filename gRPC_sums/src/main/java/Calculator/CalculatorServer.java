@@ -10,7 +10,7 @@ public class CalculatorServer {
         Server server = ServerBuilder.forPort(9999).addService(new CalculatorServiceImpl()).build();
         try {
             server.start();
-            System.out.println("Server started!!!");
+            System.out.println("Server started!");
             server.awaitTermination();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
