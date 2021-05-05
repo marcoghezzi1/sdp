@@ -51,12 +51,19 @@ public class Dictionary {
         }
     }
 
-    public synchronized boolean checkWord(Word word) {
+    public synchronized int checkWord(Word parola) {
         List<Word> copy = getDizionario();
-        for (Word w: copy) {
-            if (w.getWord().equals(word.getWord()))
-                return true;
+        for (int i = 0; i < copy.size(); i++) {
+            Word w = copy.get(i);
+            if (w.getWord().equals(parola.getWord()))
+                return i;
         }
-        return false;
+        return -1;
+    }
+
+    public synchronized void updateDefinition(Word w) {
+        int posParola = this.checkWord(w);
+        dizionario.set(posParola, w);
+
     }
 }
