@@ -16,8 +16,8 @@ public class PubExample {
             connOpts.setCleanSession(true);
             //connOpts.setUserName(username); // optional
             //connOpts.setPassword(password.toCharArray()); // optional
-            //connOpts.setWill("this/is/a/topic","will message".getBytes(),1,false);  // optional
-            //connOpts.setKeepAliveInterval(60);  // optional
+            connOpts.setWill("this/is/a/topic","will message".getBytes(),1,false);  // optional
+            connOpts.setKeepAliveInterval(59);  // optional
 
             // Connect the client
             System.out.println(clientId + " Connecting Broker " + broker);
