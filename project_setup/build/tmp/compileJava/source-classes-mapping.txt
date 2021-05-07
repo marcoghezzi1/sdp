@@ -1,0 +1,14 @@
+REST/StartServer.java
+ REST.StartServer
+REST/beans/Word.java
+ REST.beans.Word
+REST/beans/User.java
+ REST.beans.User
+REST/beans/Users.java
+ REST.beans.Users
+REST/beans/Dictionary.java
+ REST.beans.Dictionary
+REST/services/DictionaryService.java
+ REST.services.DictionaryService
+REST/services/ServerAmministratore.java
+ REST.services.ServerAmministratore
