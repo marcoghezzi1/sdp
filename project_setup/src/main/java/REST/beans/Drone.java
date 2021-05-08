@@ -1,16 +1,22 @@
 package REST.beans;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement
 public class Drone {
     private int id;
-    private String indirizzoIP;
+    private String indirizzoIp;
     private int port;
+    private String posizione;
+    private List<Drone> drones;
+    public Drone() {
 
-    public Drone(int id, String indirizzoIP, int port) {
+    }
+
+    public Drone(int id, String indirizzoIp, int port) {
         this.id = id;
-        this.indirizzoIP = indirizzoIP;
+        this.indirizzoIp = indirizzoIp;
         this.port = port;
     }
 
@@ -23,11 +29,11 @@ public class Drone {
     }
 
     public String getIndirizzoIP() {
-        return indirizzoIP;
+        return indirizzoIp;
     }
 
-    public void setIndirizzoIP(String indirizzoIP) {
-        this.indirizzoIP = indirizzoIP;
+    public void setIndirizzoIp(String indirizzoIp) {
+        this.indirizzoIp = indirizzoIp;
     }
 
     public int getPort() {
@@ -36,5 +42,9 @@ public class Drone {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void setPosizione(String posizione) {
+        this.posizione = posizione;
     }
 }
