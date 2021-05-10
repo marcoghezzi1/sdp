@@ -2,11 +2,13 @@ package REST.services;
 
 
 import REST.beans.Drone;
+import REST.beans.RispostaServerAdd;
 import REST.beans.StormoDroni;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Random;
 
 @Path("drone")
 public class DroneService {
@@ -29,12 +31,14 @@ public class DroneService {
         int posizione = StormoDroni.getInstance().checkDrone(d);
         boolean check = posizione == -1;
         if (check) {
-            //List<Drone> copy = StormoDroni.getInstance().getStormo();
+            List<Drone> copy = StormoDroni.getInstance().getStormo();
             StormoDroni.getInstance().add(d);
-            //d.setPosizione();
-            return Response.ok().build();
+            Random rand = new Random();
+            int[] coordinate = {rand.nextInt(10), rand.nextInt(10)};
+            RispostaServerAdd risposta = new RispostaServerAdd(copy, coordinate);
+            return Response.ok(risposta).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     // rimozione di un drone
