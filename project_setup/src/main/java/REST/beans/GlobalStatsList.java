@@ -1,13 +1,18 @@
 package REST.beans;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class GlobalStatsList {
 
+    @XmlElement (name = "Statistiche Globali")
     private List<GlobalStat> listaStatisticheRaccolte;
 
     private static GlobalStatsList instance;
@@ -30,23 +35,28 @@ public class GlobalStatsList {
         return new ArrayList<>(listaStatisticheRaccolte);
     }
 
-    public static void main(String[] args) {
-        Timestamp t1 = new Timestamp(121, 4, 10, 19, 7, 30, 4);
-        Timestamp t2 = new Timestamp(121, 4, 10, 19, 40, 30, 4);
-
-        GlobalStat g1 = new GlobalStat(43.2, 10.4, 15, 10.9, t2);
-        GlobalStat g2 = new GlobalStat(32.2, 10.4, 15, 11, t1);
-
-        GlobalStatsList.getInstance().addStat(g1);
-        GlobalStatsList.getInstance().addStat(g2);
-
-        List<GlobalStat> copy = getInstance().getLista();
-        copy.sort(Comparator.comparing(GlobalStat::getTimestamp));
-        for (GlobalStat g: copy) {
-            System.out.println(g.toString());
-        }
-
+    public synchronized List<GlobalStat> getLista(int n) {
+        List<GlobalStat> copy = getLista();
+        return new ArrayList<GlobalStat>(copy.subList(0, n));
     }
 
+    public synchronized List<GlobalStat> getLista(String a, String b) {
+        Timestamp t1 = Timestamp.valueOf(a);
+        Timestamp t2 = Timestamp.valueOf(b);
+        List<GlobalStat> copy = getLista();
+        List<GlobalStat> sublist = new ArrayList<GlobalStat>();
+        copy.sort(Comparator.comparing(GlobalStat::getTimestamp));
+        for (GlobalStat g: copy) {
+            if (g.getTimestamp().compareTo(t1)>= 0 && g.getTimestamp().compareTo(t2)<=0)
+                sublist.add(g);
+        }
+        return sublist;
+    }
+
+    public static void main(String[] args) {
+        String s1 = "2021-10-5";
+        Timestamp t1 = Timestamp.valueOf(s1);
+        System.out.println(t1);
+    }
 
 }

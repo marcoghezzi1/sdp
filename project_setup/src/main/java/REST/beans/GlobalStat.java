@@ -18,12 +18,12 @@ public class GlobalStat {
     public GlobalStat() {
     }
 
-    public GlobalStat(double avgDelivery, double avgKm, double avgBatteryLife, double avgPollution, Timestamp timestamp) {
+    public GlobalStat(double avgDelivery, double avgKm, double avgBatteryLife, double avgPollution, String timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKm = avgKm;
         this.avgBatteryLife = avgBatteryLife;
         this.avgPollution = avgPollution;
-        this.timestamp = timestamp;
+        this.timestamp = Timestamp.valueOf(timestamp.substring(3));
     }
 
     public double getAvgDelivery() {

@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StormoDroni {
-    @XmlElement(name = "Stormo")
+    //@XmlElement(name = "Stormo")
     private List<Drone> stormo;
     private static StormoDroni instance;
 

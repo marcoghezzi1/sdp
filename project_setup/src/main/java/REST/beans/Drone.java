@@ -28,7 +28,7 @@ public class Drone {
         this.id = id;
     }
 
-    public String getIndirizzoIP() {
+    public String getIndirizzoIp() {
         return indirizzoIp;
     }
 
