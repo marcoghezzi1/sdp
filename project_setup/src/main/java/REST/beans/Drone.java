@@ -8,10 +8,10 @@ public class Drone {
     private int id;
     private String indirizzoIp;
     private int port;
-    private String posizione;
+    private int[] posizione;
+    private boolean master;
     private List<Drone> drones;
     public Drone() {
-
     }
 
     public Drone(int id, String indirizzoIp, int port) {
@@ -44,7 +44,11 @@ public class Drone {
         this.port = port;
     }
 
-    public void setPosizione(String posizione) {
+    public int[] getPosizione() {
+        return posizione;
+    }
+
+    public void setPosizione(int[] posizione) {
         this.posizione = posizione;
     }
 }

@@ -37,7 +37,9 @@ public class GlobalStatsList {
 
     public synchronized List<GlobalStat> getLista(int n) {
         List<GlobalStat> copy = getLista();
-        return new ArrayList<GlobalStat>(copy.subList(0, n));
+        if (n > copy.size())
+            n = copy.size();
+        return new ArrayList<GlobalStat>(copy.subList(copy.size()-n, copy.size()));
     }
 
     public synchronized List<GlobalStat> getLista(String a, String b) {
@@ -52,11 +54,11 @@ public class GlobalStatsList {
         }
         return sublist;
     }
-
+/*
     public static void main(String[] args) {
         String s1 = "2021-10-5";
         Timestamp t1 = Timestamp.valueOf(s1);
         System.out.println(t1);
-    }
+    }*/
 
 }

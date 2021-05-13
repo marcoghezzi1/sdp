@@ -2,6 +2,7 @@ package REST.services;
 
 import REST.beans.GlobalStat;
 import REST.beans.GlobalStatsList;
+import REST.beans.Statistiche;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -13,7 +14,7 @@ public class StatsService {
     @GET
     @Produces({"application/json", "application/xml"})
     public Response getAllStats() {
-        return Response.ok(GlobalStatsList.getInstance()).build();
+        return Response.ok().entity(GlobalStatsList.getInstance()).build();
     }
 
     @Path("{lastN}")
@@ -44,7 +45,8 @@ public class StatsService {
             sum+= g.getAvgKm();
         }
         avgKm = (double) sum / copy.size();
-        return Response.ok().entity("{\"Avg km:\" :" + avgKm + "}").build();
+        //Statistiche stats = new Statistiche(avgKm);
+        return Response.ok().entity("{\"Avg km\":"+avgKm+ "}").build();
     }
 
     @Path("avg/delivery")
@@ -55,10 +57,11 @@ public class StatsService {
         double avgDelivery;
         int sum = 0;
         for (GlobalStat g: copy) {
-            sum+= g.getAvgKm();
+            sum+= g.getAvgDelivery();
         }
         avgDelivery = (double) sum / copy.size();
-        return Response.ok().entity("{\"Avg km:\" :" + avgDelivery + "}").build();
+        //Statistiche stats = new Statistiche(avgDelivery);
+        return Response.ok().entity("{\"AvgDelivery\":"+avgDelivery+ "}").build();
     }
 
 

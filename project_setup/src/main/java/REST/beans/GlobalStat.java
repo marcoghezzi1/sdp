@@ -1,18 +1,17 @@
 package REST.beans;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-@XmlRootElement
+@XmlRootElement(name="global stat")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GlobalStat {
     private double avgDelivery;
     private double avgKm;
     private double avgBatteryLife;
+
     private double avgPollution;
+    @XmlTransient
     private Timestamp timestamp;
 
     public GlobalStat() {
@@ -23,7 +22,7 @@ public class GlobalStat {
         this.avgKm = avgKm;
         this.avgBatteryLife = avgBatteryLife;
         this.avgPollution = avgPollution;
-        this.timestamp = Timestamp.valueOf(timestamp.substring(3));
+        this.timestamp = Timestamp.valueOf(timestamp);
     }
 
     public double getAvgDelivery() {
@@ -66,14 +65,4 @@ public class GlobalStat {
         this.timestamp = timestamp;
     }
 
-    @Override
-    public String toString() {
-        return "GlobalStat{" +
-                "avgDelivery=" + avgDelivery +
-                ", avgKm=" + avgKm +
-                ", avgBatteryLife=" + avgBatteryLife +
-                ", avgPollution=" + avgPollution +
-                ", timestamp=" + timestamp +
-                '}';
-    }
 }

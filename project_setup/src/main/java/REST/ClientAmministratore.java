@@ -1,12 +1,11 @@
 package REST;
 
-import REST.beans.Drone;
-import REST.beans.GlobalStatsList;
-import REST.beans.StormoDroni;
+import REST.beans.*;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Scanner;
@@ -33,6 +32,9 @@ public class ClientAmministratore {
             ClientResponse response;
             String output;
             Gson gson = new Gson();
+            Statistiche stats;
+            String t1;
+            String t2;
             if (risposta==5)
                 break;
             switch (risposta) {
@@ -57,7 +59,8 @@ public class ClientAmministratore {
                 case 2:
                     System.out.println("Inserisci n: ");
                     int n = scan.nextInt();
-                    webResource = client.resource(statistiche+n);
+                    webResource = client.resource(statistiche+"/" + n);
+
                     response = webResource.accept("application/json")
                             .get(ClientResponse.class);
                     if (response.getStatus() != 200) {
@@ -66,11 +69,18 @@ public class ClientAmministratore {
                     }
                     output = response.getEntity(String.class);
                     GlobalStatsList list = gson.fromJson(output, GlobalStatsList.class);
+                    //List<GlobalStat> copy_stats = list.getLista();
                     System.out.println("Le ultime " +n+" statistiche sono:");
-                    System.out.println(list.toString());
+                    System.out.println(output.getClass());
                     break;
                 case 3:
-                    webResource = client.resource(statistiche+"avg/delivery");
+                    scan.nextLine();
+                    System.out.print("Data inizio: ");
+                    t1 = scan.nextLine();
+                    System.out.print("Data fine: ");
+                    t2 = scan.nextLine();
+                    webResource = client.resource(statistiche+"/avg/delivery").queryParam("t1", t1).queryParam("t2", t2);
+                    System.out.println(webResource);
                     response = webResource.accept("application/json")
                             .get(ClientResponse.class);
                     if (response.getStatus() != 200) {
@@ -78,11 +88,17 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     output = response.getEntity(String.class);
-                    System.out.println("Media delle consegne:");
+                    //stats = gson.fromJson(output, Statistiche.class);
+                    System.out.println("Media delle consegne:" + output);
                     System.out.println(output);
                     break;
                 case 4:
-                    webResource = client.resource(statistiche+"avg/km");
+                    scan.nextLine();
+                    System.out.print("Data inizio: ");
+                    t1 = scan.nextLine();
+                    System.out.print("Data fine: ");
+                    t2 = scan.nextLine();
+                    webResource = client.resource(statistiche+"/avg/km").queryParam("t1", t1).queryParam("t2", t2);
                     response = webResource.accept("application/json")
                             .get(ClientResponse.class);
                     if (response.getStatus() != 200) {
@@ -90,7 +106,8 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     output = response.getEntity(String.class);
-                    System.out.println("Media dei chilometri:");
+                    //stats = gson.fromJson(output, Statistiche.class);
+                    System.out.println("Media dei chilometri:" +output);
                     System.out.println(output);
                     break;
             }
