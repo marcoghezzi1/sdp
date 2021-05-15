@@ -9,9 +9,7 @@ public class GlobalStat {
     private double avgDelivery;
     private double avgKm;
     private double avgBatteryLife;
-
     private double avgPollution;
-    @XmlTransient
     private Timestamp timestamp;
 
     public GlobalStat() {

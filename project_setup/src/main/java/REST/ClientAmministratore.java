@@ -68,10 +68,10 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     output = response.getEntity(String.class);
-                    GlobalStatsList list = gson.fromJson(output, GlobalStatsList.class);
-                    //List<GlobalStat> copy_stats = list.getLista();
+                    gson = new Gson();
+                    List<GlobalStat> list = gson.fromJson(output, List.class);
                     System.out.println("Le ultime " +n+" statistiche sono:");
-                    System.out.println(output.getClass());
+                    System.out.println(output);
                     break;
                 case 3:
                     scan.nextLine();
@@ -80,7 +80,7 @@ public class ClientAmministratore {
                     System.out.print("Data fine: ");
                     t2 = scan.nextLine();
                     webResource = client.resource(statistiche+"/avg/delivery").queryParam("t1", t1).queryParam("t2", t2);
-                    System.out.println(webResource);
+                    //System.out.println(webResource);
                     response = webResource.accept("application/json")
                             .get(ClientResponse.class);
                     if (response.getStatus() != 200) {
@@ -88,9 +88,10 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     output = response.getEntity(String.class);
-                    //stats = gson.fromJson(output, Statistiche.class);
-                    System.out.println("Media delle consegne:" + output);
-                    System.out.println(output);
+                    gson = new Gson();
+                    stats = gson.fromJson(output, Statistiche.class);
+                    System.out.println("Media dei delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
+                    //System.out.println(output);
                     break;
                 case 4:
                     scan.nextLine();
@@ -106,12 +107,14 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     output = response.getEntity(String.class);
-                    //stats = gson.fromJson(output, Statistiche.class);
-                    System.out.println("Media dei chilometri:" +output);
-                    System.out.println(output);
+                    gson = new Gson();
+                    stats = gson.fromJson(output, Statistiche.class);
+                    System.out.println("Media dei chilometri percorsi: " +String.format("%.2f",stats.getMedia()) + " km");
+                    //System.out.println(output);
                     break;
             }
             i++;
+            System.out.println();
         }
     }
 }

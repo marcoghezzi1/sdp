@@ -1,7 +1,7 @@
 package REST.services;
 
 
-import REST.beans.Drone;
+import REST.Drone;
 import REST.beans.RispostaServerAdd;
 import REST.beans.StormoDroni;
 

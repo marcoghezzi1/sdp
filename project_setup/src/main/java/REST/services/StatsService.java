@@ -8,6 +8,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+import static java.lang.Math.round;
+
 @Path("statistiche")
 public class StatsService {
 
@@ -21,7 +23,9 @@ public class StatsService {
     @GET
     @Produces({"application/json", "application/xml"})
     public Response getLastStats(@PathParam("lastN") int n) {
-        return Response.ok(GlobalStatsList.getInstance().getLista(n)).build();
+        List<GlobalStat> lista = GlobalStatsList.getInstance().getLista(n);
+        GlobalStatsList response = new GlobalStatsList(lista);
+        return Response.ok(response).build();
     }
 
 
@@ -45,8 +49,8 @@ public class StatsService {
             sum+= g.getAvgKm();
         }
         avgKm = (double) sum / copy.size();
-        //Statistiche stats = new Statistiche(avgKm);
-        return Response.ok().entity("{\"Avg km\":"+avgKm+ "}").build();
+        Statistiche stats = new Statistiche(avgKm);
+        return Response.ok(stats).build();
     }
 
     @Path("avg/delivery")
@@ -60,8 +64,8 @@ public class StatsService {
             sum+= g.getAvgDelivery();
         }
         avgDelivery = (double) sum / copy.size();
-        //Statistiche stats = new Statistiche(avgDelivery);
-        return Response.ok().entity("{\"AvgDelivery\":"+avgDelivery+ "}").build();
+        Statistiche stats = new Statistiche(avgDelivery);
+        return Response.ok(stats).build();
     }
 
 

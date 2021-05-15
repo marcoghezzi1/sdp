@@ -1,5 +1,7 @@
 package REST.beans;
 
+import REST.Drone;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 

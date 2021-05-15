@@ -1,12 +1,21 @@
-package REST.beans;
+package REST;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import org.codehaus.jackson.map.annotate.JsonRootName;
+
+import javax.xml.bind.annotation.*;
 import java.util.List;
-
-@XmlRootElement
+import com.google.gson.GsonBuilder;
 public class Drone {
+    @Expose
     private int id;
+    @Expose
     private String indirizzoIp;
+    @Expose
     private int port;
     private int[] posizione;
     private boolean master;
@@ -18,6 +27,14 @@ public class Drone {
         this.id = id;
         this.indirizzoIp = indirizzoIp;
         this.port = port;
+    }
+
+    public boolean sonoMaster() {
+        return master;
+    }
+
+    public void setMaster(boolean master) {
+        this.master = master;
     }
 
     public int getId() {
@@ -50,5 +67,14 @@ public class Drone {
 
     public void setPosizione(int[] posizione) {
         this.posizione = posizione;
+    }
+
+    public void connect() {
+        Client client = Client.create();
+        WebResource resource = client.resource("http://localhost:1337/drone/add");
+        //Gson gson = new Gson();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String input = gson.toJson(this);
+        System.out.println(input);
     }
 }
