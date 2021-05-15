@@ -72,9 +72,17 @@ public class Drone {
     public void connect() {
         Client client = Client.create();
         WebResource resource = client.resource("http://localhost:1337/drone/add");
-        //Gson gson = new Gson();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
-        System.out.println(input);
+        ClientResponse response = resource.type("application/json").post(ClientResponse.class, input);
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+
+        System.out.println("Output from Server .... \n");
+        String output = response.getEntity(String.class);
+        System.out.println("input \n " + input);
+        System.out.println(output);
     }
 }
