@@ -1,5 +1,6 @@
 package REST;
 
+import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
@@ -82,7 +83,13 @@ public class Drone {
 
         System.out.println("Output from Server .... \n");
         String output = response.getEntity(String.class);
+        Gson gson1 = new Gson();
+        RispostaServerAdd risposta = gson1.fromJson(output, RispostaServerAdd.class);
         System.out.println("input \n " + input);
         System.out.println(output);
+        System.out.println(risposta.getDronesAlreadyInCity());
+        int[] posizione = risposta.getPosizione();
+        System.out.println(posizione[0] +" " + posizione[1]);
     }
+
 }

@@ -20,7 +20,7 @@ public class DroneService {
     }
 
 
-    /* aggiunta di un drone alla flotta
+    /* aggiunta di un drone allo stormo
     se l'aggiunta va a buon fine, devo restituire al chiamante la posizione all'interno della smart city e
     la lista dei droni
      */
@@ -36,7 +36,7 @@ public class DroneService {
             Random rand = new Random();
             int[] coordinate = {rand.nextInt(10), rand.nextInt(10)};
             RispostaServerAdd risposta = new RispostaServerAdd(copy, coordinate);
-            return Response.ok(risposta).build();
+            return Response.ok().entity(risposta).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
