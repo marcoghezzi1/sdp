@@ -63,4 +63,12 @@ public class GlobalStat {
         this.timestamp = timestamp;
     }
 
+    @Override
+    public String toString() {
+        return "avgDelivery = " + avgDelivery +
+                ", avgKm = " + avgKm +
+                ", avgBatteryLife = " + avgBatteryLife +
+                ", avgPollution = " + avgPollution +
+                ", timestamp = " + timestamp;
+    }
 }

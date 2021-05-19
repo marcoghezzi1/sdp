@@ -5,6 +5,7 @@ import REST.beans.GlobalStatsList;
 import REST.beans.Statistiche;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class StatsService {
     @Produces({"application/json", "application/xml"})
     public Response getLastStats(@PathParam("lastN") int n) {
         List<GlobalStat> lista = GlobalStatsList.getInstance().getLista(n);
-        GlobalStatsList response = new GlobalStatsList(lista);
-        return Response.ok(response).build();
+        GenericEntity<List<GlobalStat>> output = new GenericEntity<List<GlobalStat>>(lista) {};
+        return Response.ok(output).build();
     }
 
 

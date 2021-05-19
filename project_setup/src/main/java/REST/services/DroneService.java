@@ -27,6 +27,7 @@ public class DroneService {
     @Path("add")
     @POST
     @Consumes({"application/json", "application/xml", "text/plain"})
+    @Produces("application/json")
     public Response addDrone(Drone d) {
         int posizione = StormoDroni.getInstance().checkDrone(d);
         boolean check = posizione == -1;

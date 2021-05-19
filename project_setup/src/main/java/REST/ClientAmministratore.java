@@ -4,7 +4,12 @@ import REST.beans.*;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
@@ -13,7 +18,10 @@ import java.util.Scanner;
 @XmlRootElement
 public class ClientAmministratore {
     public static void main(String[] args) {
-        Client client = Client.create();
+        ClientConfig clientConfig = new DefaultClientConfig();
+        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        clientConfig.getClasses().add(JacksonJsonProvider.class);
+        Client client = Client.create(clientConfig);
         int i = 0;
         while (true) {
             if (i == 0)
@@ -49,11 +57,15 @@ public class ClientAmministratore {
                     output = response.getEntity(String.class);
                     StormoDroni droni = gson.fromJson(output, StormoDroni.class);
                     List<Drone> copy = droni.getStormo();
-                    System.out.println("I droni nella smart city sono:");
-                    for (Drone d: copy) {
-                        System.out.println("Drone: " + d.getId() + "\n\t -indirizzo ip: " + d.getIndirizzoIp() +
-                                "\n\t -porta: "+ d.getPort());
+                    if (copy.size() != 0 ) {
+                        System.out.println("I droni nella smart city sono:");
+                        for (Drone d : copy) {
+                            System.out.println("Drone: " + d.getId() + "\n\t -indirizzo ip: " + d.getIndirizzoIp() +
+                                    "\n\t -porta: " + d.getPort());
+                        }
                     }
+                    else
+                        System.out.println("Nessun drone presente nella smart city");
 
                     break;
                 case 2:
@@ -67,11 +79,11 @@ public class ClientAmministratore {
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + response.getStatus());
                     }
-                    output = response.getEntity(String.class);
-                    gson = new Gson();
-                    List<GlobalStat> list = gson.fromJson(output, List.class);
+                    List<GlobalStat> globalStat = response.getEntity(new GenericType<List<GlobalStat>>() {});
                     System.out.println("Le ultime " +n+" statistiche sono:");
-                    System.out.println(output);
+                    for (GlobalStat g: globalStat) {
+                        System.out.println(g);
+                    }
                     break;
                 case 3:
                     scan.nextLine();
@@ -87,9 +99,7 @@ public class ClientAmministratore {
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + response.getStatus());
                     }
-                    output = response.getEntity(String.class);
-                    gson = new Gson();
-                    stats = gson.fromJson(output, Statistiche.class);
+                    stats = response.getEntity(Statistiche.class);
                     System.out.println("Media dei delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
                     //System.out.println(output);
                     break;
@@ -106,15 +116,13 @@ public class ClientAmministratore {
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + response.getStatus());
                     }
-                    output = response.getEntity(String.class);
-                    gson = new Gson();
-                    stats = gson.fromJson(output, Statistiche.class);
+                    stats = response.getEntity(Statistiche.class);
                     System.out.println("Media dei chilometri percorsi: " +String.format("%.2f",stats.getMedia()) + " km");
-                    //System.out.println(output);
                     break;
             }
             i++;
             System.out.println();
         }
     }
+
 }

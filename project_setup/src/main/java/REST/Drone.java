@@ -80,16 +80,22 @@ public class Drone {
             throw new RuntimeException("Failed : HTTP error code : "
                     + response.getStatus());
         }
-
-        System.out.println("Output from Server .... \n");
-        String output = response.getEntity(String.class);
-        Gson gson1 = new Gson();
-        RispostaServerAdd risposta = gson1.fromJson(output, RispostaServerAdd.class);
-        System.out.println("input \n " + input);
-        System.out.println(output);
-        System.out.println(risposta.getDronesAlreadyInCity());
-        int[] posizione = risposta.getPosizione();
-        System.out.println(posizione[0] +" " + posizione[1]);
+        System.out.println("Drone " + this.id+ " aggiunto nella smart city\n");
+        RispostaServerAdd output = response.getEntity(RispostaServerAdd.class);
+        List<Drone> copy = output.getDronesAlreadyInCity();
+        if (copy==null) {
+            System.out.println("Nessun drone attualmente nella smart city");
+        }
+        else {
+                System.out.print("droni attualmente nella smart city:\n");
+                for (Drone d : copy) {
+                    System.out.print("- Drone id: " + d.getId() + "\n\t- Indirizzo IP: " + d.getIndirizzoIp() +"\n");
+                    System.out.println();
+                }
+        }
+        System.out.print("Posizione assegnata al drone: ");
+        int[] posizione = output.getPosizione();
+        System.out.println("("+posizione[0] +", " + posizione[1]+")");
     }
 
 }
