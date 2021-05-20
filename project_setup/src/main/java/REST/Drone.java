@@ -6,11 +6,11 @@ import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.codehaus.jackson.map.annotate.JsonRootName;
-
-import javax.xml.bind.annotation.*;
 import java.util.List;
 import com.google.gson.GsonBuilder;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
 public class Drone {
     @Expose
     private int id;
@@ -70,6 +70,10 @@ public class Drone {
         this.posizione = posizione;
     }
 
+    public List<Drone> getDrones() {
+        return drones;
+    }
+
     public void connect() {
         Client client = Client.create();
         WebResource resource = client.resource("http://localhost:1337/drone/add");
@@ -83,6 +87,7 @@ public class Drone {
         System.out.println("Drone " + this.id+ " aggiunto nella smart city\n");
         RispostaServerAdd output = response.getEntity(RispostaServerAdd.class);
         List<Drone> copy = output.getDronesAlreadyInCity();
+        this.drones=copy;
         if (copy==null) {
             System.out.println("Nessun drone attualmente nella smart city");
         }
@@ -97,5 +102,8 @@ public class Drone {
         int[] posizione = output.getPosizione();
         System.out.println("("+posizione[0] +", " + posizione[1]+")");
     }
+    /*public void asyncCallGrpc() {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget()
+    }*/
 
 }
