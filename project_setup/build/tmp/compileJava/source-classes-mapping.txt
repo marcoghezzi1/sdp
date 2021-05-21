@@ -1,14 +1,60 @@
+REST/DroneMqttThread.java
+ REST.DroneMqttThread
+ REST.DroneMqttThread$1
+REST/beans/GlobalStat.java
+ REST.beans.GlobalStat
+REST/Drone.java
+ REST.Drone
+REST/beans/RispostaServerAdd.java
+ REST.beans.RispostaServerAdd
+com/example/grpc/DroneChattingOuterClass.java
+ com.example.grpc.DroneChattingOuterClass
+ com.example.grpc.DroneChattingOuterClass$1
+ com.example.grpc.DroneChattingOuterClass$Request
+ com.example.grpc.DroneChattingOuterClass$Request$1
+ com.example.grpc.DroneChattingOuterClass$Request$Builder
+ com.example.grpc.DroneChattingOuterClass$RequestOrBuilder
+ com.example.grpc.DroneChattingOuterClass$Response
+ com.example.grpc.DroneChattingOuterClass$Response$1
+ com.example.grpc.DroneChattingOuterClass$Response$Builder
+ com.example.grpc.DroneChattingOuterClass$ResponseOrBuilder
+Dronazon.java
+ Dronazon
 REST/StartServer.java
  REST.StartServer
-REST/beans/Word.java
- REST.beans.Word
-REST/beans/User.java
- REST.beans.User
-REST/beans/Users.java
- REST.beans.Users
-REST/beans/Dictionary.java
- REST.beans.Dictionary
-REST/services/DictionaryService.java
- REST.services.DictionaryService
-REST/services/ServerAmministratore.java
- REST.services.ServerAmministratore
+com/example/grpc/DroneChattingGrpc.java
+ com.example.grpc.DroneChattingGrpc
+ com.example.grpc.DroneChattingGrpc$1
+ com.example.grpc.DroneChattingGrpc$DroneChattingBaseDescriptorSupplier
+ com.example.grpc.DroneChattingGrpc$DroneChattingBlockingStub
+ com.example.grpc.DroneChattingGrpc$DroneChattingFileDescriptorSupplier
+ com.example.grpc.DroneChattingGrpc$DroneChattingFutureStub
+ com.example.grpc.DroneChattingGrpc$DroneChattingImplBase
+ com.example.grpc.DroneChattingGrpc$DroneChattingMethodDescriptorSupplier
+ com.example.grpc.DroneChattingGrpc$DroneChattingStub
+ com.example.grpc.DroneChattingGrpc$MethodHandlers
+REST/services/DroneService.java
+ REST.services.DroneService
+REST/services/StatsService.java
+ REST.services.StatsService
+ REST.services.StatsService$1
+REST/Order.java
+ REST.Order
+REST/ClientAmministratore.java
+ REST.ClientAmministratore
+ REST.ClientAmministratore$1
+REST/beans/Statistiche.java
+ REST.beans.Statistiche
+REST/beans/StormoDroni.java
+ REST.beans.StormoDroni
+REST/beans/GlobalStatsList.java
+ REST.beans.GlobalStatsList
+ServerDroneThread.java
+ ServerDroneThread
+DroneChattingImpl.java
+ DroneChattingImpl
+UpdateDroneList.java
+ UpdateDroneList
+ UpdateDroneList$1
+DroneMain.java
+ DroneMain
