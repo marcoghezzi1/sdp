@@ -41,6 +41,12 @@ public final class DroneChattingOuterClass {
      * @return The port.
      */
     int getPort();
+
+    /**
+     * <code>bool master = 4;</code>
+     * @return The master.
+     */
+    boolean getMaster();
   }
   /**
    * Protobuf type {@code com.example.grpc.Request}
@@ -102,6 +108,11 @@ public final class DroneChattingOuterClass {
             case 24: {
 
               port_ = input.readInt32();
+              break;
+            }
+            case 32: {
+
+              master_ = input.readBool();
               break;
             }
             default: {
@@ -192,6 +203,16 @@ public final class DroneChattingOuterClass {
       return port_;
     }
 
+    public static final int MASTER_FIELD_NUMBER = 4;
+    private boolean master_;
+    /**
+     * <code>bool master = 4;</code>
+     * @return The master.
+     */
+    public boolean getMaster() {
+      return master_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -215,6 +236,9 @@ public final class DroneChattingOuterClass {
       if (port_ != 0) {
         output.writeInt32(3, port_);
       }
+      if (master_ != false) {
+        output.writeBool(4, master_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -234,6 +258,10 @@ public final class DroneChattingOuterClass {
       if (port_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, port_);
+      }
+      if (master_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, master_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -256,6 +284,8 @@ public final class DroneChattingOuterClass {
           != other.getId()) return false;
       if (getPort()
           != other.getPort()) return false;
+      if (getMaster()
+          != other.getMaster()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -273,6 +303,9 @@ public final class DroneChattingOuterClass {
       hash = (53 * hash) + getId();
       hash = (37 * hash) + PORT_FIELD_NUMBER;
       hash = (53 * hash) + getPort();
+      hash = (37 * hash) + MASTER_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getMaster());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -412,6 +445,8 @@ public final class DroneChattingOuterClass {
 
         port_ = 0;
 
+        master_ = false;
+
         return this;
       }
 
@@ -441,6 +476,7 @@ public final class DroneChattingOuterClass {
         result.message_ = message_;
         result.id_ = id_;
         result.port_ = port_;
+        result.master_ = master_;
         onBuilt();
         return result;
       }
@@ -498,6 +534,9 @@ public final class DroneChattingOuterClass {
         }
         if (other.getPort() != 0) {
           setPort(other.getPort());
+        }
+        if (other.getMaster() != false) {
+          setMaster(other.getMaster());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -660,6 +699,36 @@ public final class DroneChattingOuterClass {
       public Builder clearPort() {
         
         port_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean master_ ;
+      /**
+       * <code>bool master = 4;</code>
+       * @return The master.
+       */
+      public boolean getMaster() {
+        return master_;
+      }
+      /**
+       * <code>bool master = 4;</code>
+       * @param value The master to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMaster(boolean value) {
+        
+        master_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool master = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMaster() {
+        
+        master_ = false;
         onChanged();
         return this;
       }
@@ -1302,11 +1371,11 @@ public final class DroneChattingOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\023DroneChatting.proto\022\020com.example.grpc\"" +
-      "4\n\007Request\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\022" +
-      "\014\n\004port\030\003 \001(\005\"\033\n\010Response\022\017\n\007message\030\001 \001" +
-      "(\t2R\n\rDroneChatting\022A\n\010chatting\022\031.com.ex" +
-      "ample.grpc.Request\032\032.com.example.grpc.Re" +
-      "sponseb\006proto3"
+      "D\n\007Request\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\022" +
+      "\014\n\004port\030\003 \001(\005\022\016\n\006master\030\004 \001(\010\"\033\n\010Respons" +
+      "e\022\017\n\007message\030\001 \001(\t2R\n\rDroneChatting\022A\n\010d" +
+      "iscover\022\031.com.example.grpc.Request\032\032.com" +
+      ".example.grpc.Responseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1317,7 +1386,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_Request_descriptor,
-        new java.lang.String[] { "Message", "Id", "Port", });
+        new java.lang.String[] { "Message", "Id", "Port", "Master", });
     internal_static_com_example_grpc_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_example_grpc_Response_fieldAccessorTable = new

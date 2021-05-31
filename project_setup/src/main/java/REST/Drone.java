@@ -1,11 +1,14 @@
 package REST;
 
+import REST.beans.GlobalStat;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
+import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
 
@@ -21,6 +24,7 @@ public class Drone {
     private boolean master;
     private int batteryLevel;
     private List<Drone> drones;
+    private int idMaster;
     public Drone() {
     }
 
@@ -30,6 +34,20 @@ public class Drone {
         this.port = port;
         this.indirizzoServerREST = indirizzoServer;
         this.batteryLevel = 100;
+    }
+
+    public Drone(int id, int port, boolean master) {
+        this.id = id;
+        this.port = port;
+        this.master = master;
+    }
+
+    public int getIdMaster() {
+        return idMaster;
+    }
+
+    public void setIdMaster(int idMaster) {
+        this.idMaster = idMaster;
     }
 
     public int getBatteryLevel() {

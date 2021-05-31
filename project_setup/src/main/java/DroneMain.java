@@ -9,12 +9,12 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) {
-        Drone d = new Drone(15, "localhost", 2452, "localhost:1337");
+        Drone d = new Drone(54, "localhost", 2476, "localhost:1337");
         Thread mqtt = new DroneMqttThread(d);
         //mqtt.start();
-        Thread server = new ServerDroneThread(d.getPort());
-        Thread console = new QuitDroneThread();
         d.connect();
+        Thread server = new ServerDroneThread(d);
+        Thread console = new QuitDroneThread();
         server.start();
         console.start();
         List<Drone> copy = d.getDrones();

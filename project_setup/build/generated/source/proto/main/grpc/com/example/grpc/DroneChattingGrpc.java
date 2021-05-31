@@ -28,34 +28,34 @@ public final class DroneChattingGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Request,
-      com.example.grpc.DroneChattingOuterClass.Response> getChattingMethod;
+      com.example.grpc.DroneChattingOuterClass.Response> getDiscoverMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "chatting",
+      fullMethodName = SERVICE_NAME + '/' + "discover",
       requestType = com.example.grpc.DroneChattingOuterClass.Request.class,
       responseType = com.example.grpc.DroneChattingOuterClass.Response.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Request,
-      com.example.grpc.DroneChattingOuterClass.Response> getChattingMethod() {
-    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Request, com.example.grpc.DroneChattingOuterClass.Response> getChattingMethod;
-    if ((getChattingMethod = DroneChattingGrpc.getChattingMethod) == null) {
+      com.example.grpc.DroneChattingOuterClass.Response> getDiscoverMethod() {
+    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Request, com.example.grpc.DroneChattingOuterClass.Response> getDiscoverMethod;
+    if ((getDiscoverMethod = DroneChattingGrpc.getDiscoverMethod) == null) {
       synchronized (DroneChattingGrpc.class) {
-        if ((getChattingMethod = DroneChattingGrpc.getChattingMethod) == null) {
-          DroneChattingGrpc.getChattingMethod = getChattingMethod =
+        if ((getDiscoverMethod = DroneChattingGrpc.getDiscoverMethod) == null) {
+          DroneChattingGrpc.getDiscoverMethod = getDiscoverMethod =
               io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.Request, com.example.grpc.DroneChattingOuterClass.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "chatting"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "discover"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.example.grpc.DroneChattingOuterClass.Request.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.example.grpc.DroneChattingOuterClass.Response.getDefaultInstance()))
-              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("chatting"))
+              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("discover"))
               .build();
         }
       }
     }
-    return getChattingMethod;
+    return getDiscoverMethod;
   }
 
   /**
@@ -87,20 +87,20 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public void chatting(com.example.grpc.DroneChattingOuterClass.Request request,
+    public void discover(com.example.grpc.DroneChattingOuterClass.Request request,
         io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getChattingMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getDiscoverMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            getChattingMethod(),
+            getDiscoverMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 com.example.grpc.DroneChattingOuterClass.Request,
                 com.example.grpc.DroneChattingOuterClass.Response>(
-                  this, METHODID_CHATTING)))
+                  this, METHODID_DISCOVER)))
           .build();
     }
   }
@@ -125,10 +125,10 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public void chatting(com.example.grpc.DroneChattingOuterClass.Request request,
+    public void discover(com.example.grpc.DroneChattingOuterClass.Request request,
         io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Response> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getChattingMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getDiscoverMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -152,9 +152,9 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public com.example.grpc.DroneChattingOuterClass.Response chatting(com.example.grpc.DroneChattingOuterClass.Request request) {
+    public com.example.grpc.DroneChattingOuterClass.Response discover(com.example.grpc.DroneChattingOuterClass.Request request) {
       return blockingUnaryCall(
-          getChannel(), getChattingMethod(), getCallOptions(), request);
+          getChannel(), getDiscoverMethod(), getCallOptions(), request);
     }
   }
 
@@ -178,14 +178,14 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.Response> chatting(
+    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.Response> discover(
         com.example.grpc.DroneChattingOuterClass.Request request) {
       return futureUnaryCall(
-          getChannel().newCall(getChattingMethod(), getCallOptions()), request);
+          getChannel().newCall(getDiscoverMethod(), getCallOptions()), request);
     }
   }
 
-  private static final int METHODID_CHATTING = 0;
+  private static final int METHODID_DISCOVER = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -204,8 +204,8 @@ public final class DroneChattingGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_CHATTING:
-          serviceImpl.chatting((com.example.grpc.DroneChattingOuterClass.Request) request,
+        case METHODID_DISCOVER:
+          serviceImpl.discover((com.example.grpc.DroneChattingOuterClass.Request) request,
               (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Response>) responseObserver);
           break;
         default:
@@ -269,7 +269,7 @@ public final class DroneChattingGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new DroneChattingFileDescriptorSupplier())
-              .addMethod(getChattingMethod())
+              .addMethod(getDiscoverMethod())
               .build();
         }
       }

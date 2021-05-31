@@ -3,6 +3,7 @@ package REST.beans;
 import REST.Drone;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Comparator;
 import java.util.List;
 
 @XmlRootElement
@@ -20,6 +21,8 @@ public class RispostaServerAdd {
     }
 
     public List<Drone> getDronesAlreadyInCity() {
+        if (dronesAlreadyInCity!=null)
+            dronesAlreadyInCity.sort(Comparator.comparing(Drone::getId));
         return dronesAlreadyInCity;
     }
 

@@ -23,20 +23,19 @@ public class ClientDroneThreadGRPC extends Thread{
     @Override
     public void run() {
         String indirizzo = otherDrones.getIndirizzoIp()+":"+otherDrones.getPort();
-        //plaintext channel on the address (ip/port) which offers the GreetingService service
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
 
-        //creating an asynchronous stub on the channel
+
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
 
-        String message = "A cojone mi sono connesso!";
+        String message = "Buongiorno! Sono il nuovo drone";
 
-        //creating the HelloResponse object which will be provided as input to the RPC method
+
         Request request = Request.newBuilder().setMessage(message)
                 .setPort(self.getPort())
                 .setId(self.getId())
                 .build();
-        stub.chatting(request, new StreamObserver<Response>() {
+        stub.discover(request, new StreamObserver<Response>() {
             @Override
             public void onNext(Response value) {
                 System.out.println(value.getMessage());
