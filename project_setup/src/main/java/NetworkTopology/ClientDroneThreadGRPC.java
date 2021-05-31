@@ -1,3 +1,5 @@
+package NetworkTopology;
+
 import REST.Drone;
 import com.example.grpc.DroneChattingGrpc;
 import io.grpc.ManagedChannel;
@@ -10,18 +12,19 @@ import java.util.concurrent.TimeUnit;
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
 
-public class UpdateDroneList extends Thread{
-    private Drone otherDrones;
-    private Drone io;
-    public UpdateDroneList(Drone altro, Drone drone) {
-        this.otherDrones = altro;
-        this.io = drone;
+public class ClientDroneThreadGRPC extends Thread{
+    private final Drone otherDrones;
+    private final Drone self;
+    public ClientDroneThreadGRPC(Drone other, Drone drone) {
+        this.otherDrones = other;
+        this.self = drone;
     }
 
     @Override
     public void run() {
+        String indirizzo = otherDrones.getIndirizzoIp()+":"+otherDrones.getPort();
         //plaintext channel on the address (ip/port) which offers the GreetingService service
-        final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:"+ otherDrones.getPort()).usePlaintext().build();
+        final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
 
         //creating an asynchronous stub on the channel
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
@@ -30,8 +33,8 @@ public class UpdateDroneList extends Thread{
 
         //creating the HelloResponse object which will be provided as input to the RPC method
         Request request = Request.newBuilder().setMessage(message)
-                .setPort(io.getPort())
-                .setId(io.getId())
+                .setPort(self.getPort())
+                .setId(self.getId())
                 .build();
         stub.chatting(request, new StreamObserver<Response>() {
             @Override

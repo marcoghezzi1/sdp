@@ -1,3 +1,5 @@
+package NetworkTopology;
+
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
@@ -13,6 +15,7 @@ public class ServerDroneThread extends Thread{
     @Override
     public void run() {
         try {
+            System.out.println(this.porta);
             Server server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl()).build();
             server.start();
             System.out.println("Server started!");

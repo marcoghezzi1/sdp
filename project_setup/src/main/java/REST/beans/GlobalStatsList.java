@@ -57,11 +57,6 @@ public class GlobalStatsList {
         }
         return sublist;
     }
-/*
-    public static void main(String[] args) {
-        String s1 = "2021-10-5";
-        Timestamp t1 = Timestamp.valueOf(s1);
-        System.out.println(t1);
-    }*/
+
 
 }

@@ -8,8 +8,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import java.util.List;
 import com.google.gson.GsonBuilder;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 
 public class Drone {
     @Expose
@@ -18,16 +16,28 @@ public class Drone {
     private String indirizzoIp;
     @Expose
     private int port;
+    private String indirizzoServerREST;
     private int[] posizione;
     private boolean master;
+    private int batteryLevel;
     private List<Drone> drones;
     public Drone() {
     }
 
-    public Drone(int id, String indirizzoIp, int port) {
+    public Drone(int id, String indirizzoIp, int port, String indirizzoServer) {
         this.id = id;
         this.indirizzoIp = indirizzoIp;
         this.port = port;
+        this.indirizzoServerREST = indirizzoServer;
+        this.batteryLevel = 100;
+    }
+
+    public int getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public void setBatteryLevel(int batteryLevel) {
+        this.batteryLevel = batteryLevel;
     }
 
     public boolean sonoMaster() {
@@ -70,13 +80,18 @@ public class Drone {
         this.posizione = posizione;
     }
 
+    public String getIndirizzoServerREST() {
+        return indirizzoServerREST;
+    }
+
     public List<Drone> getDrones() {
         return drones;
     }
 
     public void connect() {
         Client client = Client.create();
-        WebResource resource = client.resource("http://localhost:1337/drone/add");
+        String serverAddress = "http://" + this.getIndirizzoServerREST();
+        WebResource resource = client.resource(serverAddress+"/drone/add");
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
         ClientResponse response = resource.type("application/json").post(ClientResponse.class, input);
@@ -94,7 +109,7 @@ public class Drone {
         else {
                 System.out.print("droni attualmente nella smart city:\n");
                 for (Drone d : copy) {
-                    System.out.print("- Drone id: " + d.getId() + "\n\t- Indirizzo IP: " + d.getIndirizzoIp() +"\n");
+                    System.out.print("- Drone id: " + d.getId() + "\n\t- Indirizzo IP: " + d.getIndirizzoIp() +"\n\t- Porta: " + d.getPort());
                     System.out.println();
                 }
         }
@@ -102,8 +117,5 @@ public class Drone {
         int[] posizione = output.getPosizione();
         System.out.println("("+posizione[0] +", " + posizione[1]+")");
     }
-    /*public void asyncCallGrpc() {
-        ManagedChannel channel = ManagedChannelBuilder.forTarget()
-    }*/
 
 }
