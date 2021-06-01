@@ -1,0 +1,12 @@
+syntax='proto3';
+package com.example.grpc;
+
+message ElectionMessage {
+  int32 id = 1;
+}
+
+service Elezione {
+  rpc election(ElectionMessage) returns (ElectionMessage);
+  rpc elected(ElectionMessage) returns (ElectionMessage);
+}
+

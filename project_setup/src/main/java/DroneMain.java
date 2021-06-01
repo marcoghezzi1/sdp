@@ -1,3 +1,4 @@
+import NetworkTopology.PingThread;
 import NetworkTopology.QuitDroneThread;
 import NetworkTopology.ServerDroneThread;
 import NetworkTopology.ClientDroneThreadGRPC;
@@ -8,8 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DroneMain {
-    public static void main(String[] args) {
-        Drone d = new Drone(54, "localhost", 2476, "localhost:1337");
+    public static void main(String[] args) throws InterruptedException {
+        Drone d = new Drone(2, "localhost", 2, "localhost:1337");
         Thread mqtt = new DroneMqttThread(d);
         //mqtt.start();
         d.connect();
@@ -17,6 +18,8 @@ public class DroneMain {
         Thread console = new QuitDroneThread();
         server.start();
         console.start();
+        Thread ping = new PingThread(d);
+        ping.start();
         List<Drone> copy = d.getDrones();
         if (copy!= null && copy.size()!=0) {
             for (Drone a: copy) {
@@ -24,7 +27,15 @@ public class DroneMain {
                 client.start();
             }
         }
-        else
+        else {
             d.setMaster(true);
+            d.setIdMaster(d.getId());
+        }
+
+        //ping.start();
+        console.join();
+        System.out.println("ciao");
+        d.disconnect();
+        System.exit(0);
     }
 }

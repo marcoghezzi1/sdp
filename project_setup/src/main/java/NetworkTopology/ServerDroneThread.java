@@ -9,12 +9,10 @@ import java.util.List;
 
 public class ServerDroneThread extends Thread{
     private final int porta;
-    private final List<Drone> drones;
     private final Drone drone;
 
     public ServerDroneThread(Drone d) {
         this.porta = d.getPort();
-        this.drones = d.getDrones();
         this.drone = d;
     }
 
@@ -22,9 +20,10 @@ public class ServerDroneThread extends Thread{
     public void run() {
         try {
             //System.out.println(this.porta);
-            Server server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl(this.drones)).build();
+            Server server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl(this.drone)).build();
+
             server.start();
-            System.out.println("Server started!");
+            System.out.println();
 
             server.awaitTermination();
         } catch (IOException | InterruptedException e) {

@@ -58,6 +58,37 @@ public final class DroneChattingGrpc {
     return getDiscoverMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Ping,
+      com.example.grpc.DroneChattingOuterClass.Ping> getPingMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ping",
+      requestType = com.example.grpc.DroneChattingOuterClass.Ping.class,
+      responseType = com.example.grpc.DroneChattingOuterClass.Ping.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Ping,
+      com.example.grpc.DroneChattingOuterClass.Ping> getPingMethod() {
+    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Ping, com.example.grpc.DroneChattingOuterClass.Ping> getPingMethod;
+    if ((getPingMethod = DroneChattingGrpc.getPingMethod) == null) {
+      synchronized (DroneChattingGrpc.class) {
+        if ((getPingMethod = DroneChattingGrpc.getPingMethod) == null) {
+          DroneChattingGrpc.getPingMethod = getPingMethod =
+              io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.Ping, com.example.grpc.DroneChattingOuterClass.Ping>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ping"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.Ping.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.Ping.getDefaultInstance()))
+              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("ping"))
+              .build();
+        }
+      }
+    }
+    return getPingMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -92,6 +123,13 @@ public final class DroneChattingGrpc {
       asyncUnimplementedUnaryCall(getDiscoverMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void ping(com.example.grpc.DroneChattingOuterClass.Ping request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Ping> responseObserver) {
+      asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -101,6 +139,13 @@ public final class DroneChattingGrpc {
                 com.example.grpc.DroneChattingOuterClass.Request,
                 com.example.grpc.DroneChattingOuterClass.Response>(
                   this, METHODID_DISCOVER)))
+          .addMethod(
+            getPingMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.example.grpc.DroneChattingOuterClass.Ping,
+                com.example.grpc.DroneChattingOuterClass.Ping>(
+                  this, METHODID_PING)))
           .build();
     }
   }
@@ -130,6 +175,14 @@ public final class DroneChattingGrpc {
       asyncUnaryCall(
           getChannel().newCall(getDiscoverMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void ping(com.example.grpc.DroneChattingOuterClass.Ping request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Ping> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getPingMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -155,6 +208,13 @@ public final class DroneChattingGrpc {
     public com.example.grpc.DroneChattingOuterClass.Response discover(com.example.grpc.DroneChattingOuterClass.Request request) {
       return blockingUnaryCall(
           getChannel(), getDiscoverMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.example.grpc.DroneChattingOuterClass.Ping ping(com.example.grpc.DroneChattingOuterClass.Ping request) {
+      return blockingUnaryCall(
+          getChannel(), getPingMethod(), getCallOptions(), request);
     }
   }
 
@@ -183,9 +243,18 @@ public final class DroneChattingGrpc {
       return futureUnaryCall(
           getChannel().newCall(getDiscoverMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.Ping> ping(
+        com.example.grpc.DroneChattingOuterClass.Ping request) {
+      return futureUnaryCall(
+          getChannel().newCall(getPingMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_DISCOVER = 0;
+  private static final int METHODID_PING = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -207,6 +276,10 @@ public final class DroneChattingGrpc {
         case METHODID_DISCOVER:
           serviceImpl.discover((com.example.grpc.DroneChattingOuterClass.Request) request,
               (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Response>) responseObserver);
+          break;
+        case METHODID_PING:
+          serviceImpl.ping((com.example.grpc.DroneChattingOuterClass.Ping) request,
+              (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Ping>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -270,6 +343,7 @@ public final class DroneChattingGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new DroneChattingFileDescriptorSupplier())
               .addMethod(getDiscoverMethod())
+              .addMethod(getPingMethod())
               .build();
         }
       }

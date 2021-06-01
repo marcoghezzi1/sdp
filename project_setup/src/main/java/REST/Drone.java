@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
@@ -102,7 +103,7 @@ public class Drone {
         return indirizzoServerREST;
     }
 
-    public List<Drone> getDrones() {
+    public synchronized List<Drone> getDrones() {
         return drones;
     }
 
@@ -134,6 +135,29 @@ public class Drone {
         System.out.print("Posizione assegnata al drone: ");
         int[] posizione = output.getPosizione();
         System.out.println("("+posizione[0] +", " + posizione[1]+")");
+        this.setPosizione(posizione);
+    }
+
+    public void disconnect() {
+        Client client = Client.create();
+        String serverAddress = "http://" + this.getIndirizzoServerREST();
+        WebResource resource = client.resource(serverAddress+"/drone/delete/"+this.getId());
+        ClientResponse response = resource.delete(ClientResponse.class);
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+    }
+
+    public synchronized void addDroneToLocalList(Drone drone) {
+        if (this.getDrones() == null)
+            this.drones = new ArrayList<Drone>();
+        this.drones.add(drone);
+        this.drones.sort(Comparator.comparing(Drone::getId));
+    }
+
+    public synchronized void removeDroneToLocalList(Drone d) {
+        this.drones.remove(d);
     }
 
 }

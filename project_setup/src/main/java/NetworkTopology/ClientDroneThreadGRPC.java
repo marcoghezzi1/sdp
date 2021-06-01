@@ -34,11 +34,15 @@ public class ClientDroneThreadGRPC extends Thread{
         Request request = Request.newBuilder().setMessage(message)
                 .setPort(self.getPort())
                 .setId(self.getId())
+                .setPos(Request.Posizione.newBuilder()
+                        .setX(self.getPosizione()[0])
+                        .setY(self.getPosizione()[1]).build())
                 .build();
         stub.discover(request, new StreamObserver<Response>() {
             @Override
             public void onNext(Response value) {
-                System.out.println(value.getMessage());
+                System.out.println("Comunicazione da " +indirizzo+ "\nL'id del master: "+ value.getIdMaster());
+                self.setIdMaster(value.getIdMaster());
             }
 
             @Override

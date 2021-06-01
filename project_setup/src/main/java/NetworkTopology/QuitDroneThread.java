@@ -12,6 +12,5 @@ public class QuitDroneThread extends Thread {
             quit = in.nextLine();
         }
         while (!quit.equals("quit"));
-        System.exit(0);
     }
 }
