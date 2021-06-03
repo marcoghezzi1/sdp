@@ -5,14 +5,36 @@ message Request {
   string message = 1;
   int32 id = 2;
   int32 port = 3;
+  message Posizione {
+    int32 x = 1;
+    int32 y = 2;
+  }
+  bool master = 4;
+  Posizione pos = 5;
 }
 
-message Response {
+message Ping {
   string message = 1;
 }
 
+message Response {
+  int32 idMaster = 1;
+}
+
+message ElectionMessage {
+  string message = 1;
+  int32 id = 2;
+}
+
+message Position {
+  int32 x = 1;
+  int32 y = 2;
+}
 
 
 service DroneChatting {
-  rpc chatting(Request) returns (Response);
+  rpc discover(Request) returns (Response);
+  rpc ping(Ping) returns (Ping);
+  rpc election(ElectionMessage) returns (ElectionMessage);
+  rpc sendPos(Position) returns (Position);
 }
