@@ -26,11 +26,15 @@ message ElectionMessage {
   int32 id = 2;
 }
 
+message Position {
+  int32 x = 1;
+  int32 y = 2;
+}
 
 
 service DroneChatting {
   rpc discover(Request) returns (Response);
   rpc ping(Ping) returns (Ping);
   rpc election(ElectionMessage) returns (ElectionMessage);
-  rpc elected(ElectionMessage) returns (ElectionMessage);
+  rpc sendPos(Position) returns (Position);
 }

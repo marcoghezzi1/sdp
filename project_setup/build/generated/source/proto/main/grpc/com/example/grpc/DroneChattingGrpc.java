@@ -120,35 +120,35 @@ public final class DroneChattingGrpc {
     return getElectionMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
-      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod;
+  private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Position,
+      com.example.grpc.DroneChattingOuterClass.Position> getSendPosMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "elected",
-      requestType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
-      responseType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
+      fullMethodName = SERVICE_NAME + '/' + "sendPos",
+      requestType = com.example.grpc.DroneChattingOuterClass.Position.class,
+      responseType = com.example.grpc.DroneChattingOuterClass.Position.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
-      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod() {
-    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod;
-    if ((getElectedMethod = DroneChattingGrpc.getElectedMethod) == null) {
+  public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Position,
+      com.example.grpc.DroneChattingOuterClass.Position> getSendPosMethod() {
+    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.Position, com.example.grpc.DroneChattingOuterClass.Position> getSendPosMethod;
+    if ((getSendPosMethod = DroneChattingGrpc.getSendPosMethod) == null) {
       synchronized (DroneChattingGrpc.class) {
-        if ((getElectedMethod = DroneChattingGrpc.getElectedMethod) == null) {
-          DroneChattingGrpc.getElectedMethod = getElectedMethod =
-              io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage>newBuilder()
+        if ((getSendPosMethod = DroneChattingGrpc.getSendPosMethod) == null) {
+          DroneChattingGrpc.getSendPosMethod = getSendPosMethod =
+              io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.Position, com.example.grpc.DroneChattingOuterClass.Position>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "elected"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "sendPos"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
+                  com.example.grpc.DroneChattingOuterClass.Position.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
-              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("elected"))
+                  com.example.grpc.DroneChattingOuterClass.Position.getDefaultInstance()))
+              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("sendPos"))
               .build();
         }
       }
     }
-    return getElectedMethod;
+    return getSendPosMethod;
   }
 
   /**
@@ -201,9 +201,9 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public void elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
-        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
-      asyncUnimplementedUnaryCall(getElectedMethod(), responseObserver);
+    public void sendPos(com.example.grpc.DroneChattingOuterClass.Position request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Position> responseObserver) {
+      asyncUnimplementedUnaryCall(getSendPosMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -230,12 +230,12 @@ public final class DroneChattingGrpc {
                 com.example.grpc.DroneChattingOuterClass.ElectionMessage>(
                   this, METHODID_ELECTION)))
           .addMethod(
-            getElectedMethod(),
+            getSendPosMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                com.example.grpc.DroneChattingOuterClass.ElectionMessage,
-                com.example.grpc.DroneChattingOuterClass.ElectionMessage>(
-                  this, METHODID_ELECTED)))
+                com.example.grpc.DroneChattingOuterClass.Position,
+                com.example.grpc.DroneChattingOuterClass.Position>(
+                  this, METHODID_SEND_POS)))
           .build();
     }
   }
@@ -284,10 +284,10 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public void elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
-        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
+    public void sendPos(com.example.grpc.DroneChattingOuterClass.Position request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Position> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getElectedMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getSendPosMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -332,9 +332,9 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public com.example.grpc.DroneChattingOuterClass.ElectionMessage elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+    public com.example.grpc.DroneChattingOuterClass.Position sendPos(com.example.grpc.DroneChattingOuterClass.Position request) {
       return blockingUnaryCall(
-          getChannel(), getElectedMethod(), getCallOptions(), request);
+          getChannel(), getSendPosMethod(), getCallOptions(), request);
     }
   }
 
@@ -382,17 +382,17 @@ public final class DroneChattingGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.ElectionMessage> elected(
-        com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.Position> sendPos(
+        com.example.grpc.DroneChattingOuterClass.Position request) {
       return futureUnaryCall(
-          getChannel().newCall(getElectedMethod(), getCallOptions()), request);
+          getChannel().newCall(getSendPosMethod(), getCallOptions()), request);
     }
   }
 
   private static final int METHODID_DISCOVER = 0;
   private static final int METHODID_PING = 1;
   private static final int METHODID_ELECTION = 2;
-  private static final int METHODID_ELECTED = 3;
+  private static final int METHODID_SEND_POS = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -423,9 +423,9 @@ public final class DroneChattingGrpc {
           serviceImpl.election((com.example.grpc.DroneChattingOuterClass.ElectionMessage) request,
               (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage>) responseObserver);
           break;
-        case METHODID_ELECTED:
-          serviceImpl.elected((com.example.grpc.DroneChattingOuterClass.ElectionMessage) request,
-              (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage>) responseObserver);
+        case METHODID_SEND_POS:
+          serviceImpl.sendPos((com.example.grpc.DroneChattingOuterClass.Position) request,
+              (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Position>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -491,7 +491,7 @@ public final class DroneChattingGrpc {
               .addMethod(getDiscoverMethod())
               .addMethod(getPingMethod())
               .addMethod(getElectionMethod())
-              .addMethod(getElectedMethod())
+              .addMethod(getSendPosMethod())
               .build();
         }
       }
