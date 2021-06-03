@@ -89,6 +89,68 @@ public final class DroneChattingGrpc {
     return getPingMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "election",
+      requestType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
+      responseType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectionMethod() {
+    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectionMethod;
+    if ((getElectionMethod = DroneChattingGrpc.getElectionMethod) == null) {
+      synchronized (DroneChattingGrpc.class) {
+        if ((getElectionMethod = DroneChattingGrpc.getElectionMethod) == null) {
+          DroneChattingGrpc.getElectionMethod = getElectionMethod =
+              io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "election"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
+              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("election"))
+              .build();
+        }
+      }
+    }
+    return getElectionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "elected",
+      requestType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
+      responseType = com.example.grpc.DroneChattingOuterClass.ElectionMessage.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+      com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod() {
+    io.grpc.MethodDescriptor<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage> getElectedMethod;
+    if ((getElectedMethod = DroneChattingGrpc.getElectedMethod) == null) {
+      synchronized (DroneChattingGrpc.class) {
+        if ((getElectedMethod = DroneChattingGrpc.getElectedMethod) == null) {
+          DroneChattingGrpc.getElectedMethod = getElectedMethod =
+              io.grpc.MethodDescriptor.<com.example.grpc.DroneChattingOuterClass.ElectionMessage, com.example.grpc.DroneChattingOuterClass.ElectionMessage>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "elected"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.grpc.DroneChattingOuterClass.ElectionMessage.getDefaultInstance()))
+              .setSchemaDescriptor(new DroneChattingMethodDescriptorSupplier("elected"))
+              .build();
+        }
+      }
+    }
+    return getElectedMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -130,6 +192,20 @@ public final class DroneChattingGrpc {
       asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getElectionMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getElectedMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -146,6 +222,20 @@ public final class DroneChattingGrpc {
                 com.example.grpc.DroneChattingOuterClass.Ping,
                 com.example.grpc.DroneChattingOuterClass.Ping>(
                   this, METHODID_PING)))
+          .addMethod(
+            getElectionMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+                com.example.grpc.DroneChattingOuterClass.ElectionMessage>(
+                  this, METHODID_ELECTION)))
+          .addMethod(
+            getElectedMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.example.grpc.DroneChattingOuterClass.ElectionMessage,
+                com.example.grpc.DroneChattingOuterClass.ElectionMessage>(
+                  this, METHODID_ELECTED)))
           .build();
     }
   }
@@ -183,6 +273,22 @@ public final class DroneChattingGrpc {
       asyncUnaryCall(
           getChannel().newCall(getPingMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getElectionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
+        io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getElectedMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -215,6 +321,20 @@ public final class DroneChattingGrpc {
     public com.example.grpc.DroneChattingOuterClass.Ping ping(com.example.grpc.DroneChattingOuterClass.Ping request) {
       return blockingUnaryCall(
           getChannel(), getPingMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.example.grpc.DroneChattingOuterClass.ElectionMessage election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+      return blockingUnaryCall(
+          getChannel(), getElectionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.example.grpc.DroneChattingOuterClass.ElectionMessage elected(com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+      return blockingUnaryCall(
+          getChannel(), getElectedMethod(), getCallOptions(), request);
     }
   }
 
@@ -251,10 +371,28 @@ public final class DroneChattingGrpc {
       return futureUnaryCall(
           getChannel().newCall(getPingMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.ElectionMessage> election(
+        com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(getElectionMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.ElectionMessage> elected(
+        com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(getElectedMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_DISCOVER = 0;
   private static final int METHODID_PING = 1;
+  private static final int METHODID_ELECTION = 2;
+  private static final int METHODID_ELECTED = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -280,6 +418,14 @@ public final class DroneChattingGrpc {
         case METHODID_PING:
           serviceImpl.ping((com.example.grpc.DroneChattingOuterClass.Ping) request,
               (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.Ping>) responseObserver);
+          break;
+        case METHODID_ELECTION:
+          serviceImpl.election((com.example.grpc.DroneChattingOuterClass.ElectionMessage) request,
+              (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage>) responseObserver);
+          break;
+        case METHODID_ELECTED:
+          serviceImpl.elected((com.example.grpc.DroneChattingOuterClass.ElectionMessage) request,
+              (io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -344,6 +490,8 @@ public final class DroneChattingGrpc {
               .setSchemaDescriptor(new DroneChattingFileDescriptorSupplier())
               .addMethod(getDiscoverMethod())
               .addMethod(getPingMethod())
+              .addMethod(getElectionMethod())
+              .addMethod(getElectedMethod())
               .build();
         }
       }

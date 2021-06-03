@@ -1,6 +1,5 @@
 package REST;
 
-import REST.beans.GlobalStat;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -26,6 +25,8 @@ public class Drone {
     private int batteryLevel;
     private List<Drone> drones;
     private int idMaster;
+    private boolean partecipanteElezione = false;
+
     public Drone() {
     }
 
@@ -107,6 +108,14 @@ public class Drone {
         return drones;
     }
 
+    public boolean isPartecipanteElezione() {
+        return partecipanteElezione;
+    }
+
+    public void setPartecipanteElezione(boolean partecipanteElezione) {
+        this.partecipanteElezione = partecipanteElezione;
+    }
+
     public void connect() {
         Client client = Client.create();
         String serverAddress = "http://" + this.getIndirizzoServerREST();
@@ -157,7 +166,18 @@ public class Drone {
     }
 
     public synchronized void removeDroneToLocalList(Drone d) {
+        System.out.println("Drone "+d.getId()+" removed");
         this.drones.remove(d);
+    }
+
+    public synchronized Drone nextDrone() {
+        if (this.drones!=null)
+        for (Drone d: this.drones) {
+            if (d.getId()>this.getId())
+                return d;
+        }
+        return this.drones.get(0);
+
     }
 
 }

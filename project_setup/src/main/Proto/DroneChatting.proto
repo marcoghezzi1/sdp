@@ -21,9 +21,16 @@ message Response {
   int32 idMaster = 1;
 }
 
+message ElectionMessage {
+  string message = 1;
+  int32 id = 2;
+}
+
 
 
 service DroneChatting {
   rpc discover(Request) returns (Response);
   rpc ping(Ping) returns (Ping);
+  rpc election(ElectionMessage) returns (ElectionMessage);
+  rpc elected(ElectionMessage) returns (ElectionMessage);
 }

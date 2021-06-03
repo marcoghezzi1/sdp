@@ -28,7 +28,7 @@ public class PingThread extends Thread {
                     for (Drone d: drones) {
                         String indirizzo = "";
                         indirizzo =  "localhost:" + d.getPort();
-                        System.out.println("Indirizzo: " +indirizzo);
+                        //System.out.println("Indirizzo: " +indirizzo);
                         ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo)
                                 .usePlaintext().build();
 
@@ -37,17 +37,24 @@ public class PingThread extends Thread {
                         stub.ping(ping, new StreamObserver<Ping>() {
                             @Override
                             public void onNext(Ping value) {
-                                System.out.println(value.getMessage());
+                                //System.out.println(value.getMessage());
                             }
 
                             @Override
                             public void onError(Throwable t) {
                                 System.out.println("Canale chiuso");
                                 self.removeDroneToLocalList(d);
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 if (d.getId() == self.getIdMaster()) {
                                     Thread election = new ElectionThread(self);
+
                                     election.start();
                                 }
+
                             }
 
                             @Override

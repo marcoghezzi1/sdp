@@ -5,7 +5,6 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ServerDroneThread extends Thread{
     private final int porta;
@@ -21,7 +20,6 @@ public class ServerDroneThread extends Thread{
         try {
             //System.out.println(this.porta);
             Server server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl(this.drone)).build();
-
             server.start();
             System.out.println();
 

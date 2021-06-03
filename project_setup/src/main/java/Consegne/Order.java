@@ -1,4 +1,4 @@
-package REST;
+package Consegne;
 
 public class Order {
     private String id;

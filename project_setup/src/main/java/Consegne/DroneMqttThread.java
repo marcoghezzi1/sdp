@@ -1,5 +1,6 @@
-package REST;
+package Consegne;
 
+import REST.Drone;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.Scanner;
@@ -26,7 +27,7 @@ public class DroneMqttThread extends Thread {
                 client.setCallback(new MqttCallback() {
                     @Override
                     public void connectionLost(Throwable cause) {
-                        System.out.println(clientId + " Connectionlost! cause:" + cause.getMessage());
+                        System.out.println(clientId + " Connection lost! cause:" + cause.getMessage());
                     }
 
                     @Override

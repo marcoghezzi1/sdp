@@ -1,4 +1,5 @@
-import REST.Order;
+package Consegne;
+
 import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
