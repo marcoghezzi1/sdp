@@ -112,4 +112,8 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     }
 
+    @Override
+    public void sendPos(Position request, StreamObserver<Position> responseObserver) {
+        super.sendPos(request, responseObserver);
+    }
 }

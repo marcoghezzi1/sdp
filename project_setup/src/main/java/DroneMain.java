@@ -9,12 +9,12 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException {
-        Drone d = new Drone(15, "localhost", 15, "localhost:1337");
+        Drone d = new Drone(1, "localhost", 1101, "localhost:1337");
         Thread mqtt = new DroneMqttThread(d);
-        //mqtt.start();
-        d.connect();
+        d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
         Thread console = new QuitDroneThread();
+        mqtt.start();
         //thread per l'ascolto di altri droni che entrano nella rete
         server.start();
         //thread per inserimento del quit per far uscire il drone
@@ -36,11 +36,10 @@ public class DroneMain {
         //sistema di ping per capire l'assenza di un drone
         Thread ping = new PingThread(d);
         ping.start();
-
         //in caso di terminazione del thread console, esco dalla rete di droni e chiudo completamente il processo
         console.join();
         //System.out.println("ciao");
-        d.disconnect();
+        d.disconnectFromServerREST();
         System.exit(0);
     }
 }

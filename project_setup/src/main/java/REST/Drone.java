@@ -1,5 +1,6 @@
 package REST;
 
+import Consegne.Order;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
+import org.eclipse.paho.client.mqttv3.*;
 
 public class Drone {
     @Expose
@@ -26,6 +28,9 @@ public class Drone {
     private List<Drone> drones;
     private int idMaster;
     private boolean partecipanteElezione = false;
+    private boolean inConsegna;
+    private List<Order> ordiniPendingMaster;
+    private MqttClient mqttClient;
 
     public Drone() {
     }
@@ -116,7 +121,15 @@ public class Drone {
         this.partecipanteElezione = partecipanteElezione;
     }
 
-    public void connect() {
+    public boolean isInConsegna() {
+        return inConsegna;
+    }
+
+    public void setInConsegna(boolean inConsegna) {
+        this.inConsegna = inConsegna;
+    }
+
+    public void connectToServerREST() {
         Client client = Client.create();
         String serverAddress = "http://" + this.getIndirizzoServerREST();
         WebResource resource = client.resource(serverAddress+"/drone/add");
@@ -147,7 +160,7 @@ public class Drone {
         this.setPosizione(posizione);
     }
 
-    public void disconnect() {
+    public void disconnectFromServerREST() {
         Client client = Client.create();
         String serverAddress = "http://" + this.getIndirizzoServerREST();
         WebResource resource = client.resource(serverAddress+"/drone/delete/"+this.getId());
@@ -178,6 +191,48 @@ public class Drone {
         }
         return this.drones.get(0);
 
+    }
+
+
+
+    public void connectToMqtt() throws MqttException {
+
+        Gson gson = new Gson();
+        String broker = "tcp://localhost:1883";
+        String clientId = MqttClient.generateClientId();
+        String topic = "dronazon/smartcity/orders";
+        int qos = 2;
+        mqttClient = new MqttClient(broker, clientId);
+        MqttConnectOptions connOpt = new MqttConnectOptions();
+        connOpt.setCleanSession(true);
+        mqttClient.connect(connOpt);
+        mqttClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+                System.out.println(clientId + " Connection lost! cause:" + cause.getMessage());
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String receivedMessage = new String(message.getPayload());
+                Order order = gson.fromJson(receivedMessage, Order.class);
+                System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()
+                        +"\nPunto di ritiro: ("+order.getRitiro()[0]+", "+order.getRitiro()[1]+")"
+                        +"\nPunto di consegna: ("+order.getConsegna()[0]+", "+order.getConsegna()[1]+")");
+
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+        //System.out.println(clientId + " Subscribing " + Thread.currentThread().getId());
+        mqttClient.subscribe(topic, qos);
+    }
+
+    public void disconnectFromMqtt() throws MqttException {
+        mqttClient.disconnect();
     }
 
 }
