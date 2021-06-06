@@ -5,6 +5,7 @@ import com.example.grpc.DroneChattingGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import javafx.geometry.Pos;
 
 import java.util.List;
 
@@ -23,16 +24,15 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         System.out.println(request.getMessage() + "\nid: " + request.getId() + "\nport: " + request.getPort());
         Drone d = new Drone(request.getId(), request.getPort(), request.getMaster());
         int[] posizione = {request.getPos().getX(), request.getPos().getY()};
-        //System.out.println(posizione[0] + posizione[1]);
         d.setPosizione(posizione);
         this.drone.addDroneToLocalList(d);
-        //notifyAll();
         List<Drone> copy = this.drone.getDrones();
         if (copy != null){
                 System.out.print("Lista droni: ");
             for (Drone drone :
                     copy) {
-                System.out.print(" Drone id: " + drone.getId());
+                System.out.print(" Drone id: " + drone.toString());
+                        //+ "Posizione: ("+drone.getPosizione()[0]+", "+drone.getPosizione()[1]+")\n");
             }
             System.out.println();
         }
@@ -54,7 +54,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
         int idReceived = request.getId();
         Drone next = drone.nextDrone();
-        int myId = drone.getId();
+        int selfId = drone.getId();
         //System.out.println("id ricevuto: " +idReceived);
         System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
@@ -64,33 +64,44 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         ElectionMessage newElection = null;
         //String message = null;
         if (request.getMessage().equals("Election")) {
-            if (idReceived > myId) {
+            if (idReceived > selfId) {
                 newElection = request;
                 drone.setPartecipanteElezione(true);
             } else {
-                if (idReceived < myId) {
+                if (idReceived < selfId) {
                     if (!drone.isPartecipanteElezione()) {
-                        newElection = ElectionMessage.newBuilder().setId(myId).setMessage("Election").build();
+                        newElection = ElectionMessage.newBuilder().setId(selfId).setMessage("Election").build();
                         drone.setPartecipanteElezione(true);
                     }
                 }
-                else
-                    newElection = ElectionMessage.newBuilder().setId(myId).setMessage("Elected").build();
+                //se l'id ricevuto è il mio, mi proclamo master
+                else {
+                    drone.setMaster(true);
+                    drone.setIdMaster(selfId);
+                    newElection = ElectionMessage.newBuilder().setId(selfId).setMessage("Elected").build();
+                }
 
             }
         }
-        //elected
+        //altrimenti ricevo un messaggio elected
         else if (request.getMessage().equals("Elected")) {
+            //setto l'id del master
             drone.setIdMaster(idReceived);
+            //mi metto non partecipante
             drone.setPartecipanteElezione(false);
-            if (myId!=idReceived) {
+            //se non sono il master, propago il messaggio e invio la posizione al master
+            if (selfId!=idReceived) {
+                Thread invioPosizione = new SendPosThread(drone);
+                invioPosizione.start();
                 newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
+
             }
             else {
-                drone.setMaster(true);
                 newElection = null;
             }
+
         }
+        //invio il messaggio di elezione se questo non è null
         if (newElection!=null)
             stub.election(newElection, new StreamObserver<ElectionMessage>() {
                 @Override
@@ -114,6 +125,16 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void sendPos(Position request, StreamObserver<Position> responseObserver) {
-        super.sendPos(request, responseObserver);
+        System.out.println("Posizione di "+request.getId()+": (" + request.getX() + ", "+request.getY()+")");
+        int idDronePos = request.getId();
+        int[] posizione = {request.getX(),request.getY()};
+        List<Drone> copy = drone.getDrones();
+        for (Drone d: copy) {
+            if (d.getId()==idDronePos)
+                d.setPosizione(posizione);
+        }
+        drone.addNumberOfPosReceived();
+
+
     }
 }

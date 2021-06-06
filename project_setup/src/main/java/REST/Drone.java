@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
@@ -31,6 +32,7 @@ public class Drone {
     private boolean inConsegna;
     private List<Order> ordiniPendingMaster;
     private MqttClient mqttClient;
+    private int posizioniRicevute = 0;
 
     public Drone() {
     }
@@ -41,6 +43,8 @@ public class Drone {
         this.port = port;
         this.indirizzoServerREST = indirizzoServer;
         this.batteryLevel = 100;
+        this.drones = new ArrayList<>();
+        this.ordiniPendingMaster = new ArrayList<>();
     }
 
     public Drone(int id, int port, boolean master) {
@@ -150,7 +154,9 @@ public class Drone {
         else {
                 System.out.print("droni attualmente nella smart city:\n");
                 for (Drone d : copy) {
-                    System.out.print("- Drone id: " + d.getId() + "\n\t- Indirizzo IP: " + d.getIndirizzoIp() +"\n\t- Porta: " + d.getPort());
+                    System.out.print("- Drone id: " + d.getId()
+                            + "\n\t- Indirizzo IP: " + d.getIndirizzoIp()
+                            +"\n\t- Porta: " + d.getPort());
                     System.out.println();
                 }
         }
@@ -173,7 +179,7 @@ public class Drone {
 
     public synchronized void addDroneToLocalList(Drone drone) {
         if (this.getDrones() == null)
-            this.drones = new ArrayList<Drone>();
+            this.drones = new ArrayList<>();
         this.drones.add(drone);
         this.drones.sort(Comparator.comparing(Drone::getId));
     }
@@ -184,19 +190,25 @@ public class Drone {
     }
 
     public synchronized Drone nextDrone() {
-        if (this.drones!=null)
+        assert this.drones != null;
         for (Drone d: this.drones) {
             if (d.getId()>this.getId())
                 return d;
         }
-        return this.drones.get(0);
 
+        if (this.drones.size()>=1)
+            return this.drones.get(0);
+        return null;
     }
 
 
 
-    public void connectToMqtt() throws MqttException {
-
+    public synchronized void connectToMqtt() throws MqttException, InterruptedException {
+        if (this.getDrones()!=null && !this.sonoMaster()) {
+            System.out.println("waiting to be master...");
+            this.wait();
+        }
+        System.out.println("i'm master...");
         Gson gson = new Gson();
         String broker = "tcp://localhost:1883";
         String clientId = MqttClient.generateClientId();
@@ -209,7 +221,7 @@ public class Drone {
         mqttClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                System.out.println(clientId + " Connection lost! cause:" + cause.getMessage());
+                System.out.println(clientId + " Connection lost! cause:" + cause.getMessage()+ "-  Thread PID: " + Thread.currentThread().getId());
             }
 
             @Override
@@ -219,6 +231,8 @@ public class Drone {
                 System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()
                         +"\nPunto di ritiro: ("+order.getRitiro()[0]+", "+order.getRitiro()[1]+")"
                         +"\nPunto di consegna: ("+order.getConsegna()[0]+", "+order.getConsegna()[1]+")");
+                Drone.this.addOrderToQueue(order);
+                //System.out.println("ho ricevuto tutte le posizioni, posso iniziare a mandare le consegne");
 
             }
 
@@ -235,4 +249,46 @@ public class Drone {
         mqttClient.disconnect();
     }
 
+    public synchronized void addOrderToQueue(Order order) {
+        this.ordiniPendingMaster.add(order);
+    }
+
+    public synchronized void addNumberOfPosReceived(){
+        this.posizioniRicevute++;
+        if (this.getDrones().size() == this.posizioniRicevute) {
+            System.out.println("Posizioni ricevute: "+this.posizioniRicevute);
+            System.out.println("size lista: " +this.getDrones().size());
+            this.notify();
+        }
+    }
+    public int getPosizioniRicevute() {
+        return posizioniRicevute;
+    }
+
+    public synchronized void prova() throws InterruptedException {
+        System.out.println("Salve, ricevuto tutte le posizioni possiamo iniziare");
+    }
+
+    public void manageOrders() throws InterruptedException {
+        if (this.getDrones()!=null && this.getDrones().size()<this.posizioniRicevute)
+            this.wait();
+        System.out.println("baluba");
+    }
+
+    @Override
+    public String toString() {
+        return "Drone{" +
+                "id=" + id +
+                ", port=" + port +
+                ", posizione=" + Arrays.toString(posizione) +
+                '}';
+    }
+
+    public synchronized void notifyIamMaster() {
+        this.notify();
+    }
+
+    private double getDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
+    }
 }

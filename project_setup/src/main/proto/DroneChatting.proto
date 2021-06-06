@@ -27,8 +27,9 @@ message ElectionMessage {
 }
 
 message Position {
-  int32 x = 1;
-  int32 y = 2;
+  int32 id = 1;
+  int32 x = 2;
+  int32 y = 3;
 }
 
 

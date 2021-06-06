@@ -16,7 +16,7 @@ public class DroneMqttThread extends Thread {
     public void run() {
         try {
             drone.connectToMqtt();
-        } catch (MqttException e) {
+        } catch (MqttException | InterruptedException e) {
             e.printStackTrace();
         }
     }

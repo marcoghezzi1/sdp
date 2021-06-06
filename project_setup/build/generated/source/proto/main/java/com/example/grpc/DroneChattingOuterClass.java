@@ -3230,13 +3230,19 @@ public final class DroneChattingOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 x = 1;</code>
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    int getId();
+
+    /**
+     * <code>int32 x = 2;</code>
      * @return The x.
      */
     int getX();
 
     /**
-     * <code>int32 y = 2;</code>
+     * <code>int32 y = 3;</code>
      * @return The y.
      */
     int getY();
@@ -3288,10 +3294,15 @@ public final class DroneChattingOuterClass {
               break;
             case 8: {
 
-              x_ = input.readInt32();
+              id_ = input.readInt32();
               break;
             }
             case 16: {
+
+              x_ = input.readInt32();
+              break;
+            }
+            case 24: {
 
               y_ = input.readInt32();
               break;
@@ -3328,20 +3339,30 @@ public final class DroneChattingOuterClass {
               com.example.grpc.DroneChattingOuterClass.Position.class, com.example.grpc.DroneChattingOuterClass.Position.Builder.class);
     }
 
-    public static final int X_FIELD_NUMBER = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private int id_;
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    public int getId() {
+      return id_;
+    }
+
+    public static final int X_FIELD_NUMBER = 2;
     private int x_;
     /**
-     * <code>int32 x = 1;</code>
+     * <code>int32 x = 2;</code>
      * @return The x.
      */
     public int getX() {
       return x_;
     }
 
-    public static final int Y_FIELD_NUMBER = 2;
+    public static final int Y_FIELD_NUMBER = 3;
     private int y_;
     /**
-     * <code>int32 y = 2;</code>
+     * <code>int32 y = 3;</code>
      * @return The y.
      */
     public int getY() {
@@ -3362,11 +3383,14 @@ public final class DroneChattingOuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (id_ != 0) {
+        output.writeInt32(1, id_);
+      }
       if (x_ != 0) {
-        output.writeInt32(1, x_);
+        output.writeInt32(2, x_);
       }
       if (y_ != 0) {
-        output.writeInt32(2, y_);
+        output.writeInt32(3, y_);
       }
       unknownFields.writeTo(output);
     }
@@ -3377,13 +3401,17 @@ public final class DroneChattingOuterClass {
       if (size != -1) return size;
 
       size = 0;
+      if (id_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, id_);
+      }
       if (x_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, x_);
+          .computeInt32Size(2, x_);
       }
       if (y_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, y_);
+          .computeInt32Size(3, y_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3400,6 +3428,8 @@ public final class DroneChattingOuterClass {
       }
       com.example.grpc.DroneChattingOuterClass.Position other = (com.example.grpc.DroneChattingOuterClass.Position) obj;
 
+      if (getId()
+          != other.getId()) return false;
       if (getX()
           != other.getX()) return false;
       if (getY()
@@ -3415,6 +3445,8 @@ public final class DroneChattingOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId();
       hash = (37 * hash) + X_FIELD_NUMBER;
       hash = (53 * hash) + getX();
       hash = (37 * hash) + Y_FIELD_NUMBER;
@@ -3552,6 +3584,8 @@ public final class DroneChattingOuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        id_ = 0;
+
         x_ = 0;
 
         y_ = 0;
@@ -3582,6 +3616,7 @@ public final class DroneChattingOuterClass {
       @java.lang.Override
       public com.example.grpc.DroneChattingOuterClass.Position buildPartial() {
         com.example.grpc.DroneChattingOuterClass.Position result = new com.example.grpc.DroneChattingOuterClass.Position(this);
+        result.id_ = id_;
         result.x_ = x_;
         result.y_ = y_;
         onBuilt();
@@ -3632,6 +3667,9 @@ public final class DroneChattingOuterClass {
 
       public Builder mergeFrom(com.example.grpc.DroneChattingOuterClass.Position other) {
         if (other == com.example.grpc.DroneChattingOuterClass.Position.getDefaultInstance()) return this;
+        if (other.getId() != 0) {
+          setId(other.getId());
+        }
         if (other.getX() != 0) {
           setX(other.getX());
         }
@@ -3667,16 +3705,46 @@ public final class DroneChattingOuterClass {
         return this;
       }
 
+      private int id_ ;
+      /**
+       * <code>int32 id = 1;</code>
+       * @return The id.
+       */
+      public int getId() {
+        return id_;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
+       */
+      public Builder setId(int value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearId() {
+        
+        id_ = 0;
+        onChanged();
+        return this;
+      }
+
       private int x_ ;
       /**
-       * <code>int32 x = 1;</code>
+       * <code>int32 x = 2;</code>
        * @return The x.
        */
       public int getX() {
         return x_;
       }
       /**
-       * <code>int32 x = 1;</code>
+       * <code>int32 x = 2;</code>
        * @param value The x to set.
        * @return This builder for chaining.
        */
@@ -3687,7 +3755,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>int32 x = 1;</code>
+       * <code>int32 x = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearX() {
@@ -3699,14 +3767,14 @@ public final class DroneChattingOuterClass {
 
       private int y_ ;
       /**
-       * <code>int32 y = 2;</code>
+       * <code>int32 y = 3;</code>
        * @return The y.
        */
       public int getY() {
         return y_;
       }
       /**
-       * <code>int32 y = 2;</code>
+       * <code>int32 y = 3;</code>
        * @param value The y to set.
        * @return This builder for chaining.
        */
@@ -3717,7 +3785,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>int32 y = 2;</code>
+       * <code>int32 y = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearY() {
@@ -3825,15 +3893,16 @@ public final class DroneChattingOuterClass {
       "\032!\n\tPosizione\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004P" +
       "ing\022\017\n\007message\030\001 \001(\t\"\034\n\010Response\022\020\n\010idMa" +
       "ster\030\001 \001(\005\".\n\017ElectionMessage\022\017\n\007message" +
-      "\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\" \n\010Position\022\t\n\001x\030\001 \001(" +
-      "\005\022\t\n\001y\030\002 \001(\0052\237\002\n\rDroneChatting\022A\n\010discov" +
-      "er\022\031.com.example.grpc.Request\032\032.com.exam" +
-      "ple.grpc.Response\0226\n\004ping\022\026.com.example." +
-      "grpc.Ping\032\026.com.example.grpc.Ping\022P\n\010ele" +
-      "ction\022!.com.example.grpc.ElectionMessage" +
-      "\032!.com.example.grpc.ElectionMessage\022A\n\007s" +
-      "endPos\022\032.com.example.grpc.Position\032\032.com" +
-      ".example.grpc.Positionb\006proto3"
+      "\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\",\n\010Position\022\n\n\002id\030\001 \001" +
+      "(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\0052\237\002\n\rDroneChatti" +
+      "ng\022A\n\010discover\022\031.com.example.grpc.Reques" +
+      "t\032\032.com.example.grpc.Response\0226\n\004ping\022\026." +
+      "com.example.grpc.Ping\032\026.com.example.grpc" +
+      ".Ping\022P\n\010election\022!.com.example.grpc.Ele" +
+      "ctionMessage\032!.com.example.grpc.Election" +
+      "Message\022A\n\007sendPos\022\032.com.example.grpc.Po" +
+      "sition\032\032.com.example.grpc.Positionb\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3874,7 +3943,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_Position_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_Position_descriptor,
-        new java.lang.String[] { "X", "Y", });
+        new java.lang.String[] { "Id", "X", "Y", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
