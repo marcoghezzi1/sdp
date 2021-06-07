@@ -31,9 +31,10 @@ public class Drone {
     private boolean partecipanteElezione = false;
     private boolean inConsegna;
     private List<Order> ordiniPendingMaster;
-    private MqttClient mqttClient;
-    private int posizioniRicevute = 0;
 
+    private MqttClient mqttClient;
+
+    private int posizioniRicevute = 0;
     public Drone() {
     }
 
@@ -45,12 +46,14 @@ public class Drone {
         this.batteryLevel = 100;
         this.drones = new ArrayList<>();
         this.ordiniPendingMaster = new ArrayList<>();
+        this.master = false;
     }
 
     public Drone(int id, int port, boolean master) {
         this.id = id;
         this.port = port;
         this.master = master;
+        this.batteryLevel = 100;
     }
 
     public int getIdMaster() {
@@ -70,7 +73,7 @@ public class Drone {
     }
 
     public boolean sonoMaster() {
-        return master;
+        return this.getId()==this.getIdMaster();
     }
 
     public void setMaster(boolean master) {
@@ -225,14 +228,19 @@ public class Drone {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
+            public void messageArrived(String topic, MqttMessage message) {
                 String receivedMessage = new String(message.getPayload());
                 Order order = gson.fromJson(receivedMessage, Order.class);
                 System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()
                         +"\nPunto di ritiro: ("+order.getRitiro()[0]+", "+order.getRitiro()[1]+")"
                         +"\nPunto di consegna: ("+order.getConsegna()[0]+", "+order.getConsegna()[1]+")");
                 Drone.this.addOrderToQueue(order);
-                //System.out.println("ho ricevuto tutte le posizioni, posso iniziare a mandare le consegne");
+                List<Drone> copy = Drone.this.getDrones();
+                if (copy!=null)
+                    for (Drone d :
+                            Drone.this.getDrones()) {
+                        System.out.print("id: " +d.getId()+ ", battery level: "+d.getBatteryLevel()+"\n");
+                    }
 
             }
 
@@ -241,9 +249,10 @@ public class Drone {
 
             }
         });
-        //System.out.println(clientId + " Subscribing " + Thread.currentThread().getId());
+        //subscribe to broker
         mqttClient.subscribe(topic, qos);
     }
+
 
     public void disconnectFromMqtt() throws MqttException {
         mqttClient.disconnect();
@@ -251,6 +260,7 @@ public class Drone {
 
     public synchronized void addOrderToQueue(Order order) {
         this.ordiniPendingMaster.add(order);
+        //this.ordiniPendingMaster.notify();
     }
 
     public synchronized void addNumberOfPosReceived(){
@@ -258,21 +268,65 @@ public class Drone {
         if (this.getDrones().size() == this.posizioniRicevute) {
             System.out.println("Posizioni ricevute: "+this.posizioniRicevute);
             System.out.println("size lista: " +this.getDrones().size());
-            this.notify();
+            this.notifyAll();
         }
     }
+
     public int getPosizioniRicevute() {
         return posizioniRicevute;
     }
-
-    public synchronized void prova() throws InterruptedException {
-        System.out.println("Salve, ricevuto tutte le posizioni possiamo iniziare");
+    public synchronized void notifyIamMaster() {
+        this.notifyAll();
     }
 
-    public void manageOrders() throws InterruptedException {
-        if (this.getDrones()!=null && this.getDrones().size()<this.posizioniRicevute)
-            this.wait();
-        System.out.println("baluba");
+    private double getDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
+    }
+
+    public synchronized List<Order> getOrdiniPendingMaster() {
+        return ordiniPendingMaster;
+    }
+
+    public synchronized Order getAndRemoveOrder(List<Order> order) {
+        Order o = order.get(0);
+        order.remove(0);
+        return o;
+    }
+
+    public void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
+        this.ordiniPendingMaster = ordiniPendingMaster;
+    }
+
+    public Drone chooseDrone(int[] ritiro) {
+        Drone chosen = this;
+        int xDrone, yDrone, xRitiro, yRitiro;
+        xRitiro = ritiro[0];
+        yRitiro = ritiro[1];
+        double distanceMin = getDistance(this.getPosizione()[0], this.getPosizione()[1], xRitiro, yRitiro);
+        double distance;
+        List<Drone> copy = this.getDrones();
+        if (copy!=null && copy.size()!=0)
+            for (Drone toChoose :
+                    copy) {
+                if (toChoose.isInConsegna())
+                    continue;
+                xDrone = toChoose.getPosizione()[0];
+                yDrone = toChoose.getPosizione()[1];
+                distance = getDistance(xDrone, yDrone, xRitiro, yRitiro);
+                if (distance < distanceMin) {
+                    distanceMin = distance;
+                    chosen = toChoose;
+                }
+                else if (distance == distanceMin) {
+                    if (chosen.getBatteryLevel() < toChoose.getBatteryLevel())
+                        chosen = toChoose;
+                    else if (chosen.getBatteryLevel() == toChoose.getBatteryLevel()) {
+                        if (chosen.getId() < toChoose.getId())
+                            chosen = toChoose;
+                    }
+                }
+            }
+        return chosen;
     }
 
     @Override
@@ -284,11 +338,8 @@ public class Drone {
                 '}';
     }
 
-    public synchronized void notifyIamMaster() {
-        this.notify();
-    }
-
-    private double getDistance(int x1, int y1, int x2, int y2) {
-        return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
+    public void manageOrder() throws InterruptedException {
+        this.setInConsegna(true);
+        Thread.sleep(15000);
     }
 }

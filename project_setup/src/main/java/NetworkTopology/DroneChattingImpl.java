@@ -13,7 +13,7 @@ import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
 
 public class DroneChattingImpl extends DroneChattingImplBase {
-    private Drone drone;
+    private final Drone drone;
 
     public DroneChattingImpl(Drone d) {
         this.drone = d;
@@ -134,7 +134,16 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 d.setPosizione(posizione);
         }
         drone.addNumberOfPosReceived();
+    }
 
-
+    @Override
+    public void deliver(OrderMessage request, StreamObserver<OrderMessage> responseObserver) {
+        System.out.println("Ritiro a: ("+request.getXRitiro()+", "+request.getYRitiro()+"), ("
+                +request.getXConsegna()+", "+request.getYConsegna()+")");
+        try {
+            drone.manageOrder();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

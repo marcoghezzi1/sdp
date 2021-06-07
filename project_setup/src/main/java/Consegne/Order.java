@@ -5,6 +5,10 @@ public class Order {
     private int[] ritiro;
     private int[] consegna;
 
+    public Order (){
+
+    }
+
     public Order(String id, int[] ritiro, int[] consegna) {
         this.id = id;
         this.ritiro = ritiro;

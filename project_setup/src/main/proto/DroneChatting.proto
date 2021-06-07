@@ -32,10 +32,19 @@ message Position {
   int32 y = 3;
 }
 
+message OrderMessage {
+  int32 xRitiro = 1;
+  int32 yRitiro = 2;
+  int32 xConsegna = 3;
+  int32 yConsegna = 4;
+  string idOrder = 5;
+}
+
 
 service DroneChatting {
   rpc discover(Request) returns (Response);
   rpc ping(Ping) returns (Ping);
   rpc election(ElectionMessage) returns (ElectionMessage);
   rpc sendPos(Position) returns (Position);
+  rpc deliver(OrderMessage) returns (OrderMessage);
 }
