@@ -11,6 +11,7 @@ message Request {
   }
   bool master = 4;
   Posizione pos = 5;
+  string indirizzo = 6;
 }
 
 message Ping {
@@ -40,11 +41,21 @@ message OrderMessage {
   string idOrder = 5;
 }
 
+message GlobalStats {
+  int64 timestamp = 1;
+  message Consegna {
+    int32 xConsegna = 1;
+    int32 yConsegna = 2;
+  }
+  Consegna consegna = 2;
+  double km = 3;
+  int32 batteryLevel = 4;
+}
 
 service DroneChatting {
   rpc discover(Request) returns (Response);
   rpc ping(Ping) returns (Ping);
   rpc election(ElectionMessage) returns (ElectionMessage);
   rpc sendPos(Position) returns (Position);
-  rpc deliver(OrderMessage) returns (OrderMessage);
+  rpc deliver(OrderMessage) returns (GlobalStats);
 }

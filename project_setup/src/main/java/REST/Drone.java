@@ -1,5 +1,6 @@
 package REST;
 
+import Consegne.GlobalStatsToSend;
 import Consegne.Order;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
@@ -8,6 +9,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -31,10 +34,9 @@ public class Drone {
     private boolean partecipanteElezione = false;
     private boolean inConsegna;
     private List<Order> ordiniPendingMaster;
-
     private MqttClient mqttClient;
-
     private int posizioniRicevute = 0;
+
     public Drone() {
     }
 
@@ -47,13 +49,6 @@ public class Drone {
         this.drones = new ArrayList<>();
         this.ordiniPendingMaster = new ArrayList<>();
         this.master = false;
-    }
-
-    public Drone(int id, int port, boolean master) {
-        this.id = id;
-        this.port = port;
-        this.master = master;
-        this.batteryLevel = 100;
     }
 
     public int getIdMaster() {
@@ -329,6 +324,26 @@ public class Drone {
         return chosen;
     }
 
+    public GlobalStatsToSend manageOrder(String idOrder, int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
+        this.setInConsegna(true);
+        int[] posDrone = this.getPosizione();
+        double distanzaDalRitiro = getDistance(posDrone[0], posDrone[1], xRitiro, yRitiro);
+        double distanzaDallaConsegna = getDistance(xRitiro, yRitiro, xConsegna, yConsegna);
+        double distTot = distanzaDallaConsegna+distanzaDalRitiro;
+        Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
+        int[] posConsegna = {xConsegna, yConsegna};
+        Thread.sleep(5000);
+        this.setBatteryLevel(this.getBatteryLevel()-10);
+        this.setPosizione(posConsegna);
+        GlobalStatsToSend global = new GlobalStatsToSend(arrivo, this.getPosizione(), distTot, this.getBatteryLevel());
+        this.setInConsegna(false);
+        return global;
+    }
+
+    public synchronized void waitingToBeMaster() throws InterruptedException {
+        this.wait();
+    }
+
     @Override
     public String toString() {
         return "Drone{" +
@@ -336,10 +351,5 @@ public class Drone {
                 ", port=" + port +
                 ", posizione=" + Arrays.toString(posizione) +
                 '}';
-    }
-
-    public void manageOrder() throws InterruptedException {
-        this.setInConsegna(true);
-        Thread.sleep(15000);
     }
 }

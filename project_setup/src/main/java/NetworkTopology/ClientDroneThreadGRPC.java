@@ -37,6 +37,7 @@ public class ClientDroneThreadGRPC extends Thread{
                 .setPos(Request.Posizione.newBuilder()
                         .setX(self.getPosizione()[0])
                         .setY(self.getPosizione()[1]).build())
+                .setIndirizzo(self.getIndirizzoIp())
                 .build();
         stub.discover(request, new StreamObserver<Response>() {
             @Override

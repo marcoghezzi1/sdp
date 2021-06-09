@@ -1,16 +1,17 @@
 package NetworkTopology;
 
+import Consegne.GlobalStatsToSend;
 import REST.Drone;
 import com.example.grpc.DroneChattingGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import javafx.geometry.Pos;
 
 import java.util.List;
 
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
+import static com.example.grpc.DroneChattingOuterClass.GlobalStats.*;
 
 public class DroneChattingImpl extends DroneChattingImplBase {
     private final Drone drone;
@@ -22,7 +23,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     @Override
     public void discover(Request request, StreamObserver<Response> responseObserver) {
         System.out.println(request.getMessage() + "\nid: " + request.getId() + "\nport: " + request.getPort());
-        Drone d = new Drone(request.getId(), request.getPort(), request.getMaster());
+        Drone d = new Drone(request.getId(), request.getIndirizzo(), request.getPort(), drone.getIndirizzoServerREST());
         int[] posizione = {request.getPos().getX(), request.getPos().getY()};
         d.setPosizione(posizione);
         this.drone.addDroneToLocalList(d);
@@ -58,7 +59,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         //System.out.println("id ricevuto: " +idReceived);
         System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
-        String indirizzo = "localhost:"+next.getPort();
+        String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
         ElectionMessage newElection = null;
@@ -128,8 +129,8 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         System.out.println("Posizione di "+request.getId()+": (" + request.getX() + ", "+request.getY()+")");
         int idDronePos = request.getId();
         int[] posizione = {request.getX(),request.getY()};
-        List<Drone> copy = drone.getDrones();
-        for (Drone d: copy) {
+        List<Drone> drones = drone.getDrones();
+        for (Drone d: drones) {
             if (d.getId()==idDronePos)
                 d.setPosizione(posizione);
         }
@@ -137,13 +138,34 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     }
 
     @Override
-    public void deliver(OrderMessage request, StreamObserver<OrderMessage> responseObserver) {
-        System.out.println("Ritiro a: ("+request.getXRitiro()+", "+request.getYRitiro()+"), ("
-                +request.getXConsegna()+", "+request.getYConsegna()+")");
+    public void deliver(OrderMessage request, StreamObserver<GlobalStats> responseObserver) {
         try {
-            drone.manageOrder();
+            String idOrder = request.getIdOrder();
+            int xRitiro = request.getXRitiro();
+            int yRitiro = request.getYRitiro();
+            int xConsegna = request.getXConsegna();
+            int yConsegna = request.getYConsegna();
+            System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
+                    +xConsegna+", "+yConsegna+")");
+            GlobalStatsToSend global = drone.manageOrder(idOrder, xRitiro, yRitiro, xConsegna, yConsegna);
+            long timestamp = global.getArrivo().getTime();
+            int[] posConsegna = global.getPosizione();
+            GlobalStats response = newBuilder()
+                    .setTimestamp(timestamp)
+                    .setConsegna(Consegna.newBuilder()
+                            .setXConsegna(posConsegna[0])
+                            .setYConsegna(posConsegna[1])
+                            .build())
+                    .setBatteryLevel(global.getBatteryLevel())
+                    .setKm(global.getDistTot())
+                    .build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+
 }

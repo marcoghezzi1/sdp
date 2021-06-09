@@ -20,7 +20,7 @@ public class ElectionThread extends Thread {
         System.out.println("Elezione iniziata---");
         Drone next = self.nextDrone();
         if (next!=null) {
-            String indirizzo = "localhost:"+next.getPort();
+            String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
             DroneChattingStub stub = newStub(channel);
             self.setPartecipanteElezione(true);

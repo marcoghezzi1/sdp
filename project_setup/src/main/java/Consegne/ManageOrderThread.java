@@ -23,7 +23,7 @@ public class ManageOrderThread extends Thread {
         while (true) {
             if (!drone.sonoMaster()) {
                 try {
-                    this.waitingToBeMaster();
+                    drone.waitingToBeMaster();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -46,14 +46,19 @@ public class ManageOrderThread extends Thread {
                     .setXConsegna(order.getConsegna()[0]).setYConsegna(order.getConsegna()[1])
                     .build();
             scelto.setInConsegna(true);
-            stub.deliver(request, new StreamObserver<OrderMessage>() {
+            stub.deliver(request, new StreamObserver<GlobalStats>() {
                 @Override
-                public void onNext(OrderMessage value) {
-
+                public void onNext(GlobalStats value) {
+                    int[] newPosDrone = {value.getConsegna().getXConsegna(), value.getConsegna().getYConsegna()};
+                    scelto.setPosizione(newPosDrone);
+                    scelto.setBatteryLevel(value.getBatteryLevel());
+                    System.out.println("Il drone "+scelto.getId()+" per l'ultima consegna ha percorso "+ String.format("%.2f", value.getKm())+" km. " +
+                            "Ha un livello di batteria pari a "+value.getBatteryLevel());
+                    scelto.setInConsegna(false);
                 }
 
                 @Override
-                public void onError(Throwable t) {
+                public void onError(Throwable throwable) {
 
                 }
 
@@ -71,7 +76,4 @@ public class ManageOrderThread extends Thread {
         }
     }
 
-    private synchronized void waitingToBeMaster() throws InterruptedException {
-        this.wait();
-    }
 }
