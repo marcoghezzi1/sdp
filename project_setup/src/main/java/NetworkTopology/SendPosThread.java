@@ -22,10 +22,11 @@ public class SendPosThread extends Thread {
     @Override
     public void run() {
         int [] myPos = drone.getPosizione();
-        Position position = Position.newBuilder()
+        PositionAndBattery position = PositionAndBattery.newBuilder()
                 .setId(drone.getId())
                 .setX(myPos[0])
-                .setY(myPos[1]).build();
+                .setY(myPos[1])
+                .setBattery(drone.getBatteryLevel()).build();
         List<Drone> copy = drone.getDrones();
         //controllare che copy non sia vuota
         assert copy!=null;
@@ -40,10 +41,9 @@ public class SendPosThread extends Thread {
         }
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
         DroneChattingStub stub = newStub(channel);
-        stub.sendPos(position, new StreamObserver<Position>() {
+        stub.sendPos(position, new StreamObserver<Message>() {
             @Override
-            public void onNext(Position value) {
-
+            public void onNext(Message value) {
             }
 
             @Override

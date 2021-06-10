@@ -27,8 +27,8 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         int[] posizione = {request.getPos().getX(), request.getPos().getY()};
         d.setPosizione(posizione);
         this.drone.addDroneToLocalList(d);
-        List<Drone> copy = this.drone.getDrones();
-        if (copy != null){
+        //List<Drone> copy = this.drone.getDrones();
+        /*if (copy != null){
                 System.out.print("Lista droni: ");
             for (Drone drone :
                     copy) {
@@ -37,6 +37,8 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             }
             System.out.println();
         }
+
+         */
 
         Response response = Response.newBuilder().setIdMaster(this.drone.getIdMaster()).build();
         responseObserver.onNext(response);
@@ -125,16 +127,19 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     }
 
     @Override
-    public void sendPos(Position request, StreamObserver<Position> responseObserver) {
+    public void sendPos(PositionAndBattery request, StreamObserver<Message> responseObserver) {
         System.out.println("Posizione di "+request.getId()+": (" + request.getX() + ", "+request.getY()+")");
         int idDronePos = request.getId();
         int[] posizione = {request.getX(),request.getY()};
         List<Drone> drones = drone.getDrones();
         for (Drone d: drones) {
-            if (d.getId()==idDronePos)
+            if (d.getId()==idDronePos) {
                 d.setPosizione(posizione);
+                d.setBatteryLevel(request.getBattery());
+            }
         }
         drone.addNumberOfPosReceived();
+        responseObserver.onNext(Message.newBuilder().build());
     }
 
     @Override
@@ -147,6 +152,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             int yConsegna = request.getYConsegna();
             System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
                     +xConsegna+", "+yConsegna+")");
+
             GlobalStatsToSend global = drone.manageOrder(idOrder, xRitiro, yRitiro, xConsegna, yConsegna);
             long timestamp = global.getArrivo().getTime();
             int[] posConsegna = global.getPosizione();

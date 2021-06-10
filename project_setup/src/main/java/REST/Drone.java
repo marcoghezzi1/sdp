@@ -36,6 +36,7 @@ public class Drone {
     private List<Order> ordiniPendingMaster;
     private MqttClient mqttClient;
     private int posizioniRicevute = 0;
+    private boolean wantToQuit = false;
 
     public Drone() {
     }
@@ -105,6 +106,14 @@ public class Drone {
 
     public void setPosizione(int[] posizione) {
         this.posizione = posizione;
+    }
+
+    public boolean isWantToQuit() {
+        return wantToQuit;
+    }
+
+    public void setWantToQuit(boolean wantToQuit) {
+        this.wantToQuit = wantToQuit;
     }
 
     public String getIndirizzoServerREST() {
@@ -226,9 +235,7 @@ public class Drone {
             public void messageArrived(String topic, MqttMessage message) {
                 String receivedMessage = new String(message.getPayload());
                 Order order = gson.fromJson(receivedMessage, Order.class);
-                System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()
-                        +"\nPunto di ritiro: ("+order.getRitiro()[0]+", "+order.getRitiro()[1]+")"
-                        +"\nPunto di consegna: ("+order.getConsegna()[0]+", "+order.getConsegna()[1]+")");
+                System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()+"\n");
                 Drone.this.addOrderToQueue(order);
                 List<Drone> copy = Drone.this.getDrones();
                 if (copy!=null)

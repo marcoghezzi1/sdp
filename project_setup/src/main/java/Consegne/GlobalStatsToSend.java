@@ -4,10 +4,10 @@ import java.sql.Timestamp;
 
 public class GlobalStatsToSend {
 
-    private Timestamp arrivo;
-    private int[] posizione;
-    private double distTot;
-    private int batteryLevel;
+    private final Timestamp arrivo;
+    private final int[] posizione;
+    private final double distTot;
+    private final int batteryLevel;
 
     public GlobalStatsToSend(Timestamp arrivo, int[] posizione, double distTot, int batteryLevel) {
         this.arrivo = arrivo;

@@ -12,7 +12,7 @@ import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
 
 public class ManageOrderThread extends Thread {
-    private Drone drone;
+    private final Drone drone;
 
     public ManageOrderThread(Drone d) {
         this.drone = d;
@@ -28,16 +28,16 @@ public class ManageOrderThread extends Thread {
                     e.printStackTrace();
                 }
             }
-            List<Order> copy = drone.getOrdiniPendingMaster();
-            if (copy == null)
+            List<Order> orderList = drone.getOrdiniPendingMaster();
+            if (orderList == null)
                 continue;
-            if (copy.size() == 0)
+            if (orderList.size() == 0)
                 continue;
-            Order order = drone.getAndRemoveOrder(copy);
+            Order order = drone.getAndRemoveOrder(orderList);
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
             String indirizzo = "localhost:" + scelto.getPort();
-            System.out.println("Indirizzo: " + indirizzo);
+            //System.out.println("Indirizzo: " + indirizzo);
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
             DroneChattingStub stub = newStub(channel);
             OrderMessage request = OrderMessage.newBuilder()

@@ -3373,8 +3373,8 @@ public final class DroneChattingOuterClass {
 
   }
 
-  public interface PositionOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.example.grpc.Position)
+  public interface PositionAndBatteryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.example.grpc.PositionAndBattery)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3394,27 +3394,33 @@ public final class DroneChattingOuterClass {
      * @return The y.
      */
     int getY();
+
+    /**
+     * <code>int32 battery = 4;</code>
+     * @return The battery.
+     */
+    int getBattery();
   }
   /**
-   * Protobuf type {@code com.example.grpc.Position}
+   * Protobuf type {@code com.example.grpc.PositionAndBattery}
    */
-  public  static final class Position extends
+  public  static final class PositionAndBattery extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.example.grpc.Position)
-      PositionOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.example.grpc.PositionAndBattery)
+      PositionAndBatteryOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Position.newBuilder() to construct.
-    private Position(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use PositionAndBattery.newBuilder() to construct.
+    private PositionAndBattery(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Position() {
+    private PositionAndBattery() {
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new Position();
+      return new PositionAndBattery();
     }
 
     @java.lang.Override
@@ -3422,7 +3428,7 @@ public final class DroneChattingOuterClass {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Position(
+    private PositionAndBattery(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3455,6 +3461,11 @@ public final class DroneChattingOuterClass {
               y_ = input.readInt32();
               break;
             }
+            case 32: {
+
+              battery_ = input.readInt32();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -3476,15 +3487,15 @@ public final class DroneChattingOuterClass {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Position_descriptor;
+      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_PositionAndBattery_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Position_fieldAccessorTable
+      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_PositionAndBattery_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.example.grpc.DroneChattingOuterClass.Position.class, com.example.grpc.DroneChattingOuterClass.Position.Builder.class);
+              com.example.grpc.DroneChattingOuterClass.PositionAndBattery.class, com.example.grpc.DroneChattingOuterClass.PositionAndBattery.Builder.class);
     }
 
     public static final int ID_FIELD_NUMBER = 1;
@@ -3517,6 +3528,16 @@ public final class DroneChattingOuterClass {
       return y_;
     }
 
+    public static final int BATTERY_FIELD_NUMBER = 4;
+    private int battery_;
+    /**
+     * <code>int32 battery = 4;</code>
+     * @return The battery.
+     */
+    public int getBattery() {
+      return battery_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3540,6 +3561,9 @@ public final class DroneChattingOuterClass {
       if (y_ != 0) {
         output.writeInt32(3, y_);
       }
+      if (battery_ != 0) {
+        output.writeInt32(4, battery_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3561,6 +3585,10 @@ public final class DroneChattingOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, y_);
       }
+      if (battery_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, battery_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -3571,10 +3599,10 @@ public final class DroneChattingOuterClass {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.example.grpc.DroneChattingOuterClass.Position)) {
+      if (!(obj instanceof com.example.grpc.DroneChattingOuterClass.PositionAndBattery)) {
         return super.equals(obj);
       }
-      com.example.grpc.DroneChattingOuterClass.Position other = (com.example.grpc.DroneChattingOuterClass.Position) obj;
+      com.example.grpc.DroneChattingOuterClass.PositionAndBattery other = (com.example.grpc.DroneChattingOuterClass.PositionAndBattery) obj;
 
       if (getId()
           != other.getId()) return false;
@@ -3582,6 +3610,8 @@ public final class DroneChattingOuterClass {
           != other.getX()) return false;
       if (getY()
           != other.getY()) return false;
+      if (getBattery()
+          != other.getBattery()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3599,74 +3629,76 @@ public final class DroneChattingOuterClass {
       hash = (53 * hash) + getX();
       hash = (37 * hash) + Y_FIELD_NUMBER;
       hash = (53 * hash) + getY();
+      hash = (37 * hash) + BATTERY_FIELD_NUMBER;
+      hash = (53 * hash) + getBattery();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(byte[] data)
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(java.io.InputStream input)
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseDelimitedFrom(java.io.InputStream input)
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseDelimitedFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.example.grpc.DroneChattingOuterClass.Position parseFrom(
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3679,7 +3711,7 @@ public final class DroneChattingOuterClass {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.example.grpc.DroneChattingOuterClass.Position prototype) {
+    public static Builder newBuilder(com.example.grpc.DroneChattingOuterClass.PositionAndBattery prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -3695,26 +3727,26 @@ public final class DroneChattingOuterClass {
       return builder;
     }
     /**
-     * Protobuf type {@code com.example.grpc.Position}
+     * Protobuf type {@code com.example.grpc.PositionAndBattery}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:com.example.grpc.Position)
-        com.example.grpc.DroneChattingOuterClass.PositionOrBuilder {
+        // @@protoc_insertion_point(builder_implements:com.example.grpc.PositionAndBattery)
+        com.example.grpc.DroneChattingOuterClass.PositionAndBatteryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Position_descriptor;
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_PositionAndBattery_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Position_fieldAccessorTable
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_PositionAndBattery_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.example.grpc.DroneChattingOuterClass.Position.class, com.example.grpc.DroneChattingOuterClass.Position.Builder.class);
+                com.example.grpc.DroneChattingOuterClass.PositionAndBattery.class, com.example.grpc.DroneChattingOuterClass.PositionAndBattery.Builder.class);
       }
 
-      // Construct using com.example.grpc.DroneChattingOuterClass.Position.newBuilder()
+      // Construct using com.example.grpc.DroneChattingOuterClass.PositionAndBattery.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3738,23 +3770,25 @@ public final class DroneChattingOuterClass {
 
         y_ = 0;
 
+        battery_ = 0;
+
         return this;
       }
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Position_descriptor;
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_PositionAndBattery_descriptor;
       }
 
       @java.lang.Override
-      public com.example.grpc.DroneChattingOuterClass.Position getDefaultInstanceForType() {
-        return com.example.grpc.DroneChattingOuterClass.Position.getDefaultInstance();
+      public com.example.grpc.DroneChattingOuterClass.PositionAndBattery getDefaultInstanceForType() {
+        return com.example.grpc.DroneChattingOuterClass.PositionAndBattery.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.example.grpc.DroneChattingOuterClass.Position build() {
-        com.example.grpc.DroneChattingOuterClass.Position result = buildPartial();
+      public com.example.grpc.DroneChattingOuterClass.PositionAndBattery build() {
+        com.example.grpc.DroneChattingOuterClass.PositionAndBattery result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -3762,11 +3796,12 @@ public final class DroneChattingOuterClass {
       }
 
       @java.lang.Override
-      public com.example.grpc.DroneChattingOuterClass.Position buildPartial() {
-        com.example.grpc.DroneChattingOuterClass.Position result = new com.example.grpc.DroneChattingOuterClass.Position(this);
+      public com.example.grpc.DroneChattingOuterClass.PositionAndBattery buildPartial() {
+        com.example.grpc.DroneChattingOuterClass.PositionAndBattery result = new com.example.grpc.DroneChattingOuterClass.PositionAndBattery(this);
         result.id_ = id_;
         result.x_ = x_;
         result.y_ = y_;
+        result.battery_ = battery_;
         onBuilt();
         return result;
       }
@@ -3805,16 +3840,16 @@ public final class DroneChattingOuterClass {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.example.grpc.DroneChattingOuterClass.Position) {
-          return mergeFrom((com.example.grpc.DroneChattingOuterClass.Position)other);
+        if (other instanceof com.example.grpc.DroneChattingOuterClass.PositionAndBattery) {
+          return mergeFrom((com.example.grpc.DroneChattingOuterClass.PositionAndBattery)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.example.grpc.DroneChattingOuterClass.Position other) {
-        if (other == com.example.grpc.DroneChattingOuterClass.Position.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.example.grpc.DroneChattingOuterClass.PositionAndBattery other) {
+        if (other == com.example.grpc.DroneChattingOuterClass.PositionAndBattery.getDefaultInstance()) return this;
         if (other.getId() != 0) {
           setId(other.getId());
         }
@@ -3823,6 +3858,9 @@ public final class DroneChattingOuterClass {
         }
         if (other.getY() != 0) {
           setY(other.getY());
+        }
+        if (other.getBattery() != 0) {
+          setBattery(other.getBattery());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3839,11 +3877,11 @@ public final class DroneChattingOuterClass {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.example.grpc.DroneChattingOuterClass.Position parsedMessage = null;
+        com.example.grpc.DroneChattingOuterClass.PositionAndBattery parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.example.grpc.DroneChattingOuterClass.Position) e.getUnfinishedMessage();
+          parsedMessage = (com.example.grpc.DroneChattingOuterClass.PositionAndBattery) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3942,6 +3980,36 @@ public final class DroneChattingOuterClass {
         onChanged();
         return this;
       }
+
+      private int battery_ ;
+      /**
+       * <code>int32 battery = 4;</code>
+       * @return The battery.
+       */
+      public int getBattery() {
+        return battery_;
+      }
+      /**
+       * <code>int32 battery = 4;</code>
+       * @param value The battery to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBattery(int value) {
+        
+        battery_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 battery = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBattery() {
+        
+        battery_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3955,41 +4023,41 @@ public final class DroneChattingOuterClass {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:com.example.grpc.Position)
+      // @@protoc_insertion_point(builder_scope:com.example.grpc.PositionAndBattery)
     }
 
-    // @@protoc_insertion_point(class_scope:com.example.grpc.Position)
-    private static final com.example.grpc.DroneChattingOuterClass.Position DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:com.example.grpc.PositionAndBattery)
+    private static final com.example.grpc.DroneChattingOuterClass.PositionAndBattery DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.example.grpc.DroneChattingOuterClass.Position();
+      DEFAULT_INSTANCE = new com.example.grpc.DroneChattingOuterClass.PositionAndBattery();
     }
 
-    public static com.example.grpc.DroneChattingOuterClass.Position getDefaultInstance() {
+    public static com.example.grpc.DroneChattingOuterClass.PositionAndBattery getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Position>
-        PARSER = new com.google.protobuf.AbstractParser<Position>() {
+    private static final com.google.protobuf.Parser<PositionAndBattery>
+        PARSER = new com.google.protobuf.AbstractParser<PositionAndBattery>() {
       @java.lang.Override
-      public Position parsePartialFrom(
+      public PositionAndBattery parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Position(input, extensionRegistry);
+        return new PositionAndBattery(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Position> parser() {
+    public static com.google.protobuf.Parser<PositionAndBattery> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Position> getParserForType() {
+    public com.google.protobuf.Parser<PositionAndBattery> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.example.grpc.DroneChattingOuterClass.Position getDefaultInstanceForType() {
+    public com.example.grpc.DroneChattingOuterClass.PositionAndBattery getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6212,6 +6280,424 @@ public final class DroneChattingOuterClass {
 
   }
 
+  public interface MessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.example.grpc.Message)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code com.example.grpc.Message}
+   */
+  public  static final class Message extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.example.grpc.Message)
+      MessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Message.newBuilder() to construct.
+    private Message(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Message() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Message();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Message(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Message_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Message_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.example.grpc.DroneChattingOuterClass.Message.class, com.example.grpc.DroneChattingOuterClass.Message.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.example.grpc.DroneChattingOuterClass.Message)) {
+        return super.equals(obj);
+      }
+      com.example.grpc.DroneChattingOuterClass.Message other = (com.example.grpc.DroneChattingOuterClass.Message) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.DroneChattingOuterClass.Message parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.example.grpc.DroneChattingOuterClass.Message prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.example.grpc.Message}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.example.grpc.Message)
+        com.example.grpc.DroneChattingOuterClass.MessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Message_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Message_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.example.grpc.DroneChattingOuterClass.Message.class, com.example.grpc.DroneChattingOuterClass.Message.Builder.class);
+      }
+
+      // Construct using com.example.grpc.DroneChattingOuterClass.Message.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.example.grpc.DroneChattingOuterClass.internal_static_com_example_grpc_Message_descriptor;
+      }
+
+      @java.lang.Override
+      public com.example.grpc.DroneChattingOuterClass.Message getDefaultInstanceForType() {
+        return com.example.grpc.DroneChattingOuterClass.Message.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.example.grpc.DroneChattingOuterClass.Message build() {
+        com.example.grpc.DroneChattingOuterClass.Message result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.example.grpc.DroneChattingOuterClass.Message buildPartial() {
+        com.example.grpc.DroneChattingOuterClass.Message result = new com.example.grpc.DroneChattingOuterClass.Message(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.example.grpc.DroneChattingOuterClass.Message) {
+          return mergeFrom((com.example.grpc.DroneChattingOuterClass.Message)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.example.grpc.DroneChattingOuterClass.Message other) {
+        if (other == com.example.grpc.DroneChattingOuterClass.Message.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.example.grpc.DroneChattingOuterClass.Message parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.example.grpc.DroneChattingOuterClass.Message) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.example.grpc.Message)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.example.grpc.Message)
+    private static final com.example.grpc.DroneChattingOuterClass.Message DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.example.grpc.DroneChattingOuterClass.Message();
+    }
+
+    public static com.example.grpc.DroneChattingOuterClass.Message getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Message>
+        PARSER = new com.google.protobuf.AbstractParser<Message>() {
+      @java.lang.Override
+      public Message parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Message(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Message> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Message> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.example.grpc.DroneChattingOuterClass.Message getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_example_grpc_Request_descriptor;
   private static final 
@@ -6238,10 +6724,10 @@ public final class DroneChattingOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_example_grpc_ElectionMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_example_grpc_Position_descriptor;
+    internal_static_com_example_grpc_PositionAndBattery_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_example_grpc_Position_fieldAccessorTable;
+      internal_static_com_example_grpc_PositionAndBattery_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_example_grpc_OrderMessage_descriptor;
   private static final 
@@ -6257,6 +6743,11 @@ public final class DroneChattingOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_example_grpc_GlobalStats_Consegna_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_example_grpc_Message_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_example_grpc_Message_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6273,25 +6764,26 @@ public final class DroneChattingOuterClass {
       "\022\021\n\tindirizzo\030\006 \001(\t\032!\n\tPosizione\022\t\n\001x\030\001 " +
       "\001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004Ping\022\017\n\007message\030\001 \001(\t\"" +
       "\034\n\010Response\022\020\n\010idMaster\030\001 \001(\005\".\n\017Electio" +
-      "nMessage\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\",\n" +
-      "\010Position\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 " +
-      "\001(\005\"g\n\014OrderMessage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007" +
-      "yRitiro\030\002 \001(\005\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyCon" +
-      "segna\030\004 \001(\005\022\017\n\007idOrder\030\005 \001(\t\"\256\001\n\013GlobalS" +
-      "tats\022\021\n\ttimestamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(" +
-      "\0132&.com.example.grpc.GlobalStats.Consegn" +
-      "a\022\n\n\002km\030\003 \001(\001\022\024\n\014batteryLevel\030\004 \001(\005\0320\n\010C" +
-      "onsegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyConsegna\030" +
-      "\002 \001(\0052\351\002\n\rDroneChatting\022A\n\010discover\022\031.co" +
-      "m.example.grpc.Request\032\032.com.example.grp" +
-      "c.Response\0226\n\004ping\022\026.com.example.grpc.Pi" +
-      "ng\032\026.com.example.grpc.Ping\022P\n\010election\022!" +
-      ".com.example.grpc.ElectionMessage\032!.com." +
-      "example.grpc.ElectionMessage\022A\n\007sendPos\022" +
-      "\032.com.example.grpc.Position\032\032.com.exampl" +
-      "e.grpc.Position\022H\n\007deliver\022\036.com.example" +
-      ".grpc.OrderMessage\032\035.com.example.grpc.Gl" +
-      "obalStatsb\006proto3"
+      "nMessage\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\"G\n" +
+      "\022PositionAndBattery\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001" +
+      "(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n\014OrderM" +
+      "essage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitiro\030\002 \001(\005" +
+      "\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030\004 \001(\005\022\017" +
+      "\n\007idOrder\030\005 \001(\t\"\256\001\n\013GlobalStats\022\021\n\ttimes" +
+      "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
+      "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
+      "\022\024\n\014batteryLevel\030\004 \001(\005\0320\n\010Consegna\022\021\n\txC" +
+      "onsegna\030\001 \001(\005\022\021\n\tyConsegna\030\002 \001(\005\"\t\n\007Mess" +
+      "age2\362\002\n\rDroneChatting\022A\n\010discover\022\031.com." +
+      "example.grpc.Request\032\032.com.example.grpc." +
+      "Response\0226\n\004ping\022\026.com.example.grpc.Ping" +
+      "\032\026.com.example.grpc.Ping\022P\n\010election\022!.c" +
+      "om.example.grpc.ElectionMessage\032!.com.ex" +
+      "ample.grpc.ElectionMessage\022J\n\007sendPos\022$." +
+      "com.example.grpc.PositionAndBattery\032\031.co" +
+      "m.example.grpc.Message\022H\n\007deliver\022\036.com." +
+      "example.grpc.OrderMessage\032\035.com.example." +
+      "grpc.GlobalStatsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6327,12 +6819,12 @@ public final class DroneChattingOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_ElectionMessage_descriptor,
         new java.lang.String[] { "Message", "Id", });
-    internal_static_com_example_grpc_Position_descriptor =
+    internal_static_com_example_grpc_PositionAndBattery_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_com_example_grpc_Position_fieldAccessorTable = new
+    internal_static_com_example_grpc_PositionAndBattery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_example_grpc_Position_descriptor,
-        new java.lang.String[] { "Id", "X", "Y", });
+        internal_static_com_example_grpc_PositionAndBattery_descriptor,
+        new java.lang.String[] { "Id", "X", "Y", "Battery", });
     internal_static_com_example_grpc_OrderMessage_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_com_example_grpc_OrderMessage_fieldAccessorTable = new
@@ -6351,6 +6843,12 @@ public final class DroneChattingOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_GlobalStats_Consegna_descriptor,
         new java.lang.String[] { "XConsegna", "YConsegna", });
+    internal_static_com_example_grpc_Message_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_com_example_grpc_Message_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_example_grpc_Message_descriptor,
+        new java.lang.String[] { });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
