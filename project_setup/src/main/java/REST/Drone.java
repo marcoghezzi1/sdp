@@ -289,10 +289,12 @@ public class Drone {
         return ordiniPendingMaster;
     }
 
-    public synchronized Order getAndRemoveOrder(List<Order> order) {
-        Order o = order.get(0);
+    public synchronized Order getOrder(List<Order> order) {
+        return order.get(0);
+    }
+
+    public synchronized void removeOrder(List<Order> order) {
         order.remove(0);
-        return o;
     }
 
     public void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
@@ -300,14 +302,20 @@ public class Drone {
     }
 
     public Drone chooseDrone(int[] ritiro) {
-        Drone chosen = this;
+        Drone chosen = null;
         int xDrone, yDrone, xRitiro, yRitiro;
         xRitiro = ritiro[0];
         yRitiro = ritiro[1];
-        double distanceMin = getDistance(this.getPosizione()[0], this.getPosizione()[1], xRitiro, yRitiro);
+        double distanceMin = Double.MAX_VALUE;
         double distance;
-        List<Drone> copy = this.getDrones();
-        if (copy!=null && copy.size()!=0)
+        List<Drone> copy;
+        if (this.getDrones()!=null)
+            copy = new ArrayList<>(this.getDrones());
+        else
+            copy = new ArrayList<>();
+        copy.add(this);
+        copy.removeIf(d -> d.getBatteryLevel() < 15);
+        if (copy.size()!=0)
             for (Drone toChoose :
                     copy) {
                 if (toChoose.isInConsegna())
@@ -320,9 +328,9 @@ public class Drone {
                     chosen = toChoose;
                 }
                 else if (distance == distanceMin) {
-                    if (chosen.getBatteryLevel() < toChoose.getBatteryLevel())
+                    if (chosen!= null && chosen.getBatteryLevel() < toChoose.getBatteryLevel())
                         chosen = toChoose;
-                    else if (chosen.getBatteryLevel() == toChoose.getBatteryLevel()) {
+                    else if (chosen!=null && chosen.getBatteryLevel() == toChoose.getBatteryLevel()) {
                         if (chosen.getId() < toChoose.getId())
                             chosen = toChoose;
                     }

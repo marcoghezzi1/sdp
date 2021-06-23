@@ -29,13 +29,20 @@ public class ManageOrderThread extends Thread {
                 }
             }
             List<Order> orderList = drone.getOrdiniPendingMaster();
-            if (orderList == null)
-                continue;
-            if (orderList.size() == 0)
-                continue;
-            Order order = drone.getAndRemoveOrder(orderList);
+            synchronized (drone.getOrdiniPendingMaster()) {
+                if (orderList.size() == 0 && !drone.isWantToQuit()) {
+                    continue;
+                } else if (orderList.size() == 0) {
+                    drone.getOrdiniPendingMaster().notify();
+                    break;
+                }
+            }
+            Order order = drone.getOrder(orderList);
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
+            if (scelto == null)
+                continue;
+            drone.removeOrder(orderList);
             String indirizzo = "localhost:" + scelto.getPort();
             //System.out.println("Indirizzo: " + indirizzo);
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
@@ -45,7 +52,9 @@ public class ManageOrderThread extends Thread {
                     .setXRitiro(order.getRitiro()[0]).setYRitiro(order.getRitiro()[1])
                     .setXConsegna(order.getConsegna()[0]).setYConsegna(order.getConsegna()[1])
                     .build();
+            System.out.println("Drone scelto: "+scelto.getId());
             scelto.setInConsegna(true);
+            System.out.println("status consegna: "+scelto.isInConsegna());
             stub.deliver(request, new StreamObserver<GlobalStats>() {
                 @Override
                 public void onNext(GlobalStats value) {
@@ -55,6 +64,9 @@ public class ManageOrderThread extends Thread {
                     System.out.println("Il drone "+scelto.getId()+" per l'ultima consegna ha percorso "+ String.format("%.2f", value.getKm())+" km. " +
                             "Ha un livello di batteria pari a "+value.getBatteryLevel());
                     scelto.setInConsegna(false);
+                    if (scelto==drone)
+                        drone.setInConsegna(false);
+                    //System.out.println("status consegna: "+scelto.isInConsegna());
                 }
 
                 @Override
@@ -64,7 +76,7 @@ public class ManageOrderThread extends Thread {
 
                 @Override
                 public void onCompleted() {
-
+                    channel.shutdown();
                 }
             });
             try {
@@ -72,7 +84,6 @@ public class ManageOrderThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

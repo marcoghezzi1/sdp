@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(2, "localhost", 2, "localhost:1337");
+        Drone d = new Drone(5, "localhost", 5, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -42,12 +42,6 @@ public class DroneMain {
         mqttThread.start();
 
         //managing orders
-
-        /*TODO
-        ping di tutti solo al master, appena questo thread muore, si fa partire una nuova elezione.
-        Finita questa ho un nuovo master a cui devo mandare sia la posizione che il livello di batteria rimanente
-         */
-
         Thread manageOrders = new ManageOrderThread(d);
         manageOrders.start();
 
@@ -55,23 +49,27 @@ public class DroneMain {
         //console.join();
         //battery.join();
         //System.out.println("server di ascolto chiuso, consegne terminate");
-        quitting(d, console);
-
-    }
-
-    private static void quitting(Drone d, Thread console) throws MqttException {
         while (true) {
             if (!console.isAlive() || d.getBatteryLevel() < 15)
                 d.setWantToQuit(true);
             if (d.isWantToQuit()) {
                 if (d.sonoMaster()) {
                     d.disconnectFromMqtt();
-                    while (d.getOrdiniPendingMaster().size()!=0);
+                    synchronized (d.getOrdiniPendingMaster()) {
+                        if (d.getOrdiniPendingMaster().size() != 0)
+                            System.out.println("Waiting to manage all orders");
+                            d.getOrdiniPendingMaster().wait();
+                    }
+                    manageOrders.interrupt();
                 }
-                while (d.isInConsegna());
+                while (d.isInConsegna())
+                    assert true;
+                //System.out.println("In consegna drone: "+ d.isInConsegna());
                 d.disconnectFromServerREST();
                 System.exit(0);
             }
         }
+
     }
+
 }
