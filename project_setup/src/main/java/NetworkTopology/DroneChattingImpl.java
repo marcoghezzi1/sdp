@@ -1,6 +1,6 @@
 package NetworkTopology;
 
-import Consegne.GlobalStatsToSend;
+import Consegne.GlobalStatsToMaster;
 import REST.Drone;
 import com.example.grpc.DroneChattingGrpc;
 import io.grpc.ManagedChannel;
@@ -102,6 +102,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             else {
                 newElection = null;
             }
+            responseObserver.onCompleted();
 
         }
         //invio il messaggio di elezione se questo non è null
@@ -153,7 +154,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
                     +xConsegna+", "+yConsegna+")");
 
-            GlobalStatsToSend global = drone.manageOrder(idOrder, xRitiro, yRitiro, xConsegna, yConsegna);
+            GlobalStatsToMaster global = drone.manageOrder(idOrder, xRitiro, yRitiro, xConsegna, yConsegna);
             long timestamp = global.getArrivo().getTime();
             int[] posConsegna = global.getPosizione();
             GlobalStats response = newBuilder()
@@ -164,6 +165,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                             .build())
                     .setBatteryLevel(global.getBatteryLevel())
                     .setKm(global.getDistTot())
+                    .setPollution(global.getAvgPollution())
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();

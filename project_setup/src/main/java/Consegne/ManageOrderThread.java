@@ -5,6 +5,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,8 +41,9 @@ public class ManageOrderThread extends Thread {
             Order order = drone.getOrder(orderList);
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
-            if (scelto == null)
+            if (scelto == null) {
                 continue;
+            }
             drone.removeOrder(orderList);
             String indirizzo = "localhost:" + scelto.getPort();
             //System.out.println("Indirizzo: " + indirizzo);
@@ -52,9 +54,9 @@ public class ManageOrderThread extends Thread {
                     .setXRitiro(order.getRitiro()[0]).setYRitiro(order.getRitiro()[1])
                     .setXConsegna(order.getConsegna()[0]).setYConsegna(order.getConsegna()[1])
                     .build();
-            System.out.println("Drone scelto: "+scelto.getId());
+            //System.out.println("Drone scelto: "+scelto.getId());
             scelto.setInConsegna(true);
-            System.out.println("status consegna: "+scelto.isInConsegna());
+            //System.out.println("status consegna: "+scelto.isInConsegna());
             stub.deliver(request, new StreamObserver<GlobalStats>() {
                 @Override
                 public void onNext(GlobalStats value) {
@@ -64,9 +66,13 @@ public class ManageOrderThread extends Thread {
                     System.out.println("Il drone "+scelto.getId()+" per l'ultima consegna ha percorso "+ String.format("%.2f", value.getKm())+" km. " +
                             "Ha un livello di batteria pari a "+value.getBatteryLevel());
                     scelto.setInConsegna(false);
-                    if (scelto==drone)
-                        drone.setInConsegna(false);
-                    //System.out.println("status consegna: "+scelto.isInConsegna());
+                    double kmPercorsi = value.getKm();
+                    int batteryLeft = value.getBatteryLevel();
+                    double pollutionRegistered = value.getPollution();
+                    GlobalStatsToMaster stats = new GlobalStatsToMaster(new Timestamp(value.getTimestamp()),
+                            newPosDrone, kmPercorsi, batteryLeft,
+                            pollutionRegistered);
+                    drone.getListGlobal().add(stats);
                 }
 
                 @Override

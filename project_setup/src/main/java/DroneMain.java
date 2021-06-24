@@ -1,4 +1,5 @@
 import Consegne.ManageOrderThread;
+import Consegne.SendingStatsThread;
 import NetworkTopology.*;
 import REST.Drone;
 import Consegne.DroneMqttThread;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(5, "localhost", 5, "localhost:1337");
+        Drone d = new Drone(2, "localhost", 2, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -45,6 +46,10 @@ public class DroneMain {
         Thread manageOrders = new ManageOrderThread(d);
         manageOrders.start();
 
+        //thread per vedere le statistiche dei droni
+        Thread sendingStats = new SendingStatsThread(d);
+        sendingStats.start();
+
         //in caso di terminazione del thread console, esco dalla rete di droni e chiudo completamente il processo
         //console.join();
         //battery.join();
@@ -66,6 +71,8 @@ public class DroneMain {
                     assert true;
                 //System.out.println("In consegna drone: "+ d.isInConsegna());
                 d.disconnectFromServerREST();
+                //server.interrupt();
+                ping.interrupt();
                 System.exit(0);
             }
         }

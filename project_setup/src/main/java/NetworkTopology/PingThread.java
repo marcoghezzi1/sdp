@@ -28,8 +28,6 @@ public class PingThread extends Thread {
     public void run() {
         while (true) {
             try {
-                //wait();
-
                 List<Drone> drones = self.getDrones();
                 if (drones!=null && drones.size()!=0) {
                     for (Drone d: drones) {
@@ -51,6 +49,7 @@ public class PingThread extends Thread {
 
                             @Override
                             public void onError(Throwable t) {
+                                //channel.shutdown();
                                 System.out.println("Canale chiuso");
                                 self.removeDroneToLocalList(d);
                                 if (d.getId() == self.getIdMaster()) {
@@ -62,8 +61,9 @@ public class PingThread extends Thread {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-
                                 }
+                                channel.shutdown();
+
 
                             }
 
@@ -72,8 +72,6 @@ public class PingThread extends Thread {
                                 channel.shutdown();
                             }
                         });
-
-                        channel.awaitTermination(10, TimeUnit.SECONDS);
                     }
                     Thread.sleep(5000);
 

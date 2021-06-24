@@ -1,6 +1,6 @@
 package REST;
 
-import Consegne.GlobalStatsToSend;
+import Consegne.GlobalStatsToMaster;
 import Consegne.Order;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
@@ -29,15 +29,16 @@ public class Drone {
     private int[] posizione;
     private boolean master;
     private int batteryLevel;
-    private List<Drone> drones;
     private int idMaster;
     private boolean partecipanteElezione = false;
     private boolean inConsegna;
+    private List<Drone> drones = new ArrayList<>();
     private List<Order> ordiniPendingMaster;
+    private List<GlobalStatsToMaster> listGlobal = new ArrayList<>();
+
     private MqttClient mqttClient;
     private int posizioniRicevute = 0;
     private boolean wantToQuit = false;
-
     public Drone() {
     }
 
@@ -132,11 +133,11 @@ public class Drone {
         this.partecipanteElezione = partecipanteElezione;
     }
 
-    public boolean isInConsegna() {
+    public synchronized boolean isInConsegna() {
         return inConsegna;
     }
 
-    public void setInConsegna(boolean inConsegna) {
+    public synchronized void setInConsegna(boolean inConsegna) {
         this.inConsegna = inConsegna;
     }
 
@@ -237,12 +238,14 @@ public class Drone {
                 Order order = gson.fromJson(receivedMessage, Order.class);
                 System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()+"\n");
                 Drone.this.addOrderToQueue(order);
-                List<Drone> copy = Drone.this.getDrones();
+                /*List<Drone> copy = Drone.this.getDrones();
                 if (copy!=null)
                     for (Drone d :
                             Drone.this.getDrones()) {
                         System.out.print("id: " +d.getId()+ ", battery level: "+d.getBatteryLevel()+"\n");
                     }
+
+                 */
 
             }
 
@@ -277,10 +280,10 @@ public class Drone {
     public int getPosizioniRicevute() {
         return posizioniRicevute;
     }
+
     public synchronized void notifyIamMaster() {
         this.notifyAll();
     }
-
     private double getDistance(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
     }
@@ -339,18 +342,18 @@ public class Drone {
         return chosen;
     }
 
-    public GlobalStatsToSend manageOrder(String idOrder, int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
+    public GlobalStatsToMaster manageOrder(String idOrder, int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
         this.setInConsegna(true);
         int[] posDrone = this.getPosizione();
         double distanzaDalRitiro = getDistance(posDrone[0], posDrone[1], xRitiro, yRitiro);
         double distanzaDallaConsegna = getDistance(xRitiro, yRitiro, xConsegna, yConsegna);
         double distTot = distanzaDallaConsegna+distanzaDalRitiro;
-        Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
         int[] posConsegna = {xConsegna, yConsegna};
         Thread.sleep(5000);
         this.setBatteryLevel(this.getBatteryLevel()-10);
         this.setPosizione(posConsegna);
-        GlobalStatsToSend global = new GlobalStatsToSend(arrivo, this.getPosizione(), distTot, this.getBatteryLevel());
+        Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
+        GlobalStatsToMaster global = new GlobalStatsToMaster(arrivo, this.getPosizione(), distTot, this.getBatteryLevel(), 20);
         this.setInConsegna(false);
         return global;
     }
@@ -366,5 +369,13 @@ public class Drone {
                 ", port=" + port +
                 ", posizione=" + Arrays.toString(posizione) +
                 '}';
+    }
+
+    public List<GlobalStatsToMaster> getListGlobal() {
+        return listGlobal;
+    }
+
+    public void setListGlobal(List<GlobalStatsToMaster> listGlobal) {
+        this.listGlobal = listGlobal;
     }
 }

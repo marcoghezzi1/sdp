@@ -2,18 +2,24 @@ package Consegne;
 
 import java.sql.Timestamp;
 
-public class GlobalStatsToSend {
 
-    private final Timestamp arrivo;
-    private final int[] posizione;
-    private final double distTot;
-    private final int batteryLevel;
+public class GlobalStatsToMaster {
 
-    public GlobalStatsToSend(Timestamp arrivo, int[] posizione, double distTot, int batteryLevel) {
+    private Timestamp arrivo;
+    private int[] posizione;
+    private double distTot;
+    private int batteryLevel;
+    private double avgPollution;
+
+    public GlobalStatsToMaster() {
+    }
+
+    public GlobalStatsToMaster(Timestamp arrivo, int[] posizione, double distTot, int batteryLevel, double pollution) {
         this.arrivo = arrivo;
         this.posizione = posizione;
         this.distTot = distTot;
         this.batteryLevel = batteryLevel;
+        this.avgPollution = pollution;
     }
 
     public Timestamp getArrivo() {
@@ -30,5 +36,9 @@ public class GlobalStatsToSend {
 
     public int getBatteryLevel() {
         return batteryLevel;
+    }
+
+    public double getAvgPollution() {
+        return avgPollution;
     }
 }

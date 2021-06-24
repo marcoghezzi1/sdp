@@ -38,7 +38,7 @@ public class ElectionThread extends Thread {
 
                 @Override
                 public void onCompleted() {
-
+                    channel.shutdown();
                 }
             });
         }

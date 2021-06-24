@@ -4937,6 +4937,12 @@ public final class DroneChattingOuterClass {
      * @return The batteryLevel.
      */
     int getBatteryLevel();
+
+    /**
+     * <code>double pollution = 5;</code>
+     * @return The pollution.
+     */
+    double getPollution();
   }
   /**
    * Protobuf type {@code com.example.grpc.GlobalStats}
@@ -5009,6 +5015,11 @@ public final class DroneChattingOuterClass {
             case 32: {
 
               batteryLevel_ = input.readInt32();
+              break;
+            }
+            case 41: {
+
+              pollution_ = input.readDouble();
               break;
             }
             default: {
@@ -5650,6 +5661,16 @@ public final class DroneChattingOuterClass {
       return batteryLevel_;
     }
 
+    public static final int POLLUTION_FIELD_NUMBER = 5;
+    private double pollution_;
+    /**
+     * <code>double pollution = 5;</code>
+     * @return The pollution.
+     */
+    public double getPollution() {
+      return pollution_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -5676,6 +5697,9 @@ public final class DroneChattingOuterClass {
       if (batteryLevel_ != 0) {
         output.writeInt32(4, batteryLevel_);
       }
+      if (pollution_ != 0D) {
+        output.writeDouble(5, pollution_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -5700,6 +5724,10 @@ public final class DroneChattingOuterClass {
       if (batteryLevel_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, batteryLevel_);
+      }
+      if (pollution_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(5, pollution_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5728,6 +5756,9 @@ public final class DroneChattingOuterClass {
               other.getKm())) return false;
       if (getBatteryLevel()
           != other.getBatteryLevel()) return false;
+      if (java.lang.Double.doubleToLongBits(getPollution())
+          != java.lang.Double.doubleToLongBits(
+              other.getPollution())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5751,6 +5782,9 @@ public final class DroneChattingOuterClass {
           java.lang.Double.doubleToLongBits(getKm()));
       hash = (37 * hash) + BATTERYLEVEL_FIELD_NUMBER;
       hash = (53 * hash) + getBatteryLevel();
+      hash = (37 * hash) + POLLUTION_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getPollution()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -5896,6 +5930,8 @@ public final class DroneChattingOuterClass {
 
         batteryLevel_ = 0;
 
+        pollution_ = 0D;
+
         return this;
       }
 
@@ -5930,6 +5966,7 @@ public final class DroneChattingOuterClass {
         }
         result.km_ = km_;
         result.batteryLevel_ = batteryLevel_;
+        result.pollution_ = pollution_;
         onBuilt();
         return result;
       }
@@ -5989,6 +6026,9 @@ public final class DroneChattingOuterClass {
         }
         if (other.getBatteryLevel() != 0) {
           setBatteryLevel(other.getBatteryLevel());
+        }
+        if (other.getPollution() != 0D) {
+          setPollution(other.getPollution());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6224,6 +6264,36 @@ public final class DroneChattingOuterClass {
       public Builder clearBatteryLevel() {
         
         batteryLevel_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private double pollution_ ;
+      /**
+       * <code>double pollution = 5;</code>
+       * @return The pollution.
+       */
+      public double getPollution() {
+        return pollution_;
+      }
+      /**
+       * <code>double pollution = 5;</code>
+       * @param value The pollution to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPollution(double value) {
+        
+        pollution_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>double pollution = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPollution() {
+        
+        pollution_ = 0D;
         onChanged();
         return this;
       }
@@ -6769,21 +6839,22 @@ public final class DroneChattingOuterClass {
       "(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n\014OrderM" +
       "essage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitiro\030\002 \001(\005" +
       "\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030\004 \001(\005\022\017" +
-      "\n\007idOrder\030\005 \001(\t\"\256\001\n\013GlobalStats\022\021\n\ttimes" +
+      "\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021\n\ttimes" +
       "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
       "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
-      "\022\024\n\014batteryLevel\030\004 \001(\005\0320\n\010Consegna\022\021\n\txC" +
-      "onsegna\030\001 \001(\005\022\021\n\tyConsegna\030\002 \001(\005\"\t\n\007Mess" +
-      "age2\362\002\n\rDroneChatting\022A\n\010discover\022\031.com." +
-      "example.grpc.Request\032\032.com.example.grpc." +
-      "Response\0226\n\004ping\022\026.com.example.grpc.Ping" +
-      "\032\026.com.example.grpc.Ping\022P\n\010election\022!.c" +
-      "om.example.grpc.ElectionMessage\032!.com.ex" +
-      "ample.grpc.ElectionMessage\022J\n\007sendPos\022$." +
-      "com.example.grpc.PositionAndBattery\032\031.co" +
-      "m.example.grpc.Message\022H\n\007deliver\022\036.com." +
-      "example.grpc.OrderMessage\032\035.com.example." +
-      "grpc.GlobalStatsb\006proto3"
+      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \001(" +
+      "\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyCon" +
+      "segna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneChatting" +
+      "\022A\n\010discover\022\031.com.example.grpc.Request\032" +
+      "\032.com.example.grpc.Response\0226\n\004ping\022\026.co" +
+      "m.example.grpc.Ping\032\026.com.example.grpc.P" +
+      "ing\022P\n\010election\022!.com.example.grpc.Elect" +
+      "ionMessage\032!.com.example.grpc.ElectionMe" +
+      "ssage\022J\n\007sendPos\022$.com.example.grpc.Posi" +
+      "tionAndBattery\032\031.com.example.grpc.Messag" +
+      "e\022H\n\007deliver\022\036.com.example.grpc.OrderMes" +
+      "sage\032\035.com.example.grpc.GlobalStatsb\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6836,7 +6907,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_GlobalStats_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_GlobalStats_descriptor,
-        new java.lang.String[] { "Timestamp", "Consegna", "Km", "BatteryLevel", });
+        new java.lang.String[] { "Timestamp", "Consegna", "Km", "BatteryLevel", "Pollution", });
     internal_static_com_example_grpc_GlobalStats_Consegna_descriptor =
       internal_static_com_example_grpc_GlobalStats_descriptor.getNestedTypes().get(0);
     internal_static_com_example_grpc_GlobalStats_Consegna_fieldAccessorTable = new

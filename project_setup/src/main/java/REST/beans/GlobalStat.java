@@ -2,6 +2,7 @@ package REST.beans;
 
 import javax.xml.bind.annotation.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @XmlRootElement(name="global stat")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,12 +16,12 @@ public class GlobalStat {
     public GlobalStat() {
     }
 
-    public GlobalStat(double avgDelivery, double avgKm, double avgBatteryLife, double avgPollution, String timestamp) {
+    public GlobalStat(double avgDelivery, double avgKm, double avgBatteryLife, double avgPollution, Timestamp timestamp) {
         this.avgDelivery = avgDelivery;
         this.avgKm = avgKm;
         this.avgBatteryLife = avgBatteryLife;
         this.avgPollution = avgPollution;
-        this.timestamp = Timestamp.valueOf(timestamp);
+        this.timestamp = timestamp;
     }
 
     public double getAvgDelivery() {
