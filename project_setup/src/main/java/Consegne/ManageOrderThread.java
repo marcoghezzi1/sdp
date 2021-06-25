@@ -68,7 +68,7 @@ public class ManageOrderThread extends Thread {
                     scelto.setInConsegna(false);
                     double kmPercorsi = value.getKm();
                     int batteryLeft = value.getBatteryLevel();
-                    double pollutionRegistered = value.getPollution();
+                    List<Double> pollutionRegistered = value.getPollutionList();
                     GlobalStatsToMaster stats = new GlobalStatsToMaster(new Timestamp(value.getTimestamp()),
                             newPosDrone, kmPercorsi, batteryLeft,
                             pollutionRegistered);

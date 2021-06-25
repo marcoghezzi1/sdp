@@ -28,14 +28,17 @@ public class SendingStatsThread extends Thread {
                 double totKm = 0;
                 double totBattery = 0;
                 double totPollution = 0;
-                /*for (GlobalStatsToMaster stats :
+                for (GlobalStatsToMaster stats :
                         drone.getListGlobal()) {
-                    System.out.println("batteria rimanente: "+stats.getBatteryLevel()+"\nkm percorsi: "+stats.getDistTot()
-                            +"\ntimestamp: "+stats.getArrivo().toString());
+                    /*System.out.println("batteria rimanente: "+stats.getBatteryLevel()+"\nkm percorsi: "+stats.getDistTot()
+                            +"\ntimestamp: "+stats.getArrivo().toString());*/
                     totKm += stats.getDistTot();
                     totBattery+=stats.getBatteryLevel();
-                    totPollution += stats.getAvgPollution();
-                }*/
+                    for (double pollution :
+                            stats.getAvgPollutionList()) {
+                        totPollution += pollution;
+                    }
+                }
                 int lenList = drone.getListGlobal().size();
                 if (lenList!=0) {
                     double lenDrones;
@@ -56,7 +59,7 @@ public class SendingStatsThread extends Thread {
                             .create()
                             .toJson(statToRest);
                     WebResource webResource = client.resource(statistiche);
-                    //System.out.println(input);
+                    System.out.println(input);
                     ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
                     if (response.getStatus() != 200) {
                         throw new RuntimeException("Failed : HTTP error code : "

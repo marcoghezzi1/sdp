@@ -51,7 +51,7 @@ message GlobalStats {
   Consegna consegna = 2;
   double km = 3;
   int32 batteryLevel = 4;
-  double pollution = 5;
+  repeated double pollution = 5;
 }
 message Message{}
 

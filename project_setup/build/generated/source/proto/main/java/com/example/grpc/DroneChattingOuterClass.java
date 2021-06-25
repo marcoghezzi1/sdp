@@ -4939,10 +4939,21 @@ public final class DroneChattingOuterClass {
     int getBatteryLevel();
 
     /**
-     * <code>double pollution = 5;</code>
-     * @return The pollution.
+     * <code>repeated double pollution = 5;</code>
+     * @return A list containing the pollution.
      */
-    double getPollution();
+    java.util.List<java.lang.Double> getPollutionList();
+    /**
+     * <code>repeated double pollution = 5;</code>
+     * @return The count of pollution.
+     */
+    int getPollutionCount();
+    /**
+     * <code>repeated double pollution = 5;</code>
+     * @param index The index of the element to return.
+     * @return The pollution at the given index.
+     */
+    double getPollution(int index);
   }
   /**
    * Protobuf type {@code com.example.grpc.GlobalStats}
@@ -4957,6 +4968,7 @@ public final class DroneChattingOuterClass {
       super(builder);
     }
     private GlobalStats() {
+      pollution_ = emptyDoubleList();
     }
 
     @java.lang.Override
@@ -4979,6 +4991,7 @@ public final class DroneChattingOuterClass {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -5018,8 +5031,24 @@ public final class DroneChattingOuterClass {
               break;
             }
             case 41: {
-
-              pollution_ = input.readDouble();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                pollution_ = newDoubleList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              pollution_.addDouble(input.readDouble());
+              break;
+            }
+            case 42: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
+                pollution_ = newDoubleList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                pollution_.addDouble(input.readDouble());
+              }
+              input.popLimit(limit);
               break;
             }
             default: {
@@ -5037,6 +5066,9 @@ public final class DroneChattingOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          pollution_.makeImmutable(); // C
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -5662,14 +5694,31 @@ public final class DroneChattingOuterClass {
     }
 
     public static final int POLLUTION_FIELD_NUMBER = 5;
-    private double pollution_;
+    private com.google.protobuf.Internal.DoubleList pollution_;
     /**
-     * <code>double pollution = 5;</code>
-     * @return The pollution.
+     * <code>repeated double pollution = 5;</code>
+     * @return A list containing the pollution.
      */
-    public double getPollution() {
+    public java.util.List<java.lang.Double>
+        getPollutionList() {
       return pollution_;
     }
+    /**
+     * <code>repeated double pollution = 5;</code>
+     * @return The count of pollution.
+     */
+    public int getPollutionCount() {
+      return pollution_.size();
+    }
+    /**
+     * <code>repeated double pollution = 5;</code>
+     * @param index The index of the element to return.
+     * @return The pollution at the given index.
+     */
+    public double getPollution(int index) {
+      return pollution_.getDouble(index);
+    }
+    private int pollutionMemoizedSerializedSize = -1;
 
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
@@ -5685,6 +5734,7 @@ public final class DroneChattingOuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (timestamp_ != 0L) {
         output.writeInt64(1, timestamp_);
       }
@@ -5697,8 +5747,12 @@ public final class DroneChattingOuterClass {
       if (batteryLevel_ != 0) {
         output.writeInt32(4, batteryLevel_);
       }
-      if (pollution_ != 0D) {
-        output.writeDouble(5, pollution_);
+      if (getPollutionList().size() > 0) {
+        output.writeUInt32NoTag(42);
+        output.writeUInt32NoTag(pollutionMemoizedSerializedSize);
+      }
+      for (int i = 0; i < pollution_.size(); i++) {
+        output.writeDoubleNoTag(pollution_.getDouble(i));
       }
       unknownFields.writeTo(output);
     }
@@ -5725,9 +5779,16 @@ public final class DroneChattingOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, batteryLevel_);
       }
-      if (pollution_ != 0D) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(5, pollution_);
+      {
+        int dataSize = 0;
+        dataSize = 8 * getPollutionList().size();
+        size += dataSize;
+        if (!getPollutionList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        pollutionMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5756,9 +5817,8 @@ public final class DroneChattingOuterClass {
               other.getKm())) return false;
       if (getBatteryLevel()
           != other.getBatteryLevel()) return false;
-      if (java.lang.Double.doubleToLongBits(getPollution())
-          != java.lang.Double.doubleToLongBits(
-              other.getPollution())) return false;
+      if (!getPollutionList()
+          .equals(other.getPollutionList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5782,9 +5842,10 @@ public final class DroneChattingOuterClass {
           java.lang.Double.doubleToLongBits(getKm()));
       hash = (37 * hash) + BATTERYLEVEL_FIELD_NUMBER;
       hash = (53 * hash) + getBatteryLevel();
-      hash = (37 * hash) + POLLUTION_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getPollution()));
+      if (getPollutionCount() > 0) {
+        hash = (37 * hash) + POLLUTION_FIELD_NUMBER;
+        hash = (53 * hash) + getPollutionList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -5930,8 +5991,8 @@ public final class DroneChattingOuterClass {
 
         batteryLevel_ = 0;
 
-        pollution_ = 0D;
-
+        pollution_ = emptyDoubleList();
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -5958,6 +6019,7 @@ public final class DroneChattingOuterClass {
       @java.lang.Override
       public com.example.grpc.DroneChattingOuterClass.GlobalStats buildPartial() {
         com.example.grpc.DroneChattingOuterClass.GlobalStats result = new com.example.grpc.DroneChattingOuterClass.GlobalStats(this);
+        int from_bitField0_ = bitField0_;
         result.timestamp_ = timestamp_;
         if (consegnaBuilder_ == null) {
           result.consegna_ = consegna_;
@@ -5966,6 +6028,10 @@ public final class DroneChattingOuterClass {
         }
         result.km_ = km_;
         result.batteryLevel_ = batteryLevel_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          pollution_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
         result.pollution_ = pollution_;
         onBuilt();
         return result;
@@ -6027,8 +6093,15 @@ public final class DroneChattingOuterClass {
         if (other.getBatteryLevel() != 0) {
           setBatteryLevel(other.getBatteryLevel());
         }
-        if (other.getPollution() != 0D) {
-          setPollution(other.getPollution());
+        if (!other.pollution_.isEmpty()) {
+          if (pollution_.isEmpty()) {
+            pollution_ = other.pollution_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensurePollutionIsMutable();
+            pollution_.addAll(other.pollution_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6058,6 +6131,7 @@ public final class DroneChattingOuterClass {
         }
         return this;
       }
+      private int bitField0_;
 
       private long timestamp_ ;
       /**
@@ -6268,32 +6342,81 @@ public final class DroneChattingOuterClass {
         return this;
       }
 
-      private double pollution_ ;
-      /**
-       * <code>double pollution = 5;</code>
-       * @return The pollution.
-       */
-      public double getPollution() {
-        return pollution_;
+      private com.google.protobuf.Internal.DoubleList pollution_ = emptyDoubleList();
+      private void ensurePollutionIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          pollution_ = mutableCopy(pollution_);
+          bitField0_ |= 0x00000001;
+         }
       }
       /**
-       * <code>double pollution = 5;</code>
+       * <code>repeated double pollution = 5;</code>
+       * @return A list containing the pollution.
+       */
+      public java.util.List<java.lang.Double>
+          getPollutionList() {
+        return ((bitField0_ & 0x00000001) != 0) ?
+                 java.util.Collections.unmodifiableList(pollution_) : pollution_;
+      }
+      /**
+       * <code>repeated double pollution = 5;</code>
+       * @return The count of pollution.
+       */
+      public int getPollutionCount() {
+        return pollution_.size();
+      }
+      /**
+       * <code>repeated double pollution = 5;</code>
+       * @param index The index of the element to return.
+       * @return The pollution at the given index.
+       */
+      public double getPollution(int index) {
+        return pollution_.getDouble(index);
+      }
+      /**
+       * <code>repeated double pollution = 5;</code>
+       * @param index The index to set the value at.
        * @param value The pollution to set.
        * @return This builder for chaining.
        */
-      public Builder setPollution(double value) {
-        
-        pollution_ = value;
+      public Builder setPollution(
+          int index, double value) {
+        ensurePollutionIsMutable();
+        pollution_.setDouble(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>double pollution = 5;</code>
+       * <code>repeated double pollution = 5;</code>
+       * @param value The pollution to add.
+       * @return This builder for chaining.
+       */
+      public Builder addPollution(double value) {
+        ensurePollutionIsMutable();
+        pollution_.addDouble(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double pollution = 5;</code>
+       * @param values The pollution to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllPollution(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensurePollutionIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, pollution_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double pollution = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearPollution() {
-        
-        pollution_ = 0D;
+        pollution_ = emptyDoubleList();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -6842,7 +6965,7 @@ public final class DroneChattingOuterClass {
       "\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021\n\ttimes" +
       "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
       "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
-      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \001(" +
+      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \003(" +
       "\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyCon" +
       "segna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneChatting" +
       "\022A\n\010discover\022\031.com.example.grpc.Request\032" +

@@ -33,6 +33,7 @@ public class Drone {
     private boolean partecipanteElezione = false;
     private boolean inConsegna;
     private List<Drone> drones = new ArrayList<>();
+    private List<Double> mediaMisurazioni = new ArrayList<>();
     private List<Order> ordiniPendingMaster;
     private List<GlobalStatsToMaster> listGlobal = new ArrayList<>();
 
@@ -353,7 +354,8 @@ public class Drone {
         this.setBatteryLevel(this.getBatteryLevel()-10);
         this.setPosizione(posConsegna);
         Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
-        GlobalStatsToMaster global = new GlobalStatsToMaster(arrivo, this.getPosizione(), distTot, this.getBatteryLevel(), 20);
+        GlobalStatsToMaster global = new GlobalStatsToMaster(arrivo, this.getPosizione(), distTot, this.getBatteryLevel(), this.getMediaMisurazioni());
+        this.setMediaMisurazioni(new ArrayList<>());
         this.setInConsegna(false);
         return global;
     }
@@ -377,5 +379,17 @@ public class Drone {
 
     public void setListGlobal(List<GlobalStatsToMaster> listGlobal) {
         this.listGlobal = listGlobal;
+    }
+
+    public synchronized List<Double> getMediaMisurazioni() {
+        return mediaMisurazioni;
+    }
+
+    public synchronized void setMediaMisurazioni(List<Double> mediaMisurazioni) {
+        this.mediaMisurazioni = mediaMisurazioni;
+    }
+
+    public synchronized void addMedia(double misurazione) {
+        this.mediaMisurazioni.add(misurazione);
     }
 }

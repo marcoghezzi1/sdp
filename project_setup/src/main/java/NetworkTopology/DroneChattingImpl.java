@@ -165,7 +165,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                             .build())
                     .setBatteryLevel(global.getBatteryLevel())
                     .setKm(global.getDistTot())
-                    .setPollution(global.getAvgPollution())
+                    .addAllPollution(global.getAvgPollutionList())
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();

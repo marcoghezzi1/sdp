@@ -1,15 +1,20 @@
 import Consegne.ManageOrderThread;
+import Consegne.PollutionThread;
 import Consegne.SendingStatsThread;
 import NetworkTopology.*;
 import REST.Drone;
 import Consegne.DroneMqttThread;
+import SimulatoriProgettoSDP2021.Buffer;
+import SimulatoriProgettoSDP2021.Measurement;
+import SimulatoriProgettoSDP2021.PM10Simulator;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(2, "localhost", 2, "localhost:1337");
+        Drone d = new Drone(6, "localhost", 6, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -50,10 +55,43 @@ public class DroneMain {
         Thread sendingStats = new SendingStatsThread(d);
         sendingStats.start();
 
-        //in caso di terminazione del thread console, esco dalla rete di droni e chiudo completamente il processo
-        //console.join();
-        //battery.join();
-        //System.out.println("server di ascolto chiuso, consegne terminate");
+
+
+        //thread PM10 simulator
+        Buffer buffer = new Buffer() {
+            private final List<Measurement> measurements = new ArrayList<>();
+
+            @Override
+            public synchronized void addMeasurement(Measurement m) {
+                measurements.add(m);
+                if (measurements.size()==8)
+                    this.notify();
+            }
+
+            @Override
+            public synchronized List<Measurement> readAllAndClean() {
+                try {
+                    System.out.println("Waiting to receive 8 measures");
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Statistiche ricevute");
+                double overlapPercentage = 0.5;
+                int overlap = (int) (measurements.size()* overlapPercentage);
+                List<Measurement> copy = new ArrayList<>(measurements);
+                if (overlap > 0)
+                    measurements.subList(0, overlap).clear();
+                return copy;
+            }
+        };
+        Thread pm10 = new PM10Simulator(buffer);
+        pm10.start();
+
+        //thread per la raccolta di inquinamento
+        Thread pollution = new PollutionThread(d, buffer);
+        pollution.start();
+
         while (true) {
             if (!console.isAlive() || d.getBatteryLevel() < 15)
                 d.setWantToQuit(true);

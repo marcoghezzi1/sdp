@@ -1,6 +1,7 @@
 package Consegne;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 
 public class GlobalStatsToMaster {
@@ -9,17 +10,17 @@ public class GlobalStatsToMaster {
     private int[] posizione;
     private double distTot;
     private int batteryLevel;
-    private double avgPollution;
+    private List<Double> avgPollutionList;
 
     public GlobalStatsToMaster() {
     }
 
-    public GlobalStatsToMaster(Timestamp arrivo, int[] posizione, double distTot, int batteryLevel, double pollution) {
+    public GlobalStatsToMaster(Timestamp arrivo, int[] posizione, double distTot, int batteryLevel, List<Double> pollution) {
         this.arrivo = arrivo;
         this.posizione = posizione;
         this.distTot = distTot;
         this.batteryLevel = batteryLevel;
-        this.avgPollution = pollution;
+        this.avgPollutionList = pollution;
     }
 
     public Timestamp getArrivo() {
@@ -38,7 +39,7 @@ public class GlobalStatsToMaster {
         return batteryLevel;
     }
 
-    public double getAvgPollution() {
-        return avgPollution;
+    public List<Double> getAvgPollutionList() {
+        return avgPollutionList;
     }
 }
