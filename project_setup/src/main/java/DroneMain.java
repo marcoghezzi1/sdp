@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(3, "localhost", 3, "localhost:1337");
+        Drone d = new Drone(6, "localhost", 6, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -37,7 +37,6 @@ public class DroneMain {
         }
         //mi auto-proclamo master se la lista è vuota
         else {
-            d.setMaster(true);
             d.setIdMaster(d.getId());
         }
 

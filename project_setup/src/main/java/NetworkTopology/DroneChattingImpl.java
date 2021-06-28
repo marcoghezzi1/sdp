@@ -55,56 +55,111 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
-        int batteryReceived = request.getId();
+        int batteryReceived = request.getBattery();
+        int idReceived = request.getId();
         Drone next = drone.nextDrone();
-        int selfBattery = drone.getId();
-        //System.out.println("id ricevuto: " +idReceived);
-        System.out.println("next id: " +next.getId());
+        int selfBattery = drone.getBatteryLevel();
+        int selfId = drone.getId();
+        System.out.println("id ricevuto: " +idReceived);
+        //System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
         ElectionMessage newElection = null;
         //String message = null;
+        /*
+        ricevo un messaggio di election:
+        - se non sono partecipante:
+            - mi segno partecipante
+            - se la batteria ricevuta è maggiore:
+                - propago il messaggio
+            - se la batteria ricevuta è minore:
+                - cambio il messaggio inserendo il mio id e la mia batteria
+            - se la batteria ricevuta è uguale alla mia:
+                - se l'id ricevuto è minore
+                    - cambio il messaggio inserendo il mio id e la mia batteria
+                - se l'id ricevuto è maggiore
+                    - propago il messaggio
+        - se sono partecipante:
+            - se la batteria ricevuta è maggiore:
+                - propago il messaggio
+            - se la batteria ricevuta è minore:
+                - non propago
+            - se la batteria è uguale:
+                - se l'id ricevuto è uguale:
+                    - propago un messaggio di elected
+                - se l'id ricevuto è minore:
+                    - non propago il messaggio
+                - se l'id ricevuto è maggiore:
+                    - propago il messaggio così com'è
+         */
+
+
         if (request.getMessage().equals("Election")) {
             //se la batteria ricevuta è maggiore, propago il messaggio
             if (batteryReceived > selfBattery ) {
                 newElection = request;
                 drone.setPartecipanteElezione(true);
-            } else {
-                //se la batteria è minore o è uguale ma il mio id è maggiore
-                if (batteryReceived < selfBattery) {
-                    if (!drone.isPartecipanteElezione()) {
-                        newElection = ElectionMessage.newBuilder().setId(selfBattery).setMessage("Election").build();
-                        drone.setPartecipanteElezione(true);
-                    }
-                }
-                //se l'id ricevuto è il mio, mi proclamo master
-                else {
-                    drone.setMaster(true);
-                    drone.setIdMaster(selfBattery);
-                    newElection = ElectionMessage.newBuilder().setId(selfBattery).setMessage("Elected").build();
-                }
-
             }
+            if (!drone.isPartecipanteElezione()) {
+                drone.setPartecipanteElezione(true);
+                if (batteryReceived < selfBattery) {
+                    newElection = ElectionMessage.newBuilder()
+                            .setId(selfId)
+                            .setBattery(selfBattery)
+                            .setMessage("Election").build();
+                }
+                if (batteryReceived == selfBattery) {
+                    if (idReceived < selfId) {
+                        newElection = ElectionMessage.newBuilder()
+                                .setId(selfId)
+                                .setBattery(selfBattery)
+                                .setMessage("Election").build();
+                    }
+                    if (idReceived > selfId)
+                        newElection = request;
+                }
+            }
+            //se sono partecipante
+            else {
+                if (batteryReceived < selfBattery)
+                    //non propago il messaggio
+                    newElection = null;
+                if (batteryReceived == selfBattery) {
+                    if (idReceived == selfId) {
+                        newElection = ElectionMessage.newBuilder()
+                                .setId(selfId)
+                                .setMessage("Elected").build();
+                        drone.setIdMaster(selfId);
+                        drone.setPartecipanteElezione(false);
+                    }
+                    if (idReceived < selfId) {
+                        newElection = null;
+                    }
+                    if (idReceived > selfId)
+                        newElection = request;
+                }
+            }
+
+
         }
         //altrimenti ricevo un messaggio elected
         else if (request.getMessage().equals("Elected")) {
             //setto l'id del master
-            drone.setIdMaster(batteryReceived);
+            drone.setIdMaster(idReceived);
             //mi metto non partecipante
             drone.setPartecipanteElezione(false);
             //se non sono il master, propago il messaggio e invio la posizione al master
-            if (selfBattery!=batteryReceived) {
+            if (selfId!=idReceived) {
                 Thread invioPosizione = new SendPosThread(drone);
                 invioPosizione.start();
-                newElection = ElectionMessage.newBuilder().setId(batteryReceived).setMessage("Elected").build();
-
+                newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
             }
             else {
                 newElection = null;
             }
-            responseObserver.onCompleted();
+            //responseObserver.onCompleted();
 
         }
         //invio il messaggio di elezione se questo non è null
@@ -125,7 +180,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     channel.shutdown();
                 }
             });
-
 
     }
 

@@ -29,7 +29,6 @@ public class Drone {
     private int port;
     private String indirizzoServerREST;
     private int[] posizione;
-    private boolean master;
     private int batteryLevel;
     private int idMaster;
     private boolean partecipanteElezione = false;
@@ -52,7 +51,6 @@ public class Drone {
         this.batteryLevel = 100;
         this.drones = new ArrayList<>();
         this.ordiniPendingMaster = new ArrayList<>();
-        this.master = false;
     }
 
     public int getIdMaster() {
@@ -75,9 +73,6 @@ public class Drone {
         return this.getId()==this.getIdMaster();
     }
 
-    public void setMaster(boolean master) {
-        this.master = master;
-    }
 
     public int getId() {
         return id;

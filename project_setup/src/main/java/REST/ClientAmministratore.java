@@ -99,7 +99,10 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     stats = response.getEntity(Statistiche.class);
-                    System.out.println("Media dei delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
+                    if (Double.isNaN(stats.getMedia()))
+                        System.out.println("Nessuna statistica");
+                    else
+                        System.out.println("Media dei delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
                     //System.out.println(output);
                     break;
                 case 4:
@@ -116,7 +119,10 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     stats = response.getEntity(Statistiche.class);
-                    System.out.println("Media dei chilometri percorsi: " +String.format("%.2f",stats.getMedia()) + " km");
+                    if (Double.isNaN(stats.getMedia()))
+                        System.out.println("Nessuna statistica");
+                    else
+                        System.out.println("Media dei chilometri percorsi: " +String.format("%.2f",stats.getMedia()) + " km");
                     break;
             }
             i++;

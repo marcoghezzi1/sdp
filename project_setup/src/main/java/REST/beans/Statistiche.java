@@ -7,7 +7,6 @@ public class Statistiche {
     private double media;
 
     public Statistiche() {
-
     }
 
     public Statistiche(double avg) {

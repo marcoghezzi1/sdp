@@ -47,7 +47,7 @@ public class ElectionThread extends Thread {
         }
         else {
             self.setIdMaster(self.getId());
-            self.setMaster(true);
+
             self.notifyIamMaster();
         }
 

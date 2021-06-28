@@ -49,18 +49,11 @@ public class PingThread extends Thread {
 
                             @Override
                             public void onError(Throwable t) {
-                                //channel.shutdown();
                                 System.out.println("Canale chiuso");
                                 self.removeDroneToLocalList(d);
                                 if (d.getId() == self.getIdMaster()) {
                                     Thread election = new ElectionThread(self);
                                     election.start();
-                                    try {
-                                        election.join();
-                                        System.out.println("Elezione terminata");
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                                 channel.shutdown();
 

@@ -44,6 +44,7 @@ public class SendPosThread extends Thread {
         stub.sendPos(position, new StreamObserver<Message>() {
             @Override
             public void onNext(Message value) {
+                System.out.println(value);
             }
 
             @Override
