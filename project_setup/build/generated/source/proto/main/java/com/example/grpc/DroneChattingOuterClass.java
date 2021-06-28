@@ -2756,7 +2756,13 @@ public final class DroneChattingOuterClass {
         getMessageBytes();
 
     /**
-     * <code>int32 id = 2;</code>
+     * <code>int32 battery = 2;</code>
+     * @return The battery.
+     */
+    int getBattery();
+
+    /**
+     * <code>int32 id = 3;</code>
      * @return The id.
      */
     int getId();
@@ -2814,6 +2820,11 @@ public final class DroneChattingOuterClass {
               break;
             }
             case 16: {
+
+              battery_ = input.readInt32();
+              break;
+            }
+            case 24: {
 
               id_ = input.readInt32();
               break;
@@ -2886,10 +2897,20 @@ public final class DroneChattingOuterClass {
       }
     }
 
-    public static final int ID_FIELD_NUMBER = 2;
+    public static final int BATTERY_FIELD_NUMBER = 2;
+    private int battery_;
+    /**
+     * <code>int32 battery = 2;</code>
+     * @return The battery.
+     */
+    public int getBattery() {
+      return battery_;
+    }
+
+    public static final int ID_FIELD_NUMBER = 3;
     private int id_;
     /**
-     * <code>int32 id = 2;</code>
+     * <code>int32 id = 3;</code>
      * @return The id.
      */
     public int getId() {
@@ -2913,8 +2934,11 @@ public final class DroneChattingOuterClass {
       if (!getMessageBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
       }
+      if (battery_ != 0) {
+        output.writeInt32(2, battery_);
+      }
       if (id_ != 0) {
-        output.writeInt32(2, id_);
+        output.writeInt32(3, id_);
       }
       unknownFields.writeTo(output);
     }
@@ -2928,9 +2952,13 @@ public final class DroneChattingOuterClass {
       if (!getMessageBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, message_);
       }
+      if (battery_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, battery_);
+      }
       if (id_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, id_);
+          .computeInt32Size(3, id_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2949,6 +2977,8 @@ public final class DroneChattingOuterClass {
 
       if (!getMessage()
           .equals(other.getMessage())) return false;
+      if (getBattery()
+          != other.getBattery()) return false;
       if (getId()
           != other.getId()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -2964,6 +2994,8 @@ public final class DroneChattingOuterClass {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getMessage().hashCode();
+      hash = (37 * hash) + BATTERY_FIELD_NUMBER;
+      hash = (53 * hash) + getBattery();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -3101,6 +3133,8 @@ public final class DroneChattingOuterClass {
         super.clear();
         message_ = "";
 
+        battery_ = 0;
+
         id_ = 0;
 
         return this;
@@ -3130,6 +3164,7 @@ public final class DroneChattingOuterClass {
       public com.example.grpc.DroneChattingOuterClass.ElectionMessage buildPartial() {
         com.example.grpc.DroneChattingOuterClass.ElectionMessage result = new com.example.grpc.DroneChattingOuterClass.ElectionMessage(this);
         result.message_ = message_;
+        result.battery_ = battery_;
         result.id_ = id_;
         onBuilt();
         return result;
@@ -3182,6 +3217,9 @@ public final class DroneChattingOuterClass {
         if (!other.getMessage().isEmpty()) {
           message_ = other.message_;
           onChanged();
+        }
+        if (other.getBattery() != 0) {
+          setBattery(other.getBattery());
         }
         if (other.getId() != 0) {
           setId(other.getId());
@@ -3291,16 +3329,46 @@ public final class DroneChattingOuterClass {
         return this;
       }
 
+      private int battery_ ;
+      /**
+       * <code>int32 battery = 2;</code>
+       * @return The battery.
+       */
+      public int getBattery() {
+        return battery_;
+      }
+      /**
+       * <code>int32 battery = 2;</code>
+       * @param value The battery to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBattery(int value) {
+        
+        battery_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 battery = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBattery() {
+        
+        battery_ = 0;
+        onChanged();
+        return this;
+      }
+
       private int id_ ;
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 3;</code>
        * @return The id.
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 3;</code>
        * @param value The id to set.
        * @return This builder for chaining.
        */
@@ -3311,7 +3379,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearId() {
@@ -6956,28 +7024,28 @@ public final class DroneChattingOuterClass {
       "\001(\0132#.com.example.grpc.Request.Posizione" +
       "\022\021\n\tindirizzo\030\006 \001(\t\032!\n\tPosizione\022\t\n\001x\030\001 " +
       "\001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004Ping\022\017\n\007message\030\001 \001(\t\"" +
-      "\034\n\010Response\022\020\n\010idMaster\030\001 \001(\005\".\n\017Electio" +
-      "nMessage\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\"G\n" +
-      "\022PositionAndBattery\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001" +
-      "(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n\014OrderM" +
-      "essage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitiro\030\002 \001(\005" +
-      "\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030\004 \001(\005\022\017" +
-      "\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021\n\ttimes" +
-      "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
-      "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
-      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \003(" +
-      "\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyCon" +
-      "segna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneChatting" +
-      "\022A\n\010discover\022\031.com.example.grpc.Request\032" +
-      "\032.com.example.grpc.Response\0226\n\004ping\022\026.co" +
-      "m.example.grpc.Ping\032\026.com.example.grpc.P" +
-      "ing\022P\n\010election\022!.com.example.grpc.Elect" +
-      "ionMessage\032!.com.example.grpc.ElectionMe" +
-      "ssage\022J\n\007sendPos\022$.com.example.grpc.Posi" +
-      "tionAndBattery\032\031.com.example.grpc.Messag" +
-      "e\022H\n\007deliver\022\036.com.example.grpc.OrderMes" +
-      "sage\032\035.com.example.grpc.GlobalStatsb\006pro" +
-      "to3"
+      "\034\n\010Response\022\020\n\010idMaster\030\001 \001(\005\"?\n\017Electio" +
+      "nMessage\022\017\n\007message\030\001 \001(\t\022\017\n\007battery\030\002 \001" +
+      "(\005\022\n\n\002id\030\003 \001(\005\"G\n\022PositionAndBattery\022\n\n\002" +
+      "id\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007batter" +
+      "y\030\004 \001(\005\"g\n\014OrderMessage\022\017\n\007xRitiro\030\001 \001(\005" +
+      "\022\017\n\007yRitiro\030\002 \001(\005\022\021\n\txConsegna\030\003 \001(\005\022\021\n\t" +
+      "yConsegna\030\004 \001(\005\022\017\n\007idOrder\030\005 \001(\t\"\301\001\n\013Glo" +
+      "balStats\022\021\n\ttimestamp\030\001 \001(\003\0228\n\010consegna\030" +
+      "\002 \001(\0132&.com.example.grpc.GlobalStats.Con" +
+      "segna\022\n\n\002km\030\003 \001(\001\022\024\n\014batteryLevel\030\004 \001(\005\022" +
+      "\021\n\tpollution\030\005 \003(\001\0320\n\010Consegna\022\021\n\txConse" +
+      "gna\030\001 \001(\005\022\021\n\tyConsegna\030\002 \001(\005\"\t\n\007Message2" +
+      "\362\002\n\rDroneChatting\022A\n\010discover\022\031.com.exam" +
+      "ple.grpc.Request\032\032.com.example.grpc.Resp" +
+      "onse\0226\n\004ping\022\026.com.example.grpc.Ping\032\026.c" +
+      "om.example.grpc.Ping\022P\n\010election\022!.com.e" +
+      "xample.grpc.ElectionMessage\032!.com.exampl" +
+      "e.grpc.ElectionMessage\022J\n\007sendPos\022$.com." +
+      "example.grpc.PositionAndBattery\032\031.com.ex" +
+      "ample.grpc.Message\022H\n\007deliver\022\036.com.exam" +
+      "ple.grpc.OrderMessage\032\035.com.example.grpc" +
+      ".GlobalStatsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7012,7 +7080,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_ElectionMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_ElectionMessage_descriptor,
-        new java.lang.String[] { "Message", "Id", });
+        new java.lang.String[] { "Message", "Battery", "Id", });
     internal_static_com_example_grpc_PositionAndBattery_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_example_grpc_PositionAndBattery_fieldAccessorTable = new

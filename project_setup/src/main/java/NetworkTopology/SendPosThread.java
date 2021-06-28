@@ -35,7 +35,7 @@ public class SendPosThread extends Thread {
                 copy) {
             if (d.getId()==drone.getIdMaster()) {
                 indirizzo = "localhost:"+d.getPort();
-                //System.out.println(indirizzo);
+                System.out.println(indirizzo);
                 break;
             }
         }
@@ -53,7 +53,7 @@ public class SendPosThread extends Thread {
 
             @Override
             public void onCompleted() {
-
+                channel.shutdown();
             }
         });
     }

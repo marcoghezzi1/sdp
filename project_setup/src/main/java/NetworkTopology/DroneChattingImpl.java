@@ -55,9 +55,9 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
-        int idReceived = request.getId();
+        int batteryReceived = request.getId();
         Drone next = drone.nextDrone();
-        int selfId = drone.getId();
+        int selfBattery = drone.getId();
         //System.out.println("id ricevuto: " +idReceived);
         System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
@@ -67,21 +67,23 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         ElectionMessage newElection = null;
         //String message = null;
         if (request.getMessage().equals("Election")) {
-            if (idReceived > selfId) {
+            //se la batteria ricevuta è maggiore, propago il messaggio
+            if (batteryReceived > selfBattery ) {
                 newElection = request;
                 drone.setPartecipanteElezione(true);
             } else {
-                if (idReceived < selfId) {
+                //se la batteria è minore o è uguale ma il mio id è maggiore
+                if (batteryReceived < selfBattery) {
                     if (!drone.isPartecipanteElezione()) {
-                        newElection = ElectionMessage.newBuilder().setId(selfId).setMessage("Election").build();
+                        newElection = ElectionMessage.newBuilder().setId(selfBattery).setMessage("Election").build();
                         drone.setPartecipanteElezione(true);
                     }
                 }
                 //se l'id ricevuto è il mio, mi proclamo master
                 else {
                     drone.setMaster(true);
-                    drone.setIdMaster(selfId);
-                    newElection = ElectionMessage.newBuilder().setId(selfId).setMessage("Elected").build();
+                    drone.setIdMaster(selfBattery);
+                    newElection = ElectionMessage.newBuilder().setId(selfBattery).setMessage("Elected").build();
                 }
 
             }
@@ -89,14 +91,14 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         //altrimenti ricevo un messaggio elected
         else if (request.getMessage().equals("Elected")) {
             //setto l'id del master
-            drone.setIdMaster(idReceived);
+            drone.setIdMaster(batteryReceived);
             //mi metto non partecipante
             drone.setPartecipanteElezione(false);
             //se non sono il master, propago il messaggio e invio la posizione al master
-            if (selfId!=idReceived) {
+            if (selfBattery!=batteryReceived) {
                 Thread invioPosizione = new SendPosThread(drone);
                 invioPosizione.start();
-                newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
+                newElection = ElectionMessage.newBuilder().setId(batteryReceived).setMessage("Elected").build();
 
             }
             else {
@@ -141,6 +143,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         }
         drone.addNumberOfPosReceived();
         responseObserver.onNext(Message.newBuilder().build());
+        responseObserver.onCompleted();
     }
 
     @Override

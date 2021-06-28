@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(6, "localhost", 6, "localhost:1337");
+        Drone d = new Drone(3, "localhost", 3, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -52,7 +52,7 @@ public class DroneMain {
         manageOrders.start();
 
         //thread per vedere le statistiche dei droni
-        Thread sendingStats = new SendingStatsThread(d);
+        SendingStatsThread sendingStats = new SendingStatsThread(d);
         sendingStats.start();
 
 
@@ -71,12 +71,12 @@ public class DroneMain {
             @Override
             public synchronized List<Measurement> readAllAndClean() {
                 try {
-                    System.out.println("Waiting to receive 8 measures");
+                    //System.out.println("Waiting to receive 8 measures");
                     this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Statistiche ricevute");
+                //System.out.println("Statistiche ricevute");
                 double overlapPercentage = 0.5;
                 int overlap = (int) (measurements.size()* overlapPercentage);
                 List<Measurement> copy = new ArrayList<>(measurements);
@@ -99,17 +99,20 @@ public class DroneMain {
                 if (d.sonoMaster()) {
                     d.disconnectFromMqtt();
                     synchronized (d.getOrdiniPendingMaster()) {
-                        if (d.getOrdiniPendingMaster().size() != 0)
+                        if (d.getOrdiniPendingMaster().size() != 0) {
                             System.out.println("Waiting to manage all orders");
                             d.getOrdiniPendingMaster().wait();
+                            manageOrders.join();
+                        }
                     }
-                    manageOrders.interrupt();
                 }
                 while (d.isInConsegna())
                     assert true;
-                //System.out.println("In consegna drone: "+ d.isInConsegna());
+                System.out.println("I'm out");
+                sendingStats.setStopCondition();
+                System.out.println("Invio le statistiche al server");
+                d.sendStatsToRest();
                 d.disconnectFromServerREST();
-                //server.interrupt();
                 ping.interrupt();
                 System.exit(0);
             }

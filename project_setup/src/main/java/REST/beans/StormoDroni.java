@@ -1,6 +1,7 @@
 package REST.beans;
 
 import REST.Drone;
+import com.google.gson.annotations.Expose;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,10 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+
 public class StormoDroni {
     //@XmlElement(name = "Stormo")
+    @Expose
     private List<Drone> stormo;
     private static StormoDroni instance;
 

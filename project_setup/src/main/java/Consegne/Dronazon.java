@@ -34,7 +34,7 @@ public class Dronazon {
             message.setQos(qos);
             System.out.println("messaggio pubblicato: " + payload);
             client.publish(topic, message);
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         }
     }
 

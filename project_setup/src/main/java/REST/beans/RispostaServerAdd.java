@@ -12,7 +12,6 @@ public class RispostaServerAdd {
     private int[] posizione;
 
     public RispostaServerAdd() {
-
     }
 
     public RispostaServerAdd(List<Drone> dronesAlreadyInCity, int[] posizione) {

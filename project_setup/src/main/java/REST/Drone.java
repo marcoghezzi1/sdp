@@ -2,6 +2,7 @@ package REST;
 
 import Consegne.GlobalStatsToMaster;
 import Consegne.Order;
+import REST.beans.GlobalStat;
 import REST.beans.RispostaServerAdd;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -17,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
 import org.eclipse.paho.client.mqttv3.*;
+
 
 public class Drone {
     @Expose
@@ -36,13 +38,12 @@ public class Drone {
     private List<Double> mediaMisurazioni = new ArrayList<>();
     private List<Order> ordiniPendingMaster;
     private List<GlobalStatsToMaster> listGlobal = new ArrayList<>();
-
     private MqttClient mqttClient;
     private int posizioniRicevute = 0;
     private boolean wantToQuit = false;
+
     public Drone() {
     }
-
     public Drone(int id, String indirizzoIp, int port, String indirizzoServer) {
         this.id = id;
         this.indirizzoIp = indirizzoIp;
@@ -148,6 +149,7 @@ public class Drone {
         WebResource resource = client.resource(serverAddress+"/drone/add");
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
+        System.out.println(input);
         ClientResponse response = resource.type("application/json").post(ClientResponse.class, input);
         if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
@@ -293,12 +295,12 @@ public class Drone {
         return ordiniPendingMaster;
     }
 
-    public synchronized Order getOrder(List<Order> order) {
-        return order.get(0);
+    public synchronized Order getOrder(List<Order> orders) {
+        return orders.get(0);
     }
 
-    public synchronized void removeOrder(List<Order> order) {
-        order.remove(0);
+    public synchronized void removeOrder(List<Order> orders) {
+        orders.remove(0);
     }
 
     public void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
@@ -319,6 +321,7 @@ public class Drone {
             copy = new ArrayList<>();
         copy.add(this);
         copy.removeIf(d -> d.getBatteryLevel() < 15);
+        copy.removeIf(Drone::isWantToQuit);
         if (copy.size()!=0)
             for (Drone toChoose :
                     copy) {
@@ -364,15 +367,6 @@ public class Drone {
         this.wait();
     }
 
-    @Override
-    public String toString() {
-        return "Drone{" +
-                "id=" + id +
-                ", port=" + port +
-                ", posizione=" + Arrays.toString(posizione) +
-                '}';
-    }
-
     public List<GlobalStatsToMaster> getListGlobal() {
         return listGlobal;
     }
@@ -391,5 +385,59 @@ public class Drone {
 
     public synchronized void addMedia(double misurazione) {
         this.mediaMisurazioni.add(misurazione);
+    }
+    public void sendStatsToRest() {
+        double totKm = 0;
+        double totBattery = 0;
+        double totPollution = 0;
+        double divisore = 0;
+        for (GlobalStatsToMaster stats :
+                this.getListGlobal()) {
+            totKm += stats.getDistTot();
+            totBattery+=stats.getBatteryLevel();
+            for (double pollution :
+                    stats.getAvgPollutionList()) {
+                totPollution += pollution;
+                divisore++;
+            }
+            divisore++;
+        }
+        int lenList = this.getListGlobal().size();
+        if (lenList!=0) {
+            double lenDrones;
+            if (this.getDrones()!=null)
+                lenDrones = this.getDrones().size()+1;
+            else
+                lenDrones = 1;
+            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            GlobalStat statToRest = new GlobalStat(lenList / lenDrones,
+                    totKm / lenList, totBattery / lenList,
+                    totPollution / divisore, now);
+            //creating client rest
+            Client client = Client.create();
+            //System.out.println(now);
+            String statistiche = "http://localhost:1337/statistiche/add";
+            String input = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                    .create()
+                    .toJson(statToRest);
+            WebResource webResource = client.resource(statistiche);
+            //System.out.println(input);
+            ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + response.getStatus());
+            }
+        }
+        this.setListGlobal(new ArrayList<>());
+    }
+
+    @Override
+    public String toString() {
+        return "Drone{" +
+                "id=" + id +
+                ", port=" + port +
+                ", posizione=" + Arrays.toString(posizione) +
+                '}';
     }
 }

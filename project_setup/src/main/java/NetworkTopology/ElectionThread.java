@@ -24,7 +24,10 @@ public class ElectionThread extends Thread {
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
             DroneChattingStub stub = newStub(channel);
             self.setPartecipanteElezione(true);
-            ElectionMessage request = ElectionMessage.newBuilder().setId(self.getId()).setMessage("Election").build();
+            ElectionMessage request = ElectionMessage.newBuilder()
+                    .setBattery(self.getBatteryLevel())
+                    .setId(self.getId())
+                    .setMessage("Election").build();
             stub.election(request, new StreamObserver<ElectionMessage>() {
                 @Override
                 public void onNext(ElectionMessage value) {

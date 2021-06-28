@@ -42,6 +42,14 @@ public class ManageOrderThread extends Thread {
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
             if (scelto == null) {
+                /*System.out.println("Nessun drone disponibile");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                 */
                 continue;
             }
             drone.removeOrder(orderList);
@@ -90,7 +98,9 @@ public class ManageOrderThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
     }
+
 
 }

@@ -38,7 +38,7 @@ public class ClientAmministratore {
             String statistiche = "http://localhost:1337/statistiche";
             WebResource webResource;
             ClientResponse response;
-            String output;
+            StormoDroni output;
             Gson gson = new Gson();
             Statistiche stats;
             String t1;
@@ -54,9 +54,8 @@ public class ClientAmministratore {
                         throw new RuntimeException("Failed : HTTP error code : "
                                 + response.getStatus());
                     }
-                    output = response.getEntity(String.class);
-                    StormoDroni droni = gson.fromJson(output, StormoDroni.class);
-                    List<Drone> copy = droni.getStormo();
+                    output = response.getEntity(StormoDroni.class);
+                    List<Drone> copy = output.getStormo();
                     if (copy.size() != 0 ) {
                         System.out.println("I droni nella smart city sono:");
                         for (Drone d : copy) {
