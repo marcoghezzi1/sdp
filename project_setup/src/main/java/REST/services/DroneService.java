@@ -36,6 +36,7 @@ public class DroneService {
             StormoDroni.getInstance().add(d);
             Random rand = new Random();
             int[] coordinate = {rand.nextInt(10), rand.nextInt(10)};
+            System.out.println("Drone "+d.getId()+" entrato nella smart city ("+coordinate[0]+", "+coordinate[1]+")");
             RispostaServerAdd risposta = new RispostaServerAdd(copy, coordinate);
             return Response.ok().entity(risposta).build();
         }
@@ -47,6 +48,7 @@ public class DroneService {
     @DELETE
     public Response removeDrone(@PathParam("id") int id) {
         StormoDroni.getInstance().deleteDrone(id);
+        System.out.println("Drone "+id+" uscito dalla smart city");
         return Response.ok().build();
     }
 }

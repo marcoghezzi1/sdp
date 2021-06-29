@@ -208,9 +208,9 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             int yRitiro = request.getYRitiro();
             int xConsegna = request.getXConsegna();
             int yConsegna = request.getYConsegna();
-            /*System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
-                    +xConsegna+", "+yConsegna+")");
-             */
+            System.out.println("Ritiro dell'ordine "+idOrder+" da ("+xRitiro+", "+yRitiro+"), a ("
+                    +xConsegna+", "+yConsegna+")\n");
+
 
             GlobalStatsToMaster global = drone.manageOrder(xRitiro, yRitiro, xConsegna, yConsegna);
             long timestamp = global.getArrivo().getTime();

@@ -239,7 +239,8 @@ public class Drone {
             public void messageArrived(String topic, MqttMessage message) {
                 String receivedMessage = new String(message.getPayload());
                 Order order = gson.fromJson(receivedMessage, Order.class);
-                System.out.println("\nNUOVA CONSEGNA: \nid consegna: " +order.getId()+"\n");
+                System.out.println("\nNUOVA CONSEGNA: " +order.getId()+" da: ("+order.getRitiro()[0]+", "+order.getRitiro()[1]
+                        +") a ("+order.getConsegna()[0]+", "+order.getConsegna()[1]+")\n");
                 Drone.this.addOrderToQueue(order);
                 /*List<Drone> copy = Drone.this.getDrones();
                 if (copy!=null)

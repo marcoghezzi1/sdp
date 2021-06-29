@@ -72,7 +72,7 @@ public class ManageOrderThread extends Thread {
                     scelto.setPosizione(newPosDrone);
                     scelto.setBatteryLevel(value.getBatteryLevel());
                     System.out.println("Il drone "+scelto.getId()+" per l'ultima consegna ha percorso "+ String.format("%.2f", value.getKm())+" km. " +
-                            "Ha un livello di batteria pari a "+value.getBatteryLevel());
+                            "Ha un livello di batteria pari a "+value.getBatteryLevel()+"\n");
                     scelto.setInConsegna(false);
                     double kmPercorsi = value.getKm();
                     int batteryLeft = value.getBatteryLevel();
