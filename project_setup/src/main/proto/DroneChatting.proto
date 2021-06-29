@@ -60,6 +60,7 @@ service DroneChatting {
   rpc discover(Request) returns (Response);
   rpc ping(Ping) returns (Ping);
   //pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+  //ho messo il return message, nel caso non funzioni tornare indietro e togliere la onCompleted su electionimpl
   rpc election(ElectionMessage) returns (ElectionMessage);
   rpc sendPos(PositionAndBattery) returns (Message);
   rpc deliver(OrderMessage) returns (GlobalStats);

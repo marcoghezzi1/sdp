@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(9, "localhost", 9, "localhost:1337");
+        Drone d = new Drone(9, "localhost", 8999, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -101,6 +101,7 @@ public class DroneMain {
                         if (d.getOrdiniPendingMaster().size() != 0) {
                             System.out.println("Drone in uscita: finisco di gestire tutti gli ordini rimanenti");
                             d.getOrdiniPendingMaster().wait();
+                            //aspetto che tutti mandino le stats al master
                             manageOrders.join();
                         }
                     }

@@ -6,6 +6,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
 
@@ -31,7 +33,7 @@ public class ElectionThread extends Thread {
             stub.election(request, new StreamObserver<ElectionMessage>() {
                 @Override
                 public void onNext(ElectionMessage value) {
-                    System.out.println(value.getMessage() + " " + value.getId());
+                    System.out.println(value);
                 }
 
                 @Override
@@ -44,6 +46,11 @@ public class ElectionThread extends Thread {
                     channel.shutdown();
                 }
             });
+            try {
+                channel.awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         else {
             self.setIdMaster(self.getId());

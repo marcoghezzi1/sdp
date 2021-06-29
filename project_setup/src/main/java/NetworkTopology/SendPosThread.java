@@ -8,6 +8,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
@@ -36,7 +37,7 @@ public class SendPosThread extends Thread {
             if (d.getId()==drone.getIdMaster()) {
                 indirizzo = "localhost:"+d.getPort();
                 //cancellata stampa invio posizione
-                //System.out.println(indirizzo);
+                System.out.println(indirizzo);
                 break;
             }
         }
@@ -58,5 +59,10 @@ public class SendPosThread extends Thread {
                 channel.shutdown();
             }
         });
+        try {
+            channel.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

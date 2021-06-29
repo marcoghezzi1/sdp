@@ -226,6 +226,7 @@ public final class DroneChattingGrpc {
     /**
      * <pre>
      *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     *ho messo il return message, nel caso non funzioni tornare indietro e togliere la onCompleted su electionimpl
      * </pre>
      */
     public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
@@ -325,6 +326,7 @@ public final class DroneChattingGrpc {
     /**
      * <pre>
      *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     *ho messo il return message, nel caso non funzioni tornare indietro e togliere la onCompleted su electionimpl
      * </pre>
      */
     public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
@@ -385,6 +387,7 @@ public final class DroneChattingGrpc {
     /**
      * <pre>
      *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     *ho messo il return message, nel caso non funzioni tornare indietro e togliere la onCompleted su electionimpl
      * </pre>
      */
     public com.example.grpc.DroneChattingOuterClass.ElectionMessage election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
@@ -444,6 +447,7 @@ public final class DroneChattingGrpc {
     /**
      * <pre>
      *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     *ho messo il return message, nel caso non funzioni tornare indietro e togliere la onCompleted su electionimpl
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.ElectionMessage> election(

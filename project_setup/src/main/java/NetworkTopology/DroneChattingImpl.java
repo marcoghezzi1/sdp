@@ -3,11 +3,13 @@ package NetworkTopology;
 import Consegne.GlobalStatsToMaster;
 import REST.Drone;
 import com.example.grpc.DroneChattingGrpc;
+import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
@@ -64,122 +66,133 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         //System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
-        final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
-        DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
-        ElectionMessage newElection = null;
-        //String message = null;
-        /*
-        ricevo un messaggio di election:
-        - se non sono partecipante:
-            - mi segno partecipante
-            - se la batteria ricevuta è maggiore:
-                - propago il messaggio
-            - se la batteria ricevuta è minore:
+        Context.current().fork().run(() -> {
+            final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+            DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
+            ElectionMessage newElection = null;
+            //String message = null;
+    /*
+    ricevo un messaggio di election:
+    - se non sono partecipante:
+        - mi segno partecipante
+        - se la batteria ricevuta è maggiore:
+            - propago il messaggio
+        - se la batteria ricevuta è minore:
+            - cambio il messaggio inserendo il mio id e la mia batteria
+        - se la batteria ricevuta è uguale alla mia:
+            - se l'id ricevuto è minore
                 - cambio il messaggio inserendo il mio id e la mia batteria
-            - se la batteria ricevuta è uguale alla mia:
-                - se l'id ricevuto è minore
-                    - cambio il messaggio inserendo il mio id e la mia batteria
-                - se l'id ricevuto è maggiore
-                    - propago il messaggio
-        - se sono partecipante:
-            - se la batteria ricevuta è maggiore:
+            - se l'id ricevuto è maggiore
                 - propago il messaggio
-            - se la batteria ricevuta è minore:
-                - non propago
-            - se la batteria è uguale:
-                - se l'id ricevuto è uguale:
-                    - propago un messaggio di elected
-                - se l'id ricevuto è minore:
-                    - non propago il messaggio
-                - se l'id ricevuto è maggiore:
-                    - propago il messaggio così com'è
-         */
+    - se sono partecipante:
+        - se la batteria ricevuta è maggiore:
+            - propago il messaggio
+        - se la batteria ricevuta è minore:
+            - non propago
+        - se la batteria è uguale:
+            - se l'id ricevuto è uguale:
+                - propago un messaggio di elected
+            - se l'id ricevuto è minore:
+                - non propago il messaggio
+            - se l'id ricevuto è maggiore:
+                - propago il messaggio così com'è
+     */
 
 
-        if (request.getMessage().equals("Election")) {
-            //se la batteria ricevuta è maggiore, propago il messaggio
-            if (batteryReceived > selfBattery ) {
-                newElection = request;
-                drone.setPartecipanteElezione(true);
-            }
-            if (!drone.isPartecipanteElezione()) {
-                drone.setPartecipanteElezione(true);
-                if (batteryReceived < selfBattery) {
-                    newElection = ElectionMessage.newBuilder()
-                            .setId(selfId)
-                            .setBattery(selfBattery)
-                            .setMessage("Election").build();
+            if (request.getMessage().equals("Election")) {
+                //se la batteria ricevuta è maggiore, propago il messaggio
+                if (batteryReceived > selfBattery ) {
+                    newElection = request;
+                    drone.setPartecipanteElezione(true);
                 }
-                if (batteryReceived == selfBattery) {
-                    if (idReceived < selfId) {
+                if (!drone.isPartecipanteElezione()) {
+                    drone.setPartecipanteElezione(true);
+                    if (batteryReceived < selfBattery) {
                         newElection = ElectionMessage.newBuilder()
                                 .setId(selfId)
                                 .setBattery(selfBattery)
                                 .setMessage("Election").build();
                     }
-                    if (idReceived > selfId)
-                        newElection = request;
-                }
-            }
-            //se sono partecipante
-            else {
-                if (batteryReceived < selfBattery)
-                    //non propago il messaggio
-                    newElection = null;
-                if (batteryReceived == selfBattery) {
-                    if (idReceived == selfId) {
-                        newElection = ElectionMessage.newBuilder()
-                                .setId(selfId)
-                                .setMessage("Elected").build();
-                        drone.setIdMaster(selfId);
-                        drone.setPartecipanteElezione(false);
+                    if (batteryReceived == selfBattery) {
+                        if (idReceived < selfId) {
+                            newElection = ElectionMessage.newBuilder()
+                                    .setId(selfId)
+                                    .setBattery(selfBattery)
+                                    .setMessage("Election").build();
+                        }
+                        if (idReceived > selfId)
+                            newElection = request;
                     }
-                    if (idReceived < selfId) {
+                }
+                //se sono partecipante
+                else {
+                    if (batteryReceived < selfBattery)
+                        //non propago il messaggio
                         newElection = null;
+                    if (batteryReceived == selfBattery) {
+                        if (idReceived == selfId) {
+                            newElection = ElectionMessage.newBuilder()
+                                    .setId(selfId)
+                                    .setMessage("Elected").build();
+                            drone.setIdMaster(selfId);
+                            drone.setPartecipanteElezione(false);
+                        }
+                        if (idReceived < selfId) {
+                            newElection = null;
+                        }
+                        if (idReceived > selfId)
+                            newElection = request;
                     }
-                    if (idReceived > selfId)
-                        newElection = request;
                 }
-            }
 
 
-        }
-        //altrimenti ricevo un messaggio elected
-        else if (request.getMessage().equals("Elected")) {
-            //setto l'id del master
-            drone.setIdMaster(idReceived);
-            //mi metto non partecipante
-            drone.setPartecipanteElezione(false);
-            //se non sono il master, propago il messaggio e invio la posizione al master
-            if (selfId!=idReceived) {
-                Thread invioPosizione = new SendPosThread(drone);
-                invioPosizione.start();
-                newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
             }
-            else {
-                newElection = null;
+            //altrimenti ricevo un messaggio elected
+            else if (request.getMessage().equals("Elected")) {
+                //setto l'id del master
+                drone.setIdMaster(idReceived);
+                //mi metto non partecipante
+                drone.setPartecipanteElezione(false);
+                //se non sono il master, propago il messaggio e invio la posizione al master
+                if (selfId!=idReceived) {
+                    Thread invioPosizione = new SendPosThread(drone);
+                    invioPosizione.start();
+                    newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
+                }
+                else {
+                    newElection = null;
+                }
+                //responseObserver.onCompleted();
+
             }
+
             //responseObserver.onCompleted();
+            //invio il messaggio di elezione se questo non è null
+            if (newElection!=null)
+                stub.election(newElection, new StreamObserver<ElectionMessage>() {
+                    @Override
+                    public void onNext(ElectionMessage value) {
+                        System.out.println(value);
+                    }
 
-        }
-        //invio il messaggio di elezione se questo non è null
-        if (newElection!=null)
-            stub.election(newElection, new StreamObserver<ElectionMessage>() {
-                @Override
-                public void onNext(ElectionMessage value) {
+                    @Override
+                    public void onError(Throwable t) {
+                        channel.shutdown();
+                    }
 
-                }
-
-                @Override
-                public void onError(Throwable t) {
-
-                }
-
-                @Override
-                public void onCompleted() {
-                    channel.shutdown();
-                }
-            });
+                    @Override
+                    public void onCompleted() {
+                        channel.shutdown();
+                    }
+                });
+            try {
+                channel.awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        responseObserver.onNext(ElectionMessage.newBuilder().build());
+        responseObserver.onCompleted();
 
     }
 
