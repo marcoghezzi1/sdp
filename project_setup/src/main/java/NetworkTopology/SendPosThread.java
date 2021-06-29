@@ -35,7 +35,8 @@ public class SendPosThread extends Thread {
                 copy) {
             if (d.getId()==drone.getIdMaster()) {
                 indirizzo = "localhost:"+d.getPort();
-                System.out.println(indirizzo);
+                //cancellata stampa invio posizione
+                //System.out.println(indirizzo);
                 break;
             }
         }

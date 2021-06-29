@@ -224,6 +224,9 @@ public final class DroneChattingGrpc {
     }
 
     /**
+     * <pre>
+     *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     * </pre>
      */
     public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
         io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
@@ -320,6 +323,9 @@ public final class DroneChattingGrpc {
     }
 
     /**
+     * <pre>
+     *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     * </pre>
      */
     public void election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request,
         io.grpc.stub.StreamObserver<com.example.grpc.DroneChattingOuterClass.ElectionMessage> responseObserver) {
@@ -377,6 +383,9 @@ public final class DroneChattingGrpc {
     }
 
     /**
+     * <pre>
+     *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     * </pre>
      */
     public com.example.grpc.DroneChattingOuterClass.ElectionMessage election(com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {
       return blockingUnaryCall(
@@ -433,6 +442,9 @@ public final class DroneChattingGrpc {
     }
 
     /**
+     * <pre>
+     *pensare di ritornare un messaggio vuoto per fixare gli eventuali errori
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.example.grpc.DroneChattingOuterClass.ElectionMessage> election(
         com.example.grpc.DroneChattingOuterClass.ElectionMessage request) {

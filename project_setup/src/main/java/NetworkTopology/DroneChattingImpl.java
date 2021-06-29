@@ -22,7 +22,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void discover(Request request, StreamObserver<Response> responseObserver) {
-        System.out.println(request.getMessage() + "\nid: " + request.getId() + "\nport: " + request.getPort());
+        System.out.println("\nNuovo drone inserito\nid: " + request.getId() + "\nport: " + request.getPort());
         Drone d = new Drone(request.getId(), request.getIndirizzo(), request.getPort(), drone.getIndirizzoServerREST());
         int[] posizione = {request.getPos().getX(), request.getPos().getY()};
         d.setPosizione(posizione);
@@ -208,10 +208,11 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             int yRitiro = request.getYRitiro();
             int xConsegna = request.getXConsegna();
             int yConsegna = request.getYConsegna();
-            System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
+            /*System.out.println("Ritiro dell'ordine "+idOrder+" a: ("+xRitiro+", "+yRitiro+"), ("
                     +xConsegna+", "+yConsegna+")");
+             */
 
-            GlobalStatsToMaster global = drone.manageOrder(idOrder, xRitiro, yRitiro, xConsegna, yConsegna);
+            GlobalStatsToMaster global = drone.manageOrder(xRitiro, yRitiro, xConsegna, yConsegna);
             long timestamp = global.getArrivo().getTime();
             int[] posConsegna = global.getPosizione();
             GlobalStats response = newBuilder()

@@ -144,9 +144,14 @@ public class Drone {
         WebResource resource = client.resource(serverAddress+"/drone/add");
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
-        System.out.println(input);
+        //System.out.println(input);
         ClientResponse response = resource.type("application/json").post(ClientResponse.class, input);
         if (response.getStatus() != 200) {
+            if (response.getStatus()==500) {
+                System.out.println("Drone già inserito\nEsco...");
+
+                System.exit(0);
+            }
             throw new RuntimeException("Failed : HTTP error code : "
                     + response.getStatus());
         }
@@ -158,7 +163,7 @@ public class Drone {
             System.out.println("Nessun drone attualmente nella smart city");
         }
         else {
-                System.out.print("droni attualmente nella smart city:\n");
+                System.out.print("Droni attualmente nella smart city:\n");
                 for (Drone d : copy) {
                     System.out.print("- Drone id: " + d.getId()
                             + "\n\t- Indirizzo IP: " + d.getIndirizzoIp()
@@ -269,8 +274,8 @@ public class Drone {
     public synchronized void addNumberOfPosReceived(){
         this.posizioniRicevute++;
         if (this.getDrones().size() == this.posizioniRicevute) {
-            System.out.println("Posizioni ricevute: "+this.posizioniRicevute);
-            System.out.println("size lista: " +this.getDrones().size());
+            //System.out.println("Posizioni ricevute: "+this.posizioniRicevute);
+            //System.out.println("size lista: " +this.getDrones().size());
             this.notifyAll();
         }
     }
@@ -298,10 +303,11 @@ public class Drone {
         orders.remove(0);
     }
 
-    public void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
+    public synchronized void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
         this.ordiniPendingMaster = ordiniPendingMaster;
     }
 
+    //metodo per la scelta del drone per la consegna
     public Drone chooseDrone(int[] ritiro) {
         Drone chosen = null;
         int xDrone, yDrone, xRitiro, yRitiro;
@@ -341,7 +347,8 @@ public class Drone {
         return chosen;
     }
 
-    public GlobalStatsToMaster manageOrder(String idOrder, int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
+    //gestione ordine una volta ricevuto
+    public GlobalStatsToMaster manageOrder(int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
         this.setInConsegna(true);
         int[] posDrone = this.getPosizione();
         double distanzaDalRitiro = getDistance(posDrone[0], posDrone[1], xRitiro, yRitiro);
@@ -358,11 +365,13 @@ public class Drone {
         return global;
     }
 
+    //metodo per attendere di diventare master
     public synchronized void waitingToBeMaster() throws InterruptedException {
         this.wait();
     }
 
-    public List<GlobalStatsToMaster> getListGlobal() {
+    //metodo per accedere alla lista delle statistiche da inviare al master (syncronized?)
+    public synchronized List<GlobalStatsToMaster> getListGlobal() {
         return listGlobal;
     }
 
@@ -370,10 +379,12 @@ public class Drone {
         this.listGlobal = listGlobal;
     }
 
+    //metodo per prendere la lista delle medie misurazioni
     public synchronized List<Double> getMediaMisurazioni() {
         return mediaMisurazioni;
     }
 
+    //metodo per settare la lista delle medie misurazioni
     public synchronized void setMediaMisurazioni(List<Double> mediaMisurazioni) {
         this.mediaMisurazioni = mediaMisurazioni;
     }
@@ -381,6 +392,8 @@ public class Drone {
     public synchronized void addMedia(double misurazione) {
         this.mediaMisurazioni.add(misurazione);
     }
+
+    //metodo per inviare le statistiche al server rest
     public void sendStatsToRest() {
         double totKm = 0;
         double totBattery = 0;

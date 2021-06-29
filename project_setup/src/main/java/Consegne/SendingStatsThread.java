@@ -28,7 +28,7 @@ public class SendingStatsThread extends Thread {
                 if (!drone.sonoMaster()) {
                     drone.waitingToBeMaster();
                 }
-                System.out.println("Sending stats");
+                //System.out.println("Sending stats");
                 drone.sendStatsToRest();
                 Thread.sleep(10000);
             } catch (InterruptedException e) {

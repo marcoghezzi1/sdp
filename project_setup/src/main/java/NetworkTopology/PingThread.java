@@ -19,6 +19,7 @@ import static com.example.grpc.DroneChattingOuterClass.*;
 
 public class PingThread extends Thread {
     private Drone self;
+    private boolean stopCondition = false;
     public PingThread(Drone drone) {
         this.self = drone;
     }
@@ -26,11 +27,11 @@ public class PingThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            while (!stopCondition) {
                 List<Drone> drones = self.getDrones();
-                if (drones!=null && drones.size()!=0) {
-                    for (Drone d: drones) {
+                if (drones != null && drones.size() != 0) {
+                    for (Drone d : drones) {
 
                         String indirizzo = "";
 
@@ -56,8 +57,6 @@ public class PingThread extends Thread {
                                     election.start();
                                 }
                                 channel.shutdown();
-
-
                             }
 
                             @Override
@@ -69,9 +68,15 @@ public class PingThread extends Thread {
                     Thread.sleep(5000);
 
                 }
-            } catch (InterruptedException e) {
 
             }
         }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setStopCondition() {
+        stopCondition = true;
     }
 }
