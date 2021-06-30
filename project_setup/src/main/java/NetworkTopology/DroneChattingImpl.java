@@ -57,6 +57,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
+        drone.setElection(true);
         int batteryReceived = request.getBattery();
         int idReceived = request.getId();
         Drone next = drone.nextDrone();
@@ -131,6 +132,12 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                         newElection = null;
                     if (batteryReceived == selfBattery) {
                         if (idReceived == selfId) {
+                            //sleep per testare il quit del nuovo master, cosa minchia succede?
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             newElection = ElectionMessage.newBuilder()
                                     .setId(selfId)
                                     .setMessage("Elected").build();
@@ -158,6 +165,12 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     Thread invioPosizione = new SendPosThread(drone);
                     invioPosizione.start();
                     newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
+                    //sleep per testare il quit del nuovo master, cosa minchia succede?
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else {
                     newElection = null;
@@ -167,7 +180,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             }
 
             //responseObserver.onCompleted();
-            //invio il messaggio di elezione se questo non è null
+            //invio il messaggio di elezione (election o elected) se questo non è null
             if (newElection!=null)
                 stub.election(newElection, new StreamObserver<ElectionMessage>() {
                     @Override
@@ -191,6 +204,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 e.printStackTrace();
             }
         });
+        drone.setElection(false);
         responseObserver.onNext(ElectionMessage.newBuilder().build());
         responseObserver.onCompleted();
 

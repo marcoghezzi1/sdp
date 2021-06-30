@@ -19,7 +19,8 @@ public class ElectionThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Elezione iniziata---");
+        self.setElection(true);
+        System.out.println("---Elezione iniziata---");
         Drone next = self.nextDrone();
         if (next!=null) {
             String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
@@ -54,10 +55,9 @@ public class ElectionThread extends Thread {
         }
         else {
             self.setIdMaster(self.getId());
-
             self.notifyIamMaster();
         }
-
+        self.setElection(false);
 
 
     }

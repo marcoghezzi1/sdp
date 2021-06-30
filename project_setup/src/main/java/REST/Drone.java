@@ -40,6 +40,7 @@ public class Drone {
     private MqttClient mqttClient;
     private int posizioniRicevute = 0;
     private boolean wantToQuit = false;
+    private boolean electionGoing = false;
 
     public Drone() {
     }
@@ -448,5 +449,13 @@ public class Drone {
                 ", port=" + port +
                 ", posizione=" + Arrays.toString(posizione) +
                 '}';
+    }
+
+    public void setElection(boolean b) {
+        this.electionGoing = b;
+    }
+
+    public boolean isElectionGoing() {
+        return electionGoing;
     }
 }

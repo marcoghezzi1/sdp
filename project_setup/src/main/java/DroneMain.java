@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(9, "localhost", 8999, "localhost:1337");
+        Drone d = new Drone(4, "localhost", 4, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -92,7 +92,7 @@ public class DroneMain {
         pollution.start();
 
         while (true) {
-            if (!console.isAlive() || d.getBatteryLevel() < 15)
+            if ((!console.isAlive() || d.getBatteryLevel() < 15) && !d.isElectionGoing())
                 d.setWantToQuit(true);
             if (d.isWantToQuit()) {
                 if (d.sonoMaster()) {

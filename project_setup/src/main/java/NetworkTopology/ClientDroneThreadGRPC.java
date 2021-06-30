@@ -28,7 +28,7 @@ public class ClientDroneThreadGRPC extends Thread{
 
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
 
-        String message = "Buongiorno! Sono il nuovo drone";
+        String message = "Nuovo drone inserito";
 
 
         Request request = Request.newBuilder().setMessage(message)
