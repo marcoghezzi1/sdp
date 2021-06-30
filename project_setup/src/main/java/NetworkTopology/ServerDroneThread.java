@@ -26,6 +26,7 @@ public class ServerDroneThread extends Thread{
             server.awaitTermination();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            System.exit(0);
         }
 
 

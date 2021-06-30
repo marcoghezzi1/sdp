@@ -19,45 +19,47 @@ public class ElectionThread extends Thread {
 
     @Override
     public void run() {
-        self.setElection(true);
-        System.out.println("---Elezione iniziata---");
-        Drone next = self.nextDrone();
-        if (next!=null) {
-            String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
-            final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
-            DroneChattingStub stub = newStub(channel);
-            self.setPartecipanteElezione(true);
-            ElectionMessage request = ElectionMessage.newBuilder()
-                    .setBattery(self.getBatteryLevel())
-                    .setId(self.getId())
-                    .setMessage("Election").build();
-            stub.election(request, new StreamObserver<ElectionMessage>() {
-                @Override
-                public void onNext(ElectionMessage value) {
-                    System.out.println(value);
-                }
+        if (!self.isElectionGoing()) {
+            self.setElection(true);
+            System.out.println("---Elezione iniziata---");
+            Drone next = self.nextDrone();
+            if (next != null) {
+                System.out.println("sending message to " + next.getId());
+                String indirizzo = next.getIndirizzoIp() + ":" + next.getPort();
+                final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+                DroneChattingStub stub = newStub(channel);
+                self.setPartecipanteElezione(true);
+                ElectionMessage request = ElectionMessage.newBuilder()
+                        .setBattery(self.getBatteryLevel())
+                        .setId(self.getId())
+                        .setMessage("Election").build();
+                stub.election(request, new StreamObserver<ElectionMessage>() {
+                    @Override
+                    public void onNext(ElectionMessage value) {
+                        System.out.println(value);
+                    }
 
-                @Override
-                public void onError(Throwable t) {
+                    @Override
+                    public void onError(Throwable t) {
 
-                }
+                    }
 
-                @Override
-                public void onCompleted() {
-                    channel.shutdown();
+                    @Override
+                    public void onCompleted() {
+                        channel.shutdown();
+                    }
+                });
+                try {
+                    channel.awaitTermination(10, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
-            try {
-                channel.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } else {
+                self.setIdMaster(self.getId());
+                self.notifyIamMaster();
             }
+            self.setElection(false);
         }
-        else {
-            self.setIdMaster(self.getId());
-            self.notifyIamMaster();
-        }
-        self.setElection(false);
 
 
     }

@@ -29,18 +29,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         int[] posizione = {request.getPos().getX(), request.getPos().getY()};
         d.setPosizione(posizione);
         this.drone.addDroneToLocalList(d);
-        //List<Drone> copy = this.drone.getDrones();
-        /*if (copy != null){
-                System.out.print("Lista droni: ");
-            for (Drone drone :
-                    copy) {
-                System.out.print(" Drone id: " + drone.toString());
-                        //+ "Posizione: ("+drone.getPosizione()[0]+", "+drone.getPosizione()[1]+")\n");
-            }
-            System.out.println();
-        }
-
-         */
 
         Response response = Response.newBuilder().setIdMaster(this.drone.getIdMaster()).build();
         responseObserver.onNext(response);
@@ -64,7 +52,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         int selfBattery = drone.getBatteryLevel();
         int selfId = drone.getId();
         System.out.println("id ricevuto: " +idReceived);
-        //System.out.println("next id: " +next.getId());
+        System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         Context.current().fork().run(() -> {
@@ -132,12 +120,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                         newElection = null;
                     if (batteryReceived == selfBattery) {
                         if (idReceived == selfId) {
-                            //sleep per testare il quit del nuovo master, cosa minchia succede?
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             newElection = ElectionMessage.newBuilder()
                                     .setId(selfId)
                                     .setMessage("Elected").build();
@@ -160,19 +142,16 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 drone.setIdMaster(idReceived);
                 //mi metto non partecipante
                 drone.setPartecipanteElezione(false);
+
                 //se non sono il master, propago il messaggio e invio la posizione al master
                 if (selfId!=idReceived) {
                     Thread invioPosizione = new SendPosThread(drone);
                     invioPosizione.start();
                     newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
                     //sleep per testare il quit del nuovo master, cosa minchia succede?
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
                 else {
+                    drone.notifyIamMaster();
                     newElection = null;
                 }
                 //responseObserver.onCompleted();
@@ -236,7 +215,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             int xConsegna = request.getXConsegna();
             int yConsegna = request.getYConsegna();
             System.out.println("Ritiro dell'ordine "+idOrder+" da ("+xRitiro+", "+yRitiro+"), a ("
-                    +xConsegna+", "+yConsegna+")\n");
+                    +xConsegna+", "+yConsegna+")");
 
 
             GlobalStatsToMaster global = drone.manageOrder(xRitiro, yRitiro, xConsegna, yConsegna);
@@ -252,6 +231,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     .setKm(global.getDistTot())
                     .addAllPollution(global.getAvgPollutionList())
                     .build();
+            System.out.println("Batteria rimasta: " +drone.getBatteryLevel()+"\n");
             responseObserver.onNext(response);
             responseObserver.onCompleted();
 
@@ -259,6 +239,5 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             e.printStackTrace();
         }
     }
-
 
 }

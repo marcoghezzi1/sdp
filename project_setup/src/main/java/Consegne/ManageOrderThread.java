@@ -42,18 +42,10 @@ public class ManageOrderThread extends Thread {
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
             if (scelto == null) {
-                /*System.out.println("Nessun drone disponibile");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                 */
                 continue;
             }
             drone.removeOrder(orderList);
-            String indirizzo = "localhost:" + scelto.getPort();
+            String indirizzo = scelto.getIndirizzoIp()+":" + scelto.getPort();
             //System.out.println("Indirizzo: " + indirizzo);
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
             DroneChattingStub stub = newStub(channel);

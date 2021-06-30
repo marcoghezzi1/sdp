@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(4, "localhost", 4, "localhost:1337");
+        Drone d = new Drone(10, "localhost", 8000, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
         Thread server = new ServerDroneThread(d);
@@ -103,15 +103,16 @@ public class DroneMain {
                             d.getOrdiniPendingMaster().wait();
                             //aspetto che tutti mandino le stats al master
                             manageOrders.join();
+                            System.out.println("Gestiti tutti gli ordini");
+                            sendingStats.setStopCondition();
+                            d.sendStatsToRest();
+                            System.out.println("Invio le statistiche al server");
                         }
                     }
                 }
-                while (d.isInConsegna())
+                while (d.isInConsegna()) {
                     assert true;
-                System.out.println("Gestiti tutti gli ordini");
-                sendingStats.setStopCondition();
-                d.sendStatsToRest();
-                System.out.println("Invio le statistiche al server");
+                }
                 d.disconnectFromServerREST();
                 ping.setStopCondition();
                 System.out.println("Drone "+d.getId()+ " uscito dalla smart-city.");

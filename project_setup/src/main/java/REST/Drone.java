@@ -120,7 +120,9 @@ public class Drone {
     }
 
     public synchronized List<Drone> getDrones() {
-        return drones;
+        if (drones!=null)
+            return new ArrayList<>(drones);
+        return null;
     }
 
     public boolean isPartecipanteElezione() {
@@ -275,9 +277,15 @@ public class Drone {
 
     public synchronized void addNumberOfPosReceived(){
         this.posizioniRicevute++;
-        if (this.getDrones().size() == this.posizioniRicevute) {
-            //System.out.println("Posizioni ricevute: "+this.posizioniRicevute);
-            //System.out.println("size lista: " +this.getDrones().size());
+        System.out.println("Posizioni ricevute "+this.posizioniRicevute+"/"+this.getDrones().size());
+        int len = 0;
+        for (Drone d :
+                this.getDrones()) {
+            if (d.getId()!=d.getIdMaster())
+                len++;
+        }
+        System.out.println(len);
+        if (len == this.posizioniRicevute) {
             this.notifyAll();
         }
     }

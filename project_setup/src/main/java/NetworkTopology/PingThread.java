@@ -8,6 +8,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -30,12 +31,12 @@ public class PingThread extends Thread {
         try {
             while (!stopCondition) {
                 List<Drone> drones = self.getDrones();
-                if (drones != null && drones.size() != 0) {
+                if (drones!= null && drones.size() != 0) {
                     for (Drone d : drones) {
 
                         String indirizzo = "";
 
-                        indirizzo = "localhost:" + d.getPort();
+                        indirizzo = d.getIndirizzoIp()+":" + d.getPort();
                         //System.out.println("Indirizzo: " +indirizzo);
                         ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo)
                                 .usePlaintext().build();
@@ -65,7 +66,7 @@ public class PingThread extends Thread {
                             }
                         });
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
 
                 }
 
