@@ -209,11 +209,20 @@ public class Drone {
             if (d.getId()>this.getId())
                 return d;
         }
-
         if (this.drones.size()>=1)
             return this.drones.get(0);
         return null;
     }
+
+    public synchronized Drone nextNextDrone() {
+        assert this.drones != null;
+        for (int i = 0; i < this.drones.size(); i++) {
+            if (this.drones.get(i).getId()>this.getId())
+                return this.drones.get((i+1)%this.drones.size());
+        }
+        return null;
+    }
+
 
 
 

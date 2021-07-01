@@ -54,15 +54,19 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         int batteryReceived = request.getBattery();
         int idReceived = request.getId();
         Drone next = drone.nextDrone();
+        Drone nextNext = drone.nextNextDrone();
+        System.out.println("next: "+next.getId());
+        if (next.nextDrone()!=null)
+            System.out.println("next next: "+next.nextDrone().getId());
         int selfBattery = drone.getBatteryLevel();
         int selfId = drone.getId();
+
         System.out.println("id ricevuto: " +idReceived);
         System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
+
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         Context.current().fork().run(() -> {
-            final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
-            DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
             ElectionMessage newElection = null;
             //String message = null;
     /*
@@ -128,6 +132,10 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                             newElection = ElectionMessage.newBuilder()
                                     .setId(selfId)
                                     .setMessage("Elected").build();
+                            //se ricevo un messaggio di election con il mio id, posso rimuovere il master dalla mia lista
+                            for(Drone d: drone.getDrones())
+                                if (d.getId()==drone.getIdMaster())
+                                    drone.removeDroneToLocalList(d);
                             drone.setIdMaster(selfId);
                             drone.setPartecipanteElezione(false);
                         }
@@ -158,17 +166,21 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     //drone.notifyIamMaster();
                     newElection = null;
                 }
-                System.out.println("Sono uscito dall'elezione");
+                //System.out.println("Sono uscito dall'elezione");
                 drone.setElection(false);
 
             }
-
+/*
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+ */
             if (newElection!=null) {
+                final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+                DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
                 ElectionMessage finalNewElection = newElection;
                 stub.election(newElection, new StreamObserver<ElectionMessage>() {
                     @Override
@@ -179,37 +191,45 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     @Override
                     public void onError(Throwable t) {
                         System.out.println("Canale andato brooo");
-                        //devo propagare al next del next
-                        Drone next = drone.nextDrone();
-                        String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
-                        final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
-                        DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
-                        stub.election(finalNewElection, new StreamObserver<ElectionMessage>() {
-                            @Override
-                            public void onNext(ElectionMessage value) {
-                                System.out.println(value);
-                            }
+                        if (nextNext!=null) {
+                            String indirizzo = nextNext.getIndirizzoIp() + ":" + nextNext.getPort();
+                            System.out.println(indirizzo);
+                            final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+                            DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
+                            stub.election(finalNewElection, new StreamObserver<ElectionMessage>() {
+                                @Override
+                                public void onNext(ElectionMessage value) {
+                                    System.out.println(value);
+                                }
 
-                            @Override
-                            public void onError(Throwable t) {
+                                @Override
+                                public void onError(Throwable t) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onCompleted() {
-                                System.out.println("Canale chiuso con " +indirizzo);
-                                channel.shutdown();
-                            }
-                        });
-                        //channel.shutdown();
+                                @Override
+                                public void onCompleted() {
+                                    //System.out.println("Canale chiuso con " + indirizzo);
+                                    channel.shutdown();
+                                }
+                            });
+                            //responseObserver.onNext(ElectionMessage.newBuilder().build());
+                            //responseObserver.onCompleted();
+                        }
+                        channel.shutdown();
                     }
 
                     @Override
                     public void onCompleted() {
-                        System.out.println("Canale chiuso con " +indirizzo);
+                        //System.out.println("Canale chiuso con " +indirizzo);
                         channel.shutdown();
                     }
                 });
+                try {
+                    channel.awaitTermination(10, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 responseObserver.onNext(ElectionMessage.newBuilder().build());
                 responseObserver.onCompleted();
             }
@@ -217,11 +237,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 responseObserver.onNext(ElectionMessage.newBuilder().build());
                 responseObserver.onCompleted();
             }
-            try {
-                channel.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
         });
 
     }
