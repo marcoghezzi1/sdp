@@ -2262,6 +2262,12 @@ public final class DroneChattingOuterClass {
      * @return The idMaster.
      */
     int getIdMaster();
+
+    /**
+     * <code>bool electionGoing = 2;</code>
+     * @return The electionGoing.
+     */
+    boolean getElectionGoing();
   }
   /**
    * Protobuf type {@code com.example.grpc.Response}
@@ -2313,6 +2319,11 @@ public final class DroneChattingOuterClass {
               idMaster_ = input.readInt32();
               break;
             }
+            case 16: {
+
+              electionGoing_ = input.readBool();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -2355,6 +2366,16 @@ public final class DroneChattingOuterClass {
       return idMaster_;
     }
 
+    public static final int ELECTIONGOING_FIELD_NUMBER = 2;
+    private boolean electionGoing_;
+    /**
+     * <code>bool electionGoing = 2;</code>
+     * @return The electionGoing.
+     */
+    public boolean getElectionGoing() {
+      return electionGoing_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2372,6 +2393,9 @@ public final class DroneChattingOuterClass {
       if (idMaster_ != 0) {
         output.writeInt32(1, idMaster_);
       }
+      if (electionGoing_ != false) {
+        output.writeBool(2, electionGoing_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2384,6 +2408,10 @@ public final class DroneChattingOuterClass {
       if (idMaster_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, idMaster_);
+      }
+      if (electionGoing_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, electionGoing_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2402,6 +2430,8 @@ public final class DroneChattingOuterClass {
 
       if (getIdMaster()
           != other.getIdMaster()) return false;
+      if (getElectionGoing()
+          != other.getElectionGoing()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2415,6 +2445,9 @@ public final class DroneChattingOuterClass {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + IDMASTER_FIELD_NUMBER;
       hash = (53 * hash) + getIdMaster();
+      hash = (37 * hash) + ELECTIONGOING_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getElectionGoing());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2550,6 +2583,8 @@ public final class DroneChattingOuterClass {
         super.clear();
         idMaster_ = 0;
 
+        electionGoing_ = false;
+
         return this;
       }
 
@@ -2577,6 +2612,7 @@ public final class DroneChattingOuterClass {
       public com.example.grpc.DroneChattingOuterClass.Response buildPartial() {
         com.example.grpc.DroneChattingOuterClass.Response result = new com.example.grpc.DroneChattingOuterClass.Response(this);
         result.idMaster_ = idMaster_;
+        result.electionGoing_ = electionGoing_;
         onBuilt();
         return result;
       }
@@ -2627,6 +2663,9 @@ public final class DroneChattingOuterClass {
         if (other == com.example.grpc.DroneChattingOuterClass.Response.getDefaultInstance()) return this;
         if (other.getIdMaster() != 0) {
           setIdMaster(other.getIdMaster());
+        }
+        if (other.getElectionGoing() != false) {
+          setElectionGoing(other.getElectionGoing());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2683,6 +2722,36 @@ public final class DroneChattingOuterClass {
       public Builder clearIdMaster() {
         
         idMaster_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean electionGoing_ ;
+      /**
+       * <code>bool electionGoing = 2;</code>
+       * @return The electionGoing.
+       */
+      public boolean getElectionGoing() {
+        return electionGoing_;
+      }
+      /**
+       * <code>bool electionGoing = 2;</code>
+       * @param value The electionGoing to set.
+       * @return This builder for chaining.
+       */
+      public Builder setElectionGoing(boolean value) {
+        
+        electionGoing_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool electionGoing = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearElectionGoing() {
+        
+        electionGoing_ = false;
         onChanged();
         return this;
       }
@@ -7024,28 +7093,29 @@ public final class DroneChattingOuterClass {
       "\001(\0132#.com.example.grpc.Request.Posizione" +
       "\022\021\n\tindirizzo\030\006 \001(\t\032!\n\tPosizione\022\t\n\001x\030\001 " +
       "\001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004Ping\022\017\n\007message\030\001 \001(\t\"" +
-      "\034\n\010Response\022\020\n\010idMaster\030\001 \001(\005\"?\n\017Electio" +
-      "nMessage\022\017\n\007message\030\001 \001(\t\022\017\n\007battery\030\002 \001" +
-      "(\005\022\n\n\002id\030\003 \001(\005\"G\n\022PositionAndBattery\022\n\n\002" +
-      "id\030\001 \001(\005\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007batter" +
-      "y\030\004 \001(\005\"g\n\014OrderMessage\022\017\n\007xRitiro\030\001 \001(\005" +
-      "\022\017\n\007yRitiro\030\002 \001(\005\022\021\n\txConsegna\030\003 \001(\005\022\021\n\t" +
-      "yConsegna\030\004 \001(\005\022\017\n\007idOrder\030\005 \001(\t\"\301\001\n\013Glo" +
-      "balStats\022\021\n\ttimestamp\030\001 \001(\003\0228\n\010consegna\030" +
-      "\002 \001(\0132&.com.example.grpc.GlobalStats.Con" +
-      "segna\022\n\n\002km\030\003 \001(\001\022\024\n\014batteryLevel\030\004 \001(\005\022" +
-      "\021\n\tpollution\030\005 \003(\001\0320\n\010Consegna\022\021\n\txConse" +
-      "gna\030\001 \001(\005\022\021\n\tyConsegna\030\002 \001(\005\"\t\n\007Message2" +
-      "\362\002\n\rDroneChatting\022A\n\010discover\022\031.com.exam" +
-      "ple.grpc.Request\032\032.com.example.grpc.Resp" +
-      "onse\0226\n\004ping\022\026.com.example.grpc.Ping\032\026.c" +
-      "om.example.grpc.Ping\022P\n\010election\022!.com.e" +
-      "xample.grpc.ElectionMessage\032!.com.exampl" +
-      "e.grpc.ElectionMessage\022J\n\007sendPos\022$.com." +
-      "example.grpc.PositionAndBattery\032\031.com.ex" +
-      "ample.grpc.Message\022H\n\007deliver\022\036.com.exam" +
-      "ple.grpc.OrderMessage\032\035.com.example.grpc" +
-      ".GlobalStatsb\006proto3"
+      "3\n\010Response\022\020\n\010idMaster\030\001 \001(\005\022\025\n\relectio" +
+      "nGoing\030\002 \001(\010\"?\n\017ElectionMessage\022\017\n\007messa" +
+      "ge\030\001 \001(\t\022\017\n\007battery\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\"G\n" +
+      "\022PositionAndBattery\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001" +
+      "(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n\014OrderM" +
+      "essage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitiro\030\002 \001(\005" +
+      "\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030\004 \001(\005\022\017" +
+      "\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021\n\ttimes" +
+      "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
+      "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
+      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \003(" +
+      "\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyCon" +
+      "segna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneChatting" +
+      "\022A\n\010discover\022\031.com.example.grpc.Request\032" +
+      "\032.com.example.grpc.Response\0226\n\004ping\022\026.co" +
+      "m.example.grpc.Ping\032\026.com.example.grpc.P" +
+      "ing\022P\n\010election\022!.com.example.grpc.Elect" +
+      "ionMessage\032!.com.example.grpc.ElectionMe" +
+      "ssage\022J\n\007sendPos\022$.com.example.grpc.Posi" +
+      "tionAndBattery\032\031.com.example.grpc.Messag" +
+      "e\022H\n\007deliver\022\036.com.example.grpc.OrderMes" +
+      "sage\032\035.com.example.grpc.GlobalStatsb\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7074,7 +7144,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_Response_descriptor,
-        new java.lang.String[] { "IdMaster", });
+        new java.lang.String[] { "IdMaster", "ElectionGoing", });
     internal_static_com_example_grpc_ElectionMessage_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_example_grpc_ElectionMessage_fieldAccessorTable = new

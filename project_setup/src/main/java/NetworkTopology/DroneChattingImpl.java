@@ -30,7 +30,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         d.setPosizione(posizione);
         this.drone.addDroneToLocalList(d);
 
-        Response response = Response.newBuilder().setIdMaster(this.drone.getIdMaster()).build();
+        Response response = Response.newBuilder().setIdMaster(this.drone.getIdMaster()).setElectionGoing(this.drone.isElectionGoing()).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
@@ -170,14 +170,14 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 drone.setElection(false);
 
             }
-/*
+
             try {
-                Thread.sleep(5000);
+                Thread.sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
- */
+
             if (newElection!=null) {
                 final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
                 DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
@@ -190,7 +190,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
                     @Override
                     public void onError(Throwable t) {
-                        System.out.println("Canale andato brooo");
+                        //System.out.println("Canale andato brooo");
                         if (nextNext!=null) {
                             String indirizzo = nextNext.getIndirizzoIp() + ":" + nextNext.getPort();
                             System.out.println(indirizzo);
