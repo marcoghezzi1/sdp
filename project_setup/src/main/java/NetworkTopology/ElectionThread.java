@@ -59,6 +59,7 @@ public class ElectionThread extends Thread {
                 self.notifyIamMaster();
             }
             self.setElection(false);
+            System.out.println("Status: "+self.isElectionGoing());
         }
 
 

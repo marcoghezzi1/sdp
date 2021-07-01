@@ -45,14 +45,14 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
-        drone.setElection(true);
-        System.out.println("Sto facendo l'elezione");
+        if (!drone.isElectionGoing()) {
+            drone.setElection(true);
+            System.out.println("Elezione iniziata una volta ricevuto \nun messaggio di election da un altro drone");
+        }
+        else
+            System.out.println("Stavo già facendo l'elezione");
         int batteryReceived = request.getBattery();
         int idReceived = request.getId();
-        /*
-        TODO
-        gestione master caduto (next del next o salto?)
-         */
         Drone next = drone.nextDrone();
         int selfBattery = drone.getBatteryLevel();
         int selfId = drone.getId();
@@ -62,10 +62,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         Context.current().fork().run(() -> {
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
-            /*
-            if (channel.isShutdown())
-                System.out.println("canale chiuso porca puttana");
-             */
             DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
             ElectionMessage newElection = null;
             //String message = null;
@@ -147,28 +143,26 @@ public class DroneChattingImpl extends DroneChattingImplBase {
             }
             //altrimenti ricevo un messaggio elected
             else if (request.getMessage().equals("Elected")) {
-                //setto l'id del master
-                drone.setIdMaster(idReceived);
                 //mi metto non partecipante
                 drone.setPartecipanteElezione(false);
-
                 //se non sono il master, propago il messaggio e invio la posizione al master
                 if (selfId!=idReceived) {
                     Thread invioPosizione = new SendPosThread(drone);
                     invioPosizione.start();
+                    //setto l'id del master
+                    drone.setIdMaster(idReceived);
                     newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
-                    //sleep per testare il quit del nuovo master, cosa minchia succede?
+                    //una volta ricevuto il messaggio di elected, posso chiudere il channel (?)
                 }
                 else {
                     //drone.notifyIamMaster();
                     newElection = null;
                 }
-                //responseObserver.onCompleted();
+                System.out.println("Sono uscito dall'elezione");
+                drone.setElection(false);
 
             }
 
-            //responseObserver.onCompleted();
-            //invio il messaggio di elezione (election o elected) se questo non è null
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -203,6 +197,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
                             @Override
                             public void onCompleted() {
+                                System.out.println("Canale chiuso con " +indirizzo);
                                 channel.shutdown();
                             }
                         });
@@ -211,9 +206,16 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
                     @Override
                     public void onCompleted() {
+                        System.out.println("Canale chiuso con " +indirizzo);
                         channel.shutdown();
                     }
                 });
+                responseObserver.onNext(ElectionMessage.newBuilder().build());
+                responseObserver.onCompleted();
+            }
+            else {
+                responseObserver.onNext(ElectionMessage.newBuilder().build());
+                responseObserver.onCompleted();
             }
             try {
                 channel.awaitTermination(10, TimeUnit.SECONDS);
@@ -221,10 +223,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 e.printStackTrace();
             }
         });
-        System.out.println("Sono uscito dall'elezione");
-        drone.setElection(false);
-        responseObserver.onNext(ElectionMessage.newBuilder().build());
-        responseObserver.onCompleted();
 
     }
 
