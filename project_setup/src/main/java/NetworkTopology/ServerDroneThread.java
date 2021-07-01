@@ -9,6 +9,7 @@ import java.io.IOException;
 public class ServerDroneThread extends Thread{
     private final int porta;
     private final Drone drone;
+    private Server server;
 
     public ServerDroneThread(Drone d) {
         this.porta = d.getPort();
@@ -19,7 +20,7 @@ public class ServerDroneThread extends Thread{
     public void run() {
         try {
             //System.out.println(this.porta);
-            Server server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl(this.drone)).build();
+            server = ServerBuilder.forPort(porta).addService(new DroneChattingImpl(this.drone)).build();
             server.start();
             System.out.println();
 
@@ -30,5 +31,9 @@ public class ServerDroneThread extends Thread{
         }
 
 
+    }
+
+    public void stopCondition() {
+        server.shutdownNow();
     }
 }

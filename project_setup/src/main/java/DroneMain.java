@@ -14,10 +14,10 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(10, "localhost", 8000, "localhost:1337");
+        Drone d = new Drone(6, "localhost", 6, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         d.connectToServerREST();
-        Thread server = new ServerDroneThread(d);
+        ServerDroneThread server = new ServerDroneThread(d);
         Thread console = new QuitDroneThread();
         PingThread ping = new PingThread(d);
 
@@ -53,7 +53,6 @@ public class DroneMain {
         //thread per vedere le statistiche dei droni
         SendingStatsThread sendingStats = new SendingStatsThread(d);
         sendingStats.start();
-
 
 
         //thread PM10 simulator
@@ -113,6 +112,8 @@ public class DroneMain {
                 while (d.isInConsegna()) {
                     assert true;
                 }
+                System.out.println("chiudo il server di ascolto");
+                server.stopCondition();
                 d.disconnectFromServerREST();
                 ping.setStopCondition();
                 System.out.println("Drone "+d.getId()+ " uscito dalla smart-city.");

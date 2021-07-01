@@ -46,8 +46,13 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     @Override
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
         drone.setElection(true);
+        System.out.println("Sto facendo l'elezione");
         int batteryReceived = request.getBattery();
         int idReceived = request.getId();
+        /*
+        TODO
+        gestione master caduto (next del next o salto?)
+         */
         Drone next = drone.nextDrone();
         int selfBattery = drone.getBatteryLevel();
         int selfId = drone.getId();
@@ -57,6 +62,10 @@ public class DroneChattingImpl extends DroneChattingImplBase {
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         Context.current().fork().run(() -> {
             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+            /*
+            if (channel.isShutdown())
+                System.out.println("canale chiuso porca puttana");
+             */
             DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
             ElectionMessage newElection = null;
             //String message = null;
@@ -151,7 +160,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     //sleep per testare il quit del nuovo master, cosa minchia succede?
                 }
                 else {
-                    drone.notifyIamMaster();
+                    //drone.notifyIamMaster();
                     newElection = null;
                 }
                 //responseObserver.onCompleted();
@@ -160,7 +169,13 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
             //responseObserver.onCompleted();
             //invio il messaggio di elezione (election o elected) se questo non è null
-            if (newElection!=null)
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (newElection!=null) {
+                ElectionMessage finalNewElection = newElection;
                 stub.election(newElection, new StreamObserver<ElectionMessage>() {
                     @Override
                     public void onNext(ElectionMessage value) {
@@ -169,7 +184,29 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
                     @Override
                     public void onError(Throwable t) {
-                        channel.shutdown();
+                        System.out.println("Canale andato brooo");
+                        //devo propagare al next del next
+                        Drone next = drone.nextDrone();
+                        String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
+                        final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
+                        DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
+                        stub.election(finalNewElection, new StreamObserver<ElectionMessage>() {
+                            @Override
+                            public void onNext(ElectionMessage value) {
+                                System.out.println(value);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+
+                            }
+
+                            @Override
+                            public void onCompleted() {
+                                channel.shutdown();
+                            }
+                        });
+                        //channel.shutdown();
                     }
 
                     @Override
@@ -177,12 +214,14 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                         channel.shutdown();
                     }
                 });
+            }
             try {
                 channel.awaitTermination(10, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
+        System.out.println("Sono uscito dall'elezione");
         drone.setElection(false);
         responseObserver.onNext(ElectionMessage.newBuilder().build());
         responseObserver.onCompleted();
