@@ -47,23 +47,25 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     public void election(ElectionMessage request, StreamObserver<ElectionMessage> responseObserver) {
         if (!drone.isElectionGoing()) {
             drone.setElection(true);
-            System.out.println("Elezione iniziata una volta ricevuto \nun messaggio di election da un altro drone");
-        }
+            //System.out.println("Elezione iniziata una volta ricevuto \nun messaggio di election da un altro drone");
+        }/*
         else
-            System.out.println("Stavo già facendo l'elezione");
+            //System.out.println("Stavo già facendo l'elezione");*/
         int batteryReceived = request.getBattery();
         int idReceived = request.getId();
         Drone next = drone.nextDrone();
         Drone nextNext = drone.nextNextDrone();
-        System.out.println("next: "+next.getId());
-        if (next.nextDrone()!=null)
-            System.out.println("next next: "+next.nextDrone().getId());
+        //System.out.println("next: "+next.getId());
+        /*if (next.nextDrone()!=null)
+            System.out.println("next next: "+next.nextDrone().getId());*/
         int selfBattery = drone.getBatteryLevel();
         int selfId = drone.getId();
-
+/*
         System.out.println("id ricevuto: " +idReceived);
         System.out.println("next id: " +next.getId());
         System.out.println("tipo messaggio: " + request.getMessage());
+
+ */
 
         String indirizzo = next.getIndirizzoIp()+":"+next.getPort();
         Context.current().fork().run(() -> {
@@ -171,11 +173,6 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
             }
 
-            try {
-                Thread.sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
 
             if (newElection!=null) {
@@ -190,10 +187,9 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
                     @Override
                     public void onError(Throwable t) {
-                        //System.out.println("Canale andato brooo");
                         if (nextNext!=null) {
                             String indirizzo = nextNext.getIndirizzoIp() + ":" + nextNext.getPort();
-                            System.out.println(indirizzo);
+                            //System.out.println(indirizzo);
                             final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
                             DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
                             stub.election(finalNewElection, new StreamObserver<ElectionMessage>() {
@@ -230,13 +226,10 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                responseObserver.onNext(ElectionMessage.newBuilder().build());
-                responseObserver.onCompleted();
             }
-            else {
-                responseObserver.onNext(ElectionMessage.newBuilder().build());
-                responseObserver.onCompleted();
-            }
+            //extracted common code in if-else
+            responseObserver.onNext(ElectionMessage.newBuilder().build());
+            responseObserver.onCompleted();
 
         });
 
@@ -244,7 +237,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
 
     @Override
     public void sendPos(PositionAndBattery request, StreamObserver<Message> responseObserver) {
-        System.out.println("Posizione di "+request.getId()+": (" + request.getX() + ", "+request.getY()+")");
+        //System.out.println("Posizione di "+request.getId()+": (" + request.getX() + ", "+request.getY()+")");
         int idDronePos = request.getId();
         int[] posizione = {request.getX(),request.getY()};
         List<Drone> drones = drone.getDrones();

@@ -203,7 +203,8 @@ public class Drone {
         this.drones.remove(d);
     }
 
-    public synchronized Drone nextDrone() {
+    //removed synchronized
+    public Drone nextDrone() {
         assert this.drones != null;
         for (Drone d: this.drones) {
             if (d.getId()>this.getId())
@@ -214,7 +215,8 @@ public class Drone {
         return null;
     }
 
-    public synchronized Drone nextNextDrone() {
+    //removed synchronized
+    public Drone nextNextDrone() {
         assert this.drones != null;
         for (int i = 0; i < this.drones.size(); i++) {
             if (this.drones.get(i).getId()>this.getId())
@@ -228,10 +230,10 @@ public class Drone {
 
     public synchronized void connectToMqtt() throws MqttException, InterruptedException {
         if (this.getDrones()!=null && !this.sonoMaster()) {
-            System.out.println("waiting to be master...");
+            //System.out.println("[Aspettando di essere master]");
             this.wait();
         }
-        System.out.println("i'm master...");
+        System.out.println("\n[Sono master]");
         Gson gson = new Gson();
         String broker = "tcp://localhost:1883";
         String clientId = MqttClient.generateClientId();
@@ -286,14 +288,14 @@ public class Drone {
 
     public synchronized void addNumberOfPosReceived(){
         this.posizioniRicevute++;
-        System.out.println("Posizioni ricevute "+this.posizioniRicevute+"/"+this.getDrones().size());
+        //System.out.println("Posizioni ricevute "+this.posizioniRicevute+"/"+this.getDrones().size());
         int len = 0;
         for (Drone d :
                 this.getDrones()) {
             if (d.getId()!=d.getIdMaster())
                 len++;
         }
-        System.out.println(len);
+        //System.out.println(len);
         if (len == this.posizioniRicevute) {
             this.notifyAll();
         }
@@ -310,21 +312,22 @@ public class Drone {
         return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
     }
 
-    public synchronized List<Order> getOrdiniPendingMaster() {
+    //removed synchronized to make a finer synchronization
+    public List<Order> getOrdiniPendingMaster() {
         return ordiniPendingMaster;
     }
 
-    public synchronized Order getOrder(List<Order> orders) {
+    //removed synchronized
+    public Order getOrder(List<Order> orders) {
         return orders.get(0);
     }
 
-    public synchronized void removeOrder(List<Order> orders) {
+    //removed sync
+    public void removeOrder(List<Order> orders) {
         orders.remove(0);
     }
 
-    public synchronized void setOrdiniPendingMaster(List<Order> ordiniPendingMaster) {
-        this.ordiniPendingMaster = ordiniPendingMaster;
-    }
+
 
     //metodo per la scelta del drone per la consegna
     public Drone chooseDrone(int[] ritiro) {
@@ -404,11 +407,13 @@ public class Drone {
     }
 
     //metodo per settare la lista delle medie misurazioni
-    public synchronized void setMediaMisurazioni(List<Double> mediaMisurazioni) {
+    //removed syncrhonized
+    public void setMediaMisurazioni(List<Double> mediaMisurazioni) {
         this.mediaMisurazioni = mediaMisurazioni;
     }
 
-    public synchronized void addMedia(double misurazione) {
+    //removed synchronized
+    public void addMedia(double misurazione) {
         this.mediaMisurazioni.add(misurazione);
     }
 

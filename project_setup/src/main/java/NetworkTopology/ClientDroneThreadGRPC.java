@@ -42,8 +42,8 @@ public class ClientDroneThreadGRPC extends Thread{
         stub.discover(request, new StreamObserver<Response>() {
             @Override
             public void onNext(Response value) {
-                System.out.println("Comunicazione da " +indirizzo+ "\nL'id del master: "
-                        + value.getIdMaster()+"\nSta partecipando all'elezione: "+value.getElectionGoing());
+                /*System.out.println("Comunicazione da " +indirizzo+ "\nL'id del master: "
+                        + value.getIdMaster()+"\nSta partecipando all'elezione: "+value.getElectionGoing());*/
                 if (!value.getElectionGoing())
                     self.setIdMaster(value.getIdMaster());
             }

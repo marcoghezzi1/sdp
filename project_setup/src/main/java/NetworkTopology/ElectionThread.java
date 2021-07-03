@@ -21,10 +21,10 @@ public class ElectionThread extends Thread {
     public void run() {
         if (!self.isElectionGoing()) {
             self.setElection(true);
-            System.out.println("---Elezione iniziata---");
+            //System.out.println("---Elezione iniziata---");
             Drone next = self.nextDrone();
             if (next != null) {
-                System.out.println("sending message to " + next.getId());
+                //System.out.println("sending message to " + next.getId());
                 String indirizzo = next.getIndirizzoIp() + ":" + next.getPort();
                 final ManagedChannel channel = ManagedChannelBuilder.forTarget(indirizzo).usePlaintext().build();
                 DroneChattingStub stub = newStub(channel);
@@ -59,7 +59,7 @@ public class ElectionThread extends Thread {
                 self.notifyIamMaster();
             }
             self.setElection(false);
-            System.out.println("Status: "+self.isElectionGoing());
+            //System.out.println("Status: "+self.isElectionGoing());
         }
 
 
