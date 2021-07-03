@@ -32,9 +32,15 @@ public class Drone {
     private int batteryLevel;
     private int idMaster;
     private boolean partecipanteElezione = false;
-    private boolean inConsegna;
+    private boolean inConsegna = false;
+    private final Object dummyDelivery = new Object();
     private List<Drone> drones = new ArrayList<>();
     private List<Double> mediaMisurazioni = new ArrayList<>();
+
+    public Object getDummyDelivery() {
+        return dummyDelivery;
+    }
+
     private List<Order> ordiniPendingMaster;
     private List<GlobalStatsToMaster> listGlobal = new ArrayList<>();
     private MqttClient mqttClient;
@@ -383,7 +389,10 @@ public class Drone {
         Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
         GlobalStatsToMaster global = new GlobalStatsToMaster(arrivo, this.getPosizione(), distTot, this.getBatteryLevel(), this.getMediaMisurazioni());
         this.setMediaMisurazioni(new ArrayList<>());
-        this.setInConsegna(false);
+        synchronized (this.dummyDelivery) {
+            this.setInConsegna(false);
+            this.dummyDelivery.notify();
+        }
         return global;
     }
 

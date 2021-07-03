@@ -71,6 +71,10 @@ public class ManageOrderThread extends Thread {
                                 newPosDrone, kmPercorsi, batteryLeft,
                                 pollutionRegistered);
                         drone.getListGlobal().add(stats);
+                        synchronized (drone.getListGlobal()) {
+                            drone.getListGlobal().notify();
+                        }
+
                     }
 
                     @Override

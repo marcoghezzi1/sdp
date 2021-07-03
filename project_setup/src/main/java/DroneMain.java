@@ -101,16 +101,23 @@ public class DroneMain {
                             System.out.println("Drone in uscita: finisco di gestire tutti gli ordini rimanenti");
                             d.getOrdiniPendingMaster().wait();
                             //aspetto che tutti mandino le stats al master
-                            manageOrders.join();
-                            System.out.println("Gestiti tutti gli ordini");
-                            sendingStats.setStopCondition();
-                            d.sendStatsToRest();
-                            System.out.println("Invio le statistiche al server");
                         }
                     }
+                    synchronized (d.getListGlobal()) {
+                        System.out.println("Aspetto di ricevere le statistiche indietro");
+                        d.getListGlobal().wait();
+                    }
+                    manageOrders.join();
+                    System.out.println("Gestiti tutti gli ordini");
+                    sendingStats.setStopCondition();
+                    System.out.println("Invio le statistiche al server");
+                    d.sendStatsToRest();
                 }
-                while (d.isInConsegna()) {
-                    assert true;
+                synchronized (d.getDummyDelivery()) {
+                    while (d.isInConsegna()) {
+                        System.out.println("Aspetto di finire la consegna");
+                        d.getDummyDelivery().wait();
+                    }
                 }
                 System.out.println("chiudo il server di ascolto");
                 server.stopCondition();
