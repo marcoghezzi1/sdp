@@ -207,8 +207,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                                     channel.shutdown();
                                 }
                             });
-                            //responseObserver.onNext(ElectionMessage.newBuilder().build());
-                            //responseObserver.onCompleted();
+
                         }
                         channel.shutdown();
                     }

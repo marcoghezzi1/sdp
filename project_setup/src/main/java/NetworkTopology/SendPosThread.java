@@ -1,8 +1,6 @@
 package NetworkTopology;
 
 import REST.Drone;
-import com.example.grpc.DroneChattingGrpc;
-import com.example.grpc.DroneChattingOuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;

@@ -13,7 +13,6 @@ import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
 
 
-// ping a tutti i droni o solo al master?
 
 public class PingThread extends Thread {
     private Drone self;
@@ -21,7 +20,6 @@ public class PingThread extends Thread {
     public PingThread(Drone drone) {
         this.self = drone;
     }
-    //ping a tutti
 
     @Override
     public void run() {
@@ -63,7 +61,7 @@ public class PingThread extends Thread {
                             }
                         });
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
 
                 }
 

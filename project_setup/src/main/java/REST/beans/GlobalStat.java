@@ -2,7 +2,7 @@ package REST.beans;
 
 import javax.xml.bind.annotation.*;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+
 
 @XmlRootElement(name="global stat")
 @XmlAccessorType(XmlAccessType.FIELD)

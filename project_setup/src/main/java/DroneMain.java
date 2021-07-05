@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(4, "localhost", 4444, "localhost:1337");
+        Drone d = new Drone(7, "localhost", 7777, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
         ServerDroneThread server = new ServerDroneThread(d);
         Thread console = new QuitDroneThread();
