@@ -14,7 +14,6 @@ public class Dronazon {
         String broker = "tcp://localhost:1883";
         String clientId = MqttClient.generateClientId();
         String topic = "dronazon/smartcity/orders";
-        int qos = 2;
         client = new MqttClient(broker,clientId);
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
@@ -31,7 +30,6 @@ public class Dronazon {
             Gson gson = new Gson();
             String payload = gson.toJson(order);
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(qos);
             System.out.println("messaggio pubblicato: " + payload);
             client.publish(topic, message);
             Thread.sleep(5000);

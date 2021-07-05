@@ -3,9 +3,7 @@ package REST.beans;
 import REST.Drone;
 import com.google.gson.annotations.Expose;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,7 @@ public class StormoDroni {
     private static StormoDroni instance;
 
     private StormoDroni() {
-        stormo = new ArrayList<Drone>();
+        stormo = new ArrayList<>();
     }
 
     public synchronized List<Drone> getStormo(){
@@ -29,7 +27,7 @@ public class StormoDroni {
     }
 
 
-    //singleton per ritornare l'istanza di dizionario
+    //singleton per ritornare l'istanza di stormo droni
     public synchronized static StormoDroni getInstance() {
         if (instance==null)
             instance = new StormoDroni();

@@ -9,7 +9,6 @@ import com.google.gson.annotations.Expose;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import com.google.gson.GsonBuilder;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.eclipse.paho.client.mqttv3.*;
 
 
@@ -33,20 +33,18 @@ public class Drone {
     private int idMaster;
     private boolean partecipanteElezione = false;
     private boolean inConsegna = false;
-    private final Object dummyDelivery = new Object();
+    @JsonIgnore
+    private final Object objectDelivery = new Object();
     private List<Drone> drones = new ArrayList<>();
-    private List<Double> mediaMisurazioni = new ArrayList<>();
-
-    public Object getDummyDelivery() {
-        return dummyDelivery;
-    }
-
+    private List<Double> mediaMisurazioni;
     private List<Order> ordiniPendingMaster;
-    private List<GlobalStatsToMaster> listGlobal = new ArrayList<>();
+    private List<GlobalStatsToMaster> listGlobal;
     private MqttClient mqttClient;
-    private int posizioniRicevute = 0;
-    private boolean wantToQuit = false;
-    private boolean electionGoing = false;
+    private int posizioniRicevute;
+    private int numeroConsegneEffettuate;
+    private double kmPercorsi;
+    private boolean wantToQuit;
+    private boolean electionGoing;
 
     public Drone() {
     }
@@ -57,9 +55,15 @@ public class Drone {
         this.indirizzoServerREST = indirizzoServer;
         this.batteryLevel = 100;
         this.drones = new ArrayList<>();
+        this.mediaMisurazioni = new ArrayList<>();
         this.ordiniPendingMaster = new ArrayList<>();
+        this.listGlobal = new ArrayList<>();
+        this.posizioniRicevute = 0;
+        numeroConsegneEffettuate = 0;
+        kmPercorsi = 0.0;
+        wantToQuit = false;
+        electionGoing = false;
     }
-
     public int getIdMaster() {
         return idMaster;
     }
@@ -80,9 +84,12 @@ public class Drone {
         return this.getId()==this.getIdMaster();
     }
 
-
     public int getId() {
         return id;
+    }
+
+    public Object getObjectDelivery() {
+        return objectDelivery;
     }
 
     public void setId(int id) {
@@ -135,7 +142,7 @@ public class Drone {
         return partecipanteElezione;
     }
 
-    public void setPartecipanteElezione(boolean partecipanteElezione) {
+    public synchronized void setPartecipanteElezione(boolean partecipanteElezione) {
         this.partecipanteElezione = partecipanteElezione;
     }
 
@@ -147,20 +154,37 @@ public class Drone {
         this.inConsegna = inConsegna;
     }
 
+    public synchronized void setElection(boolean b) {
+        this.electionGoing = b;
+    }
+
+    public synchronized boolean isElectionGoing() {
+        return electionGoing;
+    }
+    public int getNumeroConsegneEffettuate() {
+        return numeroConsegneEffettuate;
+    }
+
+    public void setNumeroConsegneEffettuate(int numeroConsegneEffettuate) {
+        this.numeroConsegneEffettuate = numeroConsegneEffettuate;
+    }
+
+    public double getKmPercorsi() {
+        return kmPercorsi;
+    }
+
+    public void setKmPercorsi(double kmPercorsi) {
+        this.kmPercorsi = kmPercorsi;
+    }
+
     public void connectToServerREST() {
         Client client = Client.create();
         String serverAddress = "http://" + this.getIndirizzoServerREST();
         WebResource resource = client.resource(serverAddress+"/drone/add");
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String input = gson.toJson(this);
-        //System.out.println(input);
         ClientResponse response = resource.type("application/json").post(ClientResponse.class, input);
         if (response.getStatus() != 200) {
-            if (response.getStatus()==500) {
-                System.out.println("Drone già inserito\nEsco...");
-
-                System.exit(0);
-            }
             throw new RuntimeException("Failed : HTTP error code : "
                     + response.getStatus());
         }
@@ -209,8 +233,7 @@ public class Drone {
         this.drones.remove(d);
     }
 
-    //removed synchronized
-    public Drone nextDrone() {
+    public synchronized Drone nextDrone() {
         assert this.drones != null;
         for (Drone d: this.drones) {
             if (d.getId()>this.getId())
@@ -221,8 +244,8 @@ public class Drone {
         return null;
     }
 
-    //removed synchronized
-    public Drone nextNextDrone() {
+
+    public synchronized Drone nextNextDrone() {
         assert this.drones != null;
         for (int i = 0; i < this.drones.size(); i++) {
             if (this.drones.get(i).getId()>this.getId())
@@ -244,7 +267,6 @@ public class Drone {
         String broker = "tcp://localhost:1883";
         String clientId = MqttClient.generateClientId();
         String topic = "dronazon/smartcity/orders";
-        int qos = 2;
         mqttClient = new MqttClient(broker, clientId);
         MqttConnectOptions connOpt = new MqttConnectOptions();
         connOpt.setCleanSession(true);
@@ -279,7 +301,7 @@ public class Drone {
             }
         });
         //subscribe to broker
-        mqttClient.subscribe(topic, qos);
+        mqttClient.subscribe(topic);
     }
 
 
@@ -289,7 +311,19 @@ public class Drone {
 
     public synchronized void addOrderToQueue(Order order) {
         this.ordiniPendingMaster.add(order);
-        //this.ordiniPendingMaster.notify();
+    }
+
+    public synchronized List<Order> getOrdiniPendingMaster() {
+        return ordiniPendingMaster;
+    }
+
+    public synchronized Order getOrder(List<Order> orders) {
+        return orders.get(0);
+    }
+
+
+    public synchronized void removeOrder(List<Order> orders) {
+        orders.remove(0);
     }
 
     public synchronized void addNumberOfPosReceived(){
@@ -314,28 +348,14 @@ public class Drone {
     public synchronized void notifyIamMaster() {
         this.notifyAll();
     }
+
     private double getDistance(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1), 2));
     }
 
-    //removed synchronized to make a finer synchronization
-    public List<Order> getOrdiniPendingMaster() {
-        return ordiniPendingMaster;
-    }
-
-    //removed synchronized
-    public Order getOrder(List<Order> orders) {
-        return orders.get(0);
-    }
-
-    //removed sync
-    public void removeOrder(List<Order> orders) {
-        orders.remove(0);
-    }
-
-
 
     //metodo per la scelta del drone per la consegna
+
     public Drone chooseDrone(int[] ritiro) {
         Drone chosen = null;
         int xDrone, yDrone, xRitiro, yRitiro;
@@ -374,8 +394,8 @@ public class Drone {
             }
         return chosen;
     }
-
     //gestione ordine una volta ricevuto
+
     public GlobalStatsToMaster manageOrder(int xRitiro, int yRitiro, int xConsegna, int yConsegna) throws InterruptedException {
         this.setInConsegna(true);
         int[] posDrone = this.getPosizione();
@@ -385,28 +405,29 @@ public class Drone {
         int[] posConsegna = {xConsegna, yConsegna};
         Thread.sleep(5000);
         this.setBatteryLevel(this.getBatteryLevel()-10);
+        this.numeroConsegneEffettuate++;
+        this.kmPercorsi+=distTot;
         this.setPosizione(posConsegna);
+        //System.out.println("posizione: "+this.getPosizione()[0]+", "+this.getPosizione()[1]);
         Timestamp arrivo = Timestamp.valueOf(LocalDateTime.now());
         GlobalStatsToMaster global = new GlobalStatsToMaster(arrivo, this.getPosizione(), distTot, this.getBatteryLevel(), this.getMediaMisurazioni());
         this.setMediaMisurazioni(new ArrayList<>());
-        synchronized (this.dummyDelivery) {
+        synchronized (this.objectDelivery) {
             this.setInConsegna(false);
-            this.dummyDelivery.notify();
+            this.objectDelivery.notify();
         }
         return global;
     }
-
     //metodo per attendere di diventare master
     public synchronized void waitingToBeMaster() throws InterruptedException {
         this.wait();
     }
-
-    //metodo per accedere alla lista delle statistiche da inviare al master (syncronized?)
+    //metodo per accedere alla lista delle statistiche da inviare al master
     public synchronized List<GlobalStatsToMaster> getListGlobal() {
         return listGlobal;
     }
 
-    public void setListGlobal(List<GlobalStatsToMaster> listGlobal) {
+    public synchronized void setListGlobal(List<GlobalStatsToMaster> listGlobal) {
         this.listGlobal = listGlobal;
     }
 
@@ -416,13 +437,11 @@ public class Drone {
     }
 
     //metodo per settare la lista delle medie misurazioni
-    //removed syncrhonized
-    public void setMediaMisurazioni(List<Double> mediaMisurazioni) {
+    public synchronized void setMediaMisurazioni(List<Double> mediaMisurazioni) {
         this.mediaMisurazioni = mediaMisurazioni;
     }
 
-    //removed synchronized
-    public void addMedia(double misurazione) {
+    public synchronized void addMedia(double misurazione) {
         this.mediaMisurazioni.add(misurazione);
     }
 
@@ -456,7 +475,6 @@ public class Drone {
                     totPollution / divisore, now);
             //creating client rest
             Client client = Client.create();
-            //System.out.println(now);
             String statistiche = "http://localhost:1337/statistiche/add";
             String input = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
@@ -482,11 +500,8 @@ public class Drone {
                 '}';
     }
 
-    public void setElection(boolean b) {
-        this.electionGoing = b;
-    }
-
-    public boolean isElectionGoing() {
-        return electionGoing;
+    public void printStats() {
+        System.out.println("Numero di consegne effettuate: "+this.getNumeroConsegneEffettuate()+
+                "\nKm percorsi: "+String.format("%.2f",+this.getKmPercorsi())+"\nBatteria residua: "+this.getBatteryLevel()+"\n");
     }
 }

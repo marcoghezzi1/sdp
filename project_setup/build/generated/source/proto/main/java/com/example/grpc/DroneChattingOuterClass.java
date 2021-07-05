@@ -19,57 +19,39 @@ public final class DroneChattingOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string message = 1;</code>
-     * @return The message.
-     */
-    java.lang.String getMessage();
-    /**
-     * <code>string message = 1;</code>
-     * @return The bytes for message.
-     */
-    com.google.protobuf.ByteString
-        getMessageBytes();
-
-    /**
-     * <code>int32 id = 2;</code>
+     * <code>int32 id = 1;</code>
      * @return The id.
      */
     int getId();
 
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      * @return The port.
      */
     int getPort();
 
     /**
-     * <code>bool master = 4;</code>
-     * @return The master.
-     */
-    boolean getMaster();
-
-    /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      * @return Whether the pos field is set.
      */
     boolean hasPos();
     /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      * @return The pos.
      */
     com.example.grpc.DroneChattingOuterClass.Request.Posizione getPos();
     /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      */
     com.example.grpc.DroneChattingOuterClass.Request.PosizioneOrBuilder getPosOrBuilder();
 
     /**
-     * <code>string indirizzo = 6;</code>
+     * <code>string indirizzo = 4;</code>
      * @return The indirizzo.
      */
     java.lang.String getIndirizzo();
     /**
-     * <code>string indirizzo = 6;</code>
+     * <code>string indirizzo = 4;</code>
      * @return The bytes for indirizzo.
      */
     com.google.protobuf.ByteString
@@ -88,7 +70,6 @@ public final class DroneChattingOuterClass {
       super(builder);
     }
     private Request() {
-      message_ = "";
       indirizzo_ = "";
     }
 
@@ -122,28 +103,17 @@ public final class DroneChattingOuterClass {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              message_ = s;
-              break;
-            }
-            case 16: {
+            case 8: {
 
               id_ = input.readInt32();
               break;
             }
-            case 24: {
+            case 16: {
 
               port_ = input.readInt32();
               break;
             }
-            case 32: {
-
-              master_ = input.readBool();
-              break;
-            }
-            case 42: {
+            case 26: {
               com.example.grpc.DroneChattingOuterClass.Request.Posizione.Builder subBuilder = null;
               if (pos_ != null) {
                 subBuilder = pos_.toBuilder();
@@ -156,7 +126,7 @@ public final class DroneChattingOuterClass {
 
               break;
             }
-            case 50: {
+            case 34: {
               java.lang.String s = input.readStringRequireUtf8();
 
               indirizzo_ = s;
@@ -748,99 +718,53 @@ public final class DroneChattingOuterClass {
 
     }
 
-    public static final int MESSAGE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object message_;
-    /**
-     * <code>string message = 1;</code>
-     * @return The message.
-     */
-    public java.lang.String getMessage() {
-      java.lang.Object ref = message_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        message_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string message = 1;</code>
-     * @return The bytes for message.
-     */
-    public com.google.protobuf.ByteString
-        getMessageBytes() {
-      java.lang.Object ref = message_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        message_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ID_FIELD_NUMBER = 2;
+    public static final int ID_FIELD_NUMBER = 1;
     private int id_;
     /**
-     * <code>int32 id = 2;</code>
+     * <code>int32 id = 1;</code>
      * @return The id.
      */
     public int getId() {
       return id_;
     }
 
-    public static final int PORT_FIELD_NUMBER = 3;
+    public static final int PORT_FIELD_NUMBER = 2;
     private int port_;
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      * @return The port.
      */
     public int getPort() {
       return port_;
     }
 
-    public static final int MASTER_FIELD_NUMBER = 4;
-    private boolean master_;
-    /**
-     * <code>bool master = 4;</code>
-     * @return The master.
-     */
-    public boolean getMaster() {
-      return master_;
-    }
-
-    public static final int POS_FIELD_NUMBER = 5;
+    public static final int POS_FIELD_NUMBER = 3;
     private com.example.grpc.DroneChattingOuterClass.Request.Posizione pos_;
     /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      * @return Whether the pos field is set.
      */
     public boolean hasPos() {
       return pos_ != null;
     }
     /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      * @return The pos.
      */
     public com.example.grpc.DroneChattingOuterClass.Request.Posizione getPos() {
       return pos_ == null ? com.example.grpc.DroneChattingOuterClass.Request.Posizione.getDefaultInstance() : pos_;
     }
     /**
-     * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+     * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
      */
     public com.example.grpc.DroneChattingOuterClass.Request.PosizioneOrBuilder getPosOrBuilder() {
       return getPos();
     }
 
-    public static final int INDIRIZZO_FIELD_NUMBER = 6;
+    public static final int INDIRIZZO_FIELD_NUMBER = 4;
     private volatile java.lang.Object indirizzo_;
     /**
-     * <code>string indirizzo = 6;</code>
+     * <code>string indirizzo = 4;</code>
      * @return The indirizzo.
      */
     public java.lang.String getIndirizzo() {
@@ -856,7 +780,7 @@ public final class DroneChattingOuterClass {
       }
     }
     /**
-     * <code>string indirizzo = 6;</code>
+     * <code>string indirizzo = 4;</code>
      * @return The bytes for indirizzo.
      */
     public com.google.protobuf.ByteString
@@ -887,23 +811,17 @@ public final class DroneChattingOuterClass {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getMessageBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
-      }
       if (id_ != 0) {
-        output.writeInt32(2, id_);
+        output.writeInt32(1, id_);
       }
       if (port_ != 0) {
-        output.writeInt32(3, port_);
-      }
-      if (master_ != false) {
-        output.writeBool(4, master_);
+        output.writeInt32(2, port_);
       }
       if (pos_ != null) {
-        output.writeMessage(5, getPos());
+        output.writeMessage(3, getPos());
       }
       if (!getIndirizzoBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, indirizzo_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, indirizzo_);
       }
       unknownFields.writeTo(output);
     }
@@ -914,27 +832,20 @@ public final class DroneChattingOuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (!getMessageBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, message_);
-      }
       if (id_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, id_);
+          .computeInt32Size(1, id_);
       }
       if (port_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, port_);
-      }
-      if (master_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, master_);
+          .computeInt32Size(2, port_);
       }
       if (pos_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getPos());
+          .computeMessageSize(3, getPos());
       }
       if (!getIndirizzoBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, indirizzo_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, indirizzo_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -951,14 +862,10 @@ public final class DroneChattingOuterClass {
       }
       com.example.grpc.DroneChattingOuterClass.Request other = (com.example.grpc.DroneChattingOuterClass.Request) obj;
 
-      if (!getMessage()
-          .equals(other.getMessage())) return false;
       if (getId()
           != other.getId()) return false;
       if (getPort()
           != other.getPort()) return false;
-      if (getMaster()
-          != other.getMaster()) return false;
       if (hasPos() != other.hasPos()) return false;
       if (hasPos()) {
         if (!getPos()
@@ -977,15 +884,10 @@ public final class DroneChattingOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getMessage().hashCode();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
       hash = (37 * hash) + PORT_FIELD_NUMBER;
       hash = (53 * hash) + getPort();
-      hash = (37 * hash) + MASTER_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getMaster());
       if (hasPos()) {
         hash = (37 * hash) + POS_FIELD_NUMBER;
         hash = (53 * hash) + getPos().hashCode();
@@ -1125,13 +1027,9 @@ public final class DroneChattingOuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        message_ = "";
-
         id_ = 0;
 
         port_ = 0;
-
-        master_ = false;
 
         if (posBuilder_ == null) {
           pos_ = null;
@@ -1167,10 +1065,8 @@ public final class DroneChattingOuterClass {
       @java.lang.Override
       public com.example.grpc.DroneChattingOuterClass.Request buildPartial() {
         com.example.grpc.DroneChattingOuterClass.Request result = new com.example.grpc.DroneChattingOuterClass.Request(this);
-        result.message_ = message_;
         result.id_ = id_;
         result.port_ = port_;
-        result.master_ = master_;
         if (posBuilder_ == null) {
           result.pos_ = pos_;
         } else {
@@ -1225,18 +1121,11 @@ public final class DroneChattingOuterClass {
 
       public Builder mergeFrom(com.example.grpc.DroneChattingOuterClass.Request other) {
         if (other == com.example.grpc.DroneChattingOuterClass.Request.getDefaultInstance()) return this;
-        if (!other.getMessage().isEmpty()) {
-          message_ = other.message_;
-          onChanged();
-        }
         if (other.getId() != 0) {
           setId(other.getId());
         }
         if (other.getPort() != 0) {
           setPort(other.getPort());
-        }
-        if (other.getMaster() != false) {
-          setMaster(other.getMaster());
         }
         if (other.hasPos()) {
           mergePos(other.getPos());
@@ -1274,92 +1163,16 @@ public final class DroneChattingOuterClass {
         return this;
       }
 
-      private java.lang.Object message_ = "";
-      /**
-       * <code>string message = 1;</code>
-       * @return The message.
-       */
-      public java.lang.String getMessage() {
-        java.lang.Object ref = message_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          message_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string message = 1;</code>
-       * @return The bytes for message.
-       */
-      public com.google.protobuf.ByteString
-          getMessageBytes() {
-        java.lang.Object ref = message_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          message_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string message = 1;</code>
-       * @param value The message to set.
-       * @return This builder for chaining.
-       */
-      public Builder setMessage(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        message_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string message = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearMessage() {
-        
-        message_ = getDefaultInstance().getMessage();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string message = 1;</code>
-       * @param value The bytes for message to set.
-       * @return This builder for chaining.
-       */
-      public Builder setMessageBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        message_ = value;
-        onChanged();
-        return this;
-      }
-
       private int id_ ;
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 1;</code>
        * @return The id.
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 1;</code>
        * @param value The id to set.
        * @return This builder for chaining.
        */
@@ -1370,7 +1183,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>int32 id = 2;</code>
+       * <code>int32 id = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearId() {
@@ -1382,14 +1195,14 @@ public final class DroneChattingOuterClass {
 
       private int port_ ;
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        * @return The port.
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        * @param value The port to set.
        * @return This builder for chaining.
        */
@@ -1400,7 +1213,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearPort() {
@@ -1410,48 +1223,18 @@ public final class DroneChattingOuterClass {
         return this;
       }
 
-      private boolean master_ ;
-      /**
-       * <code>bool master = 4;</code>
-       * @return The master.
-       */
-      public boolean getMaster() {
-        return master_;
-      }
-      /**
-       * <code>bool master = 4;</code>
-       * @param value The master to set.
-       * @return This builder for chaining.
-       */
-      public Builder setMaster(boolean value) {
-        
-        master_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bool master = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearMaster() {
-        
-        master_ = false;
-        onChanged();
-        return this;
-      }
-
       private com.example.grpc.DroneChattingOuterClass.Request.Posizione pos_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.example.grpc.DroneChattingOuterClass.Request.Posizione, com.example.grpc.DroneChattingOuterClass.Request.Posizione.Builder, com.example.grpc.DroneChattingOuterClass.Request.PosizioneOrBuilder> posBuilder_;
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        * @return Whether the pos field is set.
        */
       public boolean hasPos() {
         return posBuilder_ != null || pos_ != null;
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        * @return The pos.
        */
       public com.example.grpc.DroneChattingOuterClass.Request.Posizione getPos() {
@@ -1462,7 +1245,7 @@ public final class DroneChattingOuterClass {
         }
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public Builder setPos(com.example.grpc.DroneChattingOuterClass.Request.Posizione value) {
         if (posBuilder_ == null) {
@@ -1478,7 +1261,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public Builder setPos(
           com.example.grpc.DroneChattingOuterClass.Request.Posizione.Builder builderForValue) {
@@ -1492,7 +1275,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public Builder mergePos(com.example.grpc.DroneChattingOuterClass.Request.Posizione value) {
         if (posBuilder_ == null) {
@@ -1510,7 +1293,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public Builder clearPos() {
         if (posBuilder_ == null) {
@@ -1524,7 +1307,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public com.example.grpc.DroneChattingOuterClass.Request.Posizione.Builder getPosBuilder() {
         
@@ -1532,7 +1315,7 @@ public final class DroneChattingOuterClass {
         return getPosFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       public com.example.grpc.DroneChattingOuterClass.Request.PosizioneOrBuilder getPosOrBuilder() {
         if (posBuilder_ != null) {
@@ -1543,7 +1326,7 @@ public final class DroneChattingOuterClass {
         }
       }
       /**
-       * <code>.com.example.grpc.Request.Posizione pos = 5;</code>
+       * <code>.com.example.grpc.Request.Posizione pos = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.example.grpc.DroneChattingOuterClass.Request.Posizione, com.example.grpc.DroneChattingOuterClass.Request.Posizione.Builder, com.example.grpc.DroneChattingOuterClass.Request.PosizioneOrBuilder> 
@@ -1561,7 +1344,7 @@ public final class DroneChattingOuterClass {
 
       private java.lang.Object indirizzo_ = "";
       /**
-       * <code>string indirizzo = 6;</code>
+       * <code>string indirizzo = 4;</code>
        * @return The indirizzo.
        */
       public java.lang.String getIndirizzo() {
@@ -1577,7 +1360,7 @@ public final class DroneChattingOuterClass {
         }
       }
       /**
-       * <code>string indirizzo = 6;</code>
+       * <code>string indirizzo = 4;</code>
        * @return The bytes for indirizzo.
        */
       public com.google.protobuf.ByteString
@@ -1594,7 +1377,7 @@ public final class DroneChattingOuterClass {
         }
       }
       /**
-       * <code>string indirizzo = 6;</code>
+       * <code>string indirizzo = 4;</code>
        * @param value The indirizzo to set.
        * @return This builder for chaining.
        */
@@ -1609,7 +1392,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>string indirizzo = 6;</code>
+       * <code>string indirizzo = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearIndirizzo() {
@@ -1619,7 +1402,7 @@ public final class DroneChattingOuterClass {
         return this;
       }
       /**
-       * <code>string indirizzo = 6;</code>
+       * <code>string indirizzo = 4;</code>
        * @param value The bytes for indirizzo to set.
        * @return This builder for chaining.
        */
@@ -7088,34 +6871,33 @@ public final class DroneChattingOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\023DroneChatting.proto\022\020com.example.grpc\"" +
-      "\254\001\n\007Request\022\017\n\007message\030\001 \001(\t\022\n\n\002id\030\002 \001(\005" +
-      "\022\014\n\004port\030\003 \001(\005\022\016\n\006master\030\004 \001(\010\0220\n\003pos\030\005 " +
-      "\001(\0132#.com.example.grpc.Request.Posizione" +
-      "\022\021\n\tindirizzo\030\006 \001(\t\032!\n\tPosizione\022\t\n\001x\030\001 " +
-      "\001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004Ping\022\017\n\007message\030\001 \001(\t\"" +
-      "3\n\010Response\022\020\n\010idMaster\030\001 \001(\005\022\025\n\relectio" +
-      "nGoing\030\002 \001(\010\"?\n\017ElectionMessage\022\017\n\007messa" +
-      "ge\030\001 \001(\t\022\017\n\007battery\030\002 \001(\005\022\n\n\002id\030\003 \001(\005\"G\n" +
-      "\022PositionAndBattery\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001" +
-      "(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n\014OrderM" +
-      "essage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitiro\030\002 \001(\005" +
-      "\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030\004 \001(\005\022\017" +
-      "\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021\n\ttimes" +
-      "tamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.com.examp" +
-      "le.grpc.GlobalStats.Consegna\022\n\n\002km\030\003 \001(\001" +
-      "\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpollution\030\005 \003(" +
-      "\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022\021\n\tyCon" +
-      "segna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneChatting" +
-      "\022A\n\010discover\022\031.com.example.grpc.Request\032" +
-      "\032.com.example.grpc.Response\0226\n\004ping\022\026.co" +
-      "m.example.grpc.Ping\032\026.com.example.grpc.P" +
-      "ing\022P\n\010election\022!.com.example.grpc.Elect" +
-      "ionMessage\032!.com.example.grpc.ElectionMe" +
-      "ssage\022J\n\007sendPos\022$.com.example.grpc.Posi" +
-      "tionAndBattery\032\031.com.example.grpc.Messag" +
-      "e\022H\n\007deliver\022\036.com.example.grpc.OrderMes" +
-      "sage\032\035.com.example.grpc.GlobalStatsb\006pro" +
-      "to3"
+      "\213\001\n\007Request\022\n\n\002id\030\001 \001(\005\022\014\n\004port\030\002 \001(\005\0220\n" +
+      "\003pos\030\003 \001(\0132#.com.example.grpc.Request.Po" +
+      "sizione\022\021\n\tindirizzo\030\004 \001(\t\032!\n\tPosizione\022" +
+      "\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\027\n\004Ping\022\017\n\007message" +
+      "\030\001 \001(\t\"3\n\010Response\022\020\n\010idMaster\030\001 \001(\005\022\025\n\r" +
+      "electionGoing\030\002 \001(\010\"?\n\017ElectionMessage\022\017" +
+      "\n\007message\030\001 \001(\t\022\017\n\007battery\030\002 \001(\005\022\n\n\002id\030\003" +
+      " \001(\005\"G\n\022PositionAndBattery\022\n\n\002id\030\001 \001(\005\022\t" +
+      "\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\017\n\007battery\030\004 \001(\005\"g\n" +
+      "\014OrderMessage\022\017\n\007xRitiro\030\001 \001(\005\022\017\n\007yRitir" +
+      "o\030\002 \001(\005\022\021\n\txConsegna\030\003 \001(\005\022\021\n\tyConsegna\030" +
+      "\004 \001(\005\022\017\n\007idOrder\030\005 \001(\t\"\301\001\n\013GlobalStats\022\021" +
+      "\n\ttimestamp\030\001 \001(\003\0228\n\010consegna\030\002 \001(\0132&.co" +
+      "m.example.grpc.GlobalStats.Consegna\022\n\n\002k" +
+      "m\030\003 \001(\001\022\024\n\014batteryLevel\030\004 \001(\005\022\021\n\tpolluti" +
+      "on\030\005 \003(\001\0320\n\010Consegna\022\021\n\txConsegna\030\001 \001(\005\022" +
+      "\021\n\tyConsegna\030\002 \001(\005\"\t\n\007Message2\362\002\n\rDroneC" +
+      "hatting\022A\n\010discover\022\031.com.example.grpc.R" +
+      "equest\032\032.com.example.grpc.Response\0226\n\004pi" +
+      "ng\022\026.com.example.grpc.Ping\032\026.com.example" +
+      ".grpc.Ping\022P\n\010election\022!.com.example.grp" +
+      "c.ElectionMessage\032!.com.example.grpc.Ele" +
+      "ctionMessage\022J\n\007sendPos\022$.com.example.gr" +
+      "pc.PositionAndBattery\032\031.com.example.grpc" +
+      ".Message\022H\n\007deliver\022\036.com.example.grpc.O" +
+      "rderMessage\032\035.com.example.grpc.GlobalSta" +
+      "tsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7126,7 +6908,7 @@ public final class DroneChattingOuterClass {
     internal_static_com_example_grpc_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_example_grpc_Request_descriptor,
-        new java.lang.String[] { "Message", "Id", "Port", "Master", "Pos", "Indirizzo", });
+        new java.lang.String[] { "Id", "Port", "Pos", "Indirizzo", });
     internal_static_com_example_grpc_Request_Posizione_descriptor =
       internal_static_com_example_grpc_Request_descriptor.getNestedTypes().get(0);
     internal_static_com_example_grpc_Request_Posizione_fieldAccessorTable = new

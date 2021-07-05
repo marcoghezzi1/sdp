@@ -1,16 +1,13 @@
 package NetworkTopology;
 
-import Consegne.DroneMqttThread;
+
 import REST.Drone;
 import com.example.grpc.DroneChattingGrpc;
-import com.example.grpc.DroneChattingOuterClass;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 import static com.example.grpc.DroneChattingGrpc.*;
 import static com.example.grpc.DroneChattingOuterClass.*;
@@ -66,7 +63,7 @@ public class PingThread extends Thread {
                             }
                         });
                     }
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
 
                 }
 

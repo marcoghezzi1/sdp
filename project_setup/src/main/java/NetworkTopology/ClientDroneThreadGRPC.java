@@ -28,10 +28,9 @@ public class ClientDroneThreadGRPC extends Thread{
 
         DroneChattingStub stub = DroneChattingGrpc.newStub(channel);
 
-        String message = "Nuovo drone inserito";
 
 
-        Request request = Request.newBuilder().setMessage(message)
+        Request request = Request.newBuilder()
                 .setPort(self.getPort())
                 .setId(self.getId())
                 .setPos(Request.Posizione.newBuilder()
@@ -42,8 +41,8 @@ public class ClientDroneThreadGRPC extends Thread{
         stub.discover(request, new StreamObserver<Response>() {
             @Override
             public void onNext(Response value) {
-                /*System.out.println("Comunicazione da " +indirizzo+ "\nL'id del master: "
-                        + value.getIdMaster()+"\nSta partecipando all'elezione: "+value.getElectionGoing());*/
+                System.out.println("Comunicazione da " +indirizzo+ "\nL'id del master: "
+                        + value.getIdMaster());
                 if (!value.getElectionGoing())
                     self.setIdMaster(value.getIdMaster());
             }

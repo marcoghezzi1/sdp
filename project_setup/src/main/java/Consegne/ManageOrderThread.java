@@ -42,6 +42,7 @@ public class ManageOrderThread extends Thread {
             int[] ritiro = order.getRitiro();
             Drone scelto = drone.chooseDrone(ritiro);
             if (scelto != null) {
+                //System.out.println("posizione: "+scelto.getPosizione()[0]+", "+scelto.getPosizione()[1]);
                 drone.removeOrder(orderList);
                 String indirizzo = scelto.getIndirizzoIp()+":" + scelto.getPort();
                 //System.out.println("Indirizzo: " + indirizzo);

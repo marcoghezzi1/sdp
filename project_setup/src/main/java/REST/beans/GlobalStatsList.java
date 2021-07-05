@@ -17,7 +17,7 @@ public class GlobalStatsList {
     private static GlobalStatsList instance;
 
     private GlobalStatsList() {
-        listaStatisticheRaccolte = new ArrayList<GlobalStat>();
+        listaStatisticheRaccolte = new ArrayList<>();
     }
 
     public GlobalStatsList(List<GlobalStat> lista) {
@@ -49,7 +49,7 @@ public class GlobalStatsList {
         Timestamp t1 = Timestamp.valueOf(a);
         Timestamp t2 = Timestamp.valueOf(b);
         List<GlobalStat> copy = getLista();
-        List<GlobalStat> sublist = new ArrayList<GlobalStat>();
+        List<GlobalStat> sublist = new ArrayList<>();
         copy.sort(Comparator.comparing(GlobalStat::getTimestamp));
         for (GlobalStat g: copy) {
             if (g.getTimestamp().compareTo(t1)>= 0 && g.getTimestamp().compareTo(t2)<=0)

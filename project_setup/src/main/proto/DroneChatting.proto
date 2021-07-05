@@ -2,16 +2,14 @@ syntax='proto3';
 package com.example.grpc;
 
 message Request {
-  string message = 1;
-  int32 id = 2;
-  int32 port = 3;
+  int32 id = 1;
+  int32 port = 2;
   message Posizione {
     int32 x = 1;
     int32 y = 2;
   }
-  bool master = 4;
-  Posizione pos = 5;
-  string indirizzo = 6;
+  Posizione pos = 3;
+  string indirizzo = 4;
 }
 
 message Ping {

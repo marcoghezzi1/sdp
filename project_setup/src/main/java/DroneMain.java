@@ -1,9 +1,6 @@
-import Consegne.ManageOrderThread;
-import Consegne.PollutionThread;
-import Consegne.SendingStatsThread;
+import Consegne.*;
 import NetworkTopology.*;
 import REST.Drone;
-import Consegne.DroneMqttThread;
 import SimulatoriProgettoSDP2021.Buffer;
 import SimulatoriProgettoSDP2021.Measurement;
 import SimulatoriProgettoSDP2021.PM10Simulator;
@@ -14,12 +11,17 @@ import java.util.List;
 
 public class DroneMain {
     public static void main(String[] args) throws InterruptedException, MqttException {
-        Drone d = new Drone(5, "localhost", 5555, "localhost:1337");
+        Drone d = new Drone(4, "localhost", 4444, "localhost:1337");
         Thread mqttThread = new DroneMqttThread(d);
-        d.connectToServerREST();
         ServerDroneThread server = new ServerDroneThread(d);
         Thread console = new QuitDroneThread();
         PingThread ping = new PingThread(d);
+        Thread manageOrders = new ManageOrderThread(d);
+        SendingStatsThread sendingStats = new SendingStatsThread(d);
+        LocalStatsThread printingLocalStats = new LocalStatsThread(d);
+
+        //connessione al server rest
+        d.connectToServerREST();
 
         //thread per l'ascolto di altri droni che entrano nella rete
         server.start();
@@ -40,19 +42,20 @@ public class DroneMain {
             d.setIdMaster(d.getId());
         }
 
-        //sistema di ping per capire l'assenza di un drone
+        //sistema di ping per capire l'assenza di un drone (ping a tutti)
         ping.start();
 
-        //inizio a gestire gli ordini
+        //connessione all'mqtt
         mqttThread.start();
 
         //managing orders
-        Thread manageOrders = new ManageOrderThread(d);
         manageOrders.start();
 
         //thread per vedere le statistiche dei droni
-        SendingStatsThread sendingStats = new SendingStatsThread(d);
         sendingStats.start();
+
+        //thread per stampare
+        printingLocalStats.start();
 
 
         //thread PM10 simulator
@@ -69,12 +72,10 @@ public class DroneMain {
             @Override
             public synchronized List<Measurement> readAllAndClean() {
                 try {
-                    //System.out.println("Waiting to receive 8 measures");
                     this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //System.out.println("Statistiche ricevute");
                 double overlapPercentage = 0.5;
                 int overlap = (int) (measurements.size()* overlapPercentage);
                 List<Measurement> copy = new ArrayList<>(measurements);
@@ -83,17 +84,26 @@ public class DroneMain {
                 return copy;
             }
         };
-        Thread pm10 = new PM10Simulator(buffer);
+        PM10Simulator pm10 = new PM10Simulator(buffer);
         pm10.start();
 
         //thread per la raccolta di inquinamento
-        Thread pollution = new PollutionThread(d, buffer);
+        PollutionThread pollution = new PollutionThread(d, buffer);
         pollution.start();
 
         while (true) {
             if ((!console.isAlive() || d.getBatteryLevel() < 15) && !d.isElectionGoing())
                 d.setWantToQuit(true);
             if (d.isWantToQuit()) {
+                printingLocalStats.setStopCondition();
+                pm10.stopMeGently();
+                pollution.setStopCondition();
+                synchronized (d.getObjectDelivery()) {
+                    while (d.isInConsegna()) {
+                        System.out.println("Aspetto di finire la consegna");
+                        d.getObjectDelivery().wait();
+                    }
+                }
                 if (d.sonoMaster()) {
                     d.disconnectFromMqtt();
                     synchronized (d.getOrdiniPendingMaster()) {
@@ -103,23 +113,19 @@ public class DroneMain {
                             //aspetto che tutti mandino le stats al master
                         }
                     }
-                    synchronized (d.getListGlobal()) {
-                        System.out.println("Aspetto di ricevere le statistiche indietro");
-                        d.getListGlobal().wait();
-                    }
                     manageOrders.join();
-                    System.out.println("Gestiti tutti gli ordini");
+                    //System.out.println("Gestiti tutti gli ordini");
                     sendingStats.setStopCondition();
-                    System.out.println("Invio le statistiche al server");
+                    //System.out.println("Invio le statistiche al server");
                     d.sendStatsToRest();
-                }
-                synchronized (d.getDummyDelivery()) {
-                    while (d.isInConsegna()) {
-                        System.out.println("Aspetto di finire la consegna");
-                        d.getDummyDelivery().wait();
+                    synchronized (d.getListGlobal()) {
+                        if (d.getListGlobal().size()!=0) {
+                            //System.out.println("Aspetto di ricevere le statistiche indietro");
+                            d.getListGlobal().wait();
+                        }
                     }
                 }
-                System.out.println("chiudo il server di ascolto");
+                //System.out.println("Chiudo il server di ascolto");
                 server.stopCondition();
                 d.disconnectFromServerREST();
                 ping.setStopCondition();

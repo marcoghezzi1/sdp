@@ -9,6 +9,7 @@ import java.util.List;
 public class PollutionThread extends Thread {
     private Drone drone;
     private final Buffer buffer;
+    private boolean stopCondition = false;
 
     public PollutionThread(Drone d, Buffer buffer) {
         drone = d;
@@ -17,7 +18,7 @@ public class PollutionThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
+        while(!stopCondition) {
             List<Measurement> lista = buffer.readAllAndClean();
             double totValue = 0;
             double avgMeasure;
@@ -33,6 +34,10 @@ public class PollutionThread extends Thread {
                 System.out.println("media: "+measure);
             }*/
         }
-
     }
+
+    public void setStopCondition() {
+        this.stopCondition = true;
+    }
+
 }

@@ -1,7 +1,6 @@
 package REST;
 
 import REST.beans.*;
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
@@ -39,7 +38,6 @@ public class ClientAmministratore {
             WebResource webResource;
             ClientResponse response;
             StormoDroni output;
-            Gson gson = new Gson();
             Statistiche stats;
             String t1;
             String t2;
@@ -70,6 +68,7 @@ public class ClientAmministratore {
                 case 2:
                     System.out.println("Inserisci n: ");
                     int n = scan.nextInt();
+
                     webResource = client.resource(statistiche+"/" + n);
 
                     response = webResource.accept("application/json")
@@ -79,9 +78,15 @@ public class ClientAmministratore {
                                 + response.getStatus());
                     }
                     List<GlobalStat> globalStat = response.getEntity(new GenericType<List<GlobalStat>>() {});
-                    System.out.println("Le ultime " +n+" statistiche sono:");
-                    for (GlobalStat g: globalStat) {
-                        System.out.println(g);
+                    if (globalStat.size()==0)
+                        System.out.println("Nessuna statistica");
+                    else {
+                        System.out.println("Le ultime " + n + " statistiche sono:");
+                        for (GlobalStat g : globalStat) {
+                            System.out.println("Media consegne: " + String.format("%.2f", +g.getAvgDelivery()) + ", media km: "
+                                    + String.format("%.2f", +g.getAvgKm()) + ", media batteria rimanente: " + g.getAvgBatteryLife()
+                                    + ", media inquinamento: " + String.format("%.2f", +g.getAvgPollution()) + ", timestamp: " + g.getTimestamp());
+                        }
                     }
                     break;
                 case 3:
@@ -102,7 +107,7 @@ public class ClientAmministratore {
                     if (Double.isNaN(stats.getMedia()))
                         System.out.println("Nessuna statistica");
                     else
-                        System.out.println("Media dei delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
+                        System.out.println("Media delle consegne effettuate: " +String.format("%.2f",+stats.getMedia()));
                     //System.out.println(output);
                     break;
                 case 4:

@@ -162,10 +162,8 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     //setto l'id del master
                     drone.setIdMaster(idReceived);
                     newElection = ElectionMessage.newBuilder().setId(idReceived).setMessage("Elected").build();
-                    //una volta ricevuto il messaggio di elected, posso chiudere il channel (?)
                 }
                 else {
-                    //drone.notifyIamMaster();
                     newElection = null;
                 }
                 //System.out.println("Sono uscito dall'elezione");
@@ -255,13 +253,12 @@ public class DroneChattingImpl extends DroneChattingImplBase {
     @Override
     public void deliver(OrderMessage request, StreamObserver<GlobalStats> responseObserver) {
         try {
-            String idOrder = request.getIdOrder();
             int xRitiro = request.getXRitiro();
             int yRitiro = request.getYRitiro();
             int xConsegna = request.getXConsegna();
             int yConsegna = request.getYConsegna();
-            System.out.println("Ritiro dell'ordine "+idOrder+" da ("+xRitiro+", "+yRitiro+"), a ("
-                    +xConsegna+", "+yConsegna+")");
+            /*System.out.println("Ritiro dell'ordine "+idOrder+" da ("+xRitiro+", "+yRitiro+"), a ("
+                    +xConsegna+", "+yConsegna+")");*/
 
 
             GlobalStatsToMaster global = drone.manageOrder(xRitiro, yRitiro, xConsegna, yConsegna);
@@ -277,7 +274,7 @@ public class DroneChattingImpl extends DroneChattingImplBase {
                     .setKm(global.getDistTot())
                     .addAllPollution(global.getAvgPollutionList())
                     .build();
-            System.out.println("Batteria rimasta: " +drone.getBatteryLevel()+"\n");
+            //System.out.println("Batteria rimasta: " +drone.getBatteryLevel()+"\n");
             responseObserver.onNext(response);
             responseObserver.onCompleted();
 
